@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ScreenGlitch
+  m_Name: Blit_Glitch
   m_Shader: {fileID: -6465566751694194690, guid: d432580db5692724ca19ed979faa3317,
     type: 3}
   m_ValidKeywords: []
