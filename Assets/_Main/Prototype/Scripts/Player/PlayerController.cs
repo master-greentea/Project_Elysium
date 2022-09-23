@@ -1,15 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public enum camDirection
 {
     South,
+    SouthWest,
     West,
+    NorthWest,
     North,
-    East
+    NorthEast,
+    East,
+    SouthEast,
+    Count
 };
 
 public class PlayerController : MonoBehaviour
@@ -25,10 +32,9 @@ public class PlayerController : MonoBehaviour
     [Header("Camera Switch")]
     public camDirection currentCamDirection;
     private bool playerLeft; // for changing animation of running left & right
-    private Vector3 playerCamBasedMove; // for changing direction of player move
 
-    [Category("Directional Cameras")] [SerializeField]
-    private GameObject[] directionCams;
+    [Category("CM Main")] [SerializeField]
+    private Transform mainCam;
 
     // movement
     private Vector2 currentMovementInput;
@@ -99,14 +105,15 @@ public class PlayerController : MonoBehaviour
     // change animation state
     void HandleAnimation()
     {
-        if (isMoving) { animationChange.ChangeAnimationState(animator, PLAYER_RUN, true, playerLeft); animator.speed = characterController.velocity.magnitude * .2f; }
-        else { animationChange.ChangeAnimationState(animator, PLAYER_IDLE, false, playerLeft); animator.speed = 1; }
+        if (isMoving) { animationChange.ChangeAnimationState(animator, PLAYER_RUN, true, currentMovementInput.x < 0); animator.speed = characterController.velocity.magnitude * .2f; }
+        else { animationChange.ChangeAnimationState(animator, PLAYER_IDLE, false, currentMovementInput.x < 0); animator.speed = 1; }
     }
 
     void Update()
     {
         HandleAnimation();
         Move();
+        
         DirectionSwitch();
     }
 
@@ -128,8 +135,6 @@ public class PlayerController : MonoBehaviour
         // get input magnitude, cap at 1
         float inputMagnitude = currentMovementInput.magnitude;
         if (inputMagnitude > 1f) inputMagnitude = 1f;
-        // create move vector
-        Vector3 move = playerCamBasedMove;
 
         // get current horizontal speed
         float currentHorizontalSpeed = new Vector3(characterController.velocity.x, 0.0f, characterController.velocity.z).magnitude;
@@ -144,6 +149,11 @@ public class PlayerController : MonoBehaviour
         {
             moveSpeed = targetSpeed;
         }
+        
+        // create move vector
+        Vector3 direct = new Vector3(currentMovementInput.x, 0f, currentMovementInput.y).normalized;
+        float targetAngle = Mathf.Atan2(direct.x, direct.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+        Vector3 move = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
         // rotate player when moving
         if (isMoving)
@@ -191,47 +201,71 @@ public class PlayerController : MonoBehaviour
     // change camera
     private void ChangeCamera(string direction)
     {
-        // turn off all cams first
-        for (int i = 0; i < directionCams.Length; i++)
-        { directionCams[i].SetActive(false); }
-
         int camIndex = (int)currentCamDirection;
         if (direction == "Right")
         {
             camIndex--;
-            if (camIndex < 0) camIndex = directionCams.Length - 1;
+            if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
             currentCamDirection = (camDirection)camIndex;
         }
         if (direction == "Left")
         {
             camIndex++;
-            if (camIndex > directionCams.Length - 1) camIndex = 0;
+            if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
             currentCamDirection = (camDirection)camIndex;
         }
-        
-        directionCams[(int)currentCamDirection].SetActive(true);
     }
     
-    // camera based direction switch
     void DirectionSwitch()
     {
         switch (currentCamDirection)
         {
-            case camDirection.South:
-                playerLeft = transform.forward.x < 0;
-                playerCamBasedMove = new Vector3(currentMovementInput.x, 0, currentMovementInput.y);
+            case camDirection.South:mainCam.eulerAngles = new Vector3(
+                    mainCam.eulerAngles.x,
+                    Mathf.LerpAngle(mainCam.eulerAngles.y, 0, Time.deltaTime),
+                    mainCam.eulerAngles.z);
+                break;
+            case camDirection.SouthWest:
+                mainCam.eulerAngles = new Vector3(
+                    mainCam.eulerAngles.x,
+                    Mathf.LerpAngle(mainCam.eulerAngles.y, 45, Time.deltaTime),
+                    mainCam.eulerAngles.z);
                 break;
             case camDirection.West:
-                playerLeft = transform.forward.z > 0;
-                playerCamBasedMove = new Vector3(currentMovementInput.y, 0, -currentMovementInput.x);
+                mainCam.eulerAngles = new Vector3(
+                    mainCam.eulerAngles.x,
+                    Mathf.LerpAngle(mainCam.eulerAngles.y, 90, Time.deltaTime),
+                    mainCam.eulerAngles.z);
+                break;
+            case camDirection.NorthWest:
+                mainCam.eulerAngles = new Vector3(
+                    mainCam.eulerAngles.x,
+                    Mathf.LerpAngle(mainCam.eulerAngles.y, 135, Time.deltaTime),
+                    mainCam.eulerAngles.z);
                 break;
             case camDirection.North:
-                playerLeft = transform.forward.x > 0;
-                playerCamBasedMove = new Vector3(-currentMovementInput.x, 0, -currentMovementInput.y);
+                mainCam.eulerAngles = new Vector3(
+                    mainCam.eulerAngles.x,
+                    Mathf.LerpAngle(mainCam.eulerAngles.y, 180, Time.deltaTime),
+                    mainCam.eulerAngles.z);
+                break;
+            case camDirection.NorthEast:
+                mainCam.eulerAngles = new Vector3(
+                    mainCam.eulerAngles.x,
+                    Mathf.LerpAngle(mainCam.eulerAngles.y, -135, Time.deltaTime),
+                    mainCam.eulerAngles.z);
                 break;
             case camDirection.East:
-                playerLeft = transform.forward.z < 0;
-                playerCamBasedMove = new Vector3(-currentMovementInput.y, 0, currentMovementInput.x);
+                mainCam.eulerAngles = new Vector3(
+                    mainCam.eulerAngles.x,
+                    Mathf.LerpAngle(mainCam.eulerAngles.y, -90, Time.deltaTime),
+                    mainCam.eulerAngles.z);
+                break;
+            case camDirection.SouthEast:
+                mainCam.eulerAngles = new Vector3(
+                    mainCam.eulerAngles.x,
+                    Mathf.LerpAngle(mainCam.eulerAngles.y, -45, Time.deltaTime),
+                    mainCam.eulerAngles.z);
                 break;
         }
     }
