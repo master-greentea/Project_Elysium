@@ -4,31 +4,66 @@ using UnityEngine;
 
 public class PlayerFov : MonoBehaviour
 {
-    public float findTargetDelay;
-    
+    [Header("View")]
     public float viewRadius;
     [Range(0,360)]
     public float viewAngle;
 
-    public LayerMask targetMask;
-    public LayerMask wallMask;
+    [Space(10)] [Header("Layer Masks")]
+    [SerializeField] private LayerMask targetMask;
+    [SerializeField] private LayerMask wallMask;
 
     public List<Transform> visibleEntities = new List<Transform>();
 
-    public float meshResolution;
-    public int edgeResolveIterations;
-    public float edgeDistThreshold;
-    
-    public MeshFilter viewMeshFilter;
+    [Space(10)] [Header("View Visualization Mesh")]
+    [SerializeField] private MeshFilter viewMeshFilter;
+    [SerializeField] private float meshResolution;
+    [SerializeField] private int edgeResolveIterations;
+    [SerializeField] private float edgeDistThreshold;
     private Mesh viewMesh;
-
-    void Start()
+    
+    [Space(10)] [Header("Finding Target")]
+    public float findTargetDelay;
+    
+    // structs
+    public struct ViewCastInfo
     {
-        StartCoroutine(FindTargetWithDelay(findTargetDelay));
+        public bool hit;
+        public Vector3 point;
+        public float dist;
+        public float angle;
 
+        public ViewCastInfo(bool _hit, Vector3 _point, float _dist, float _angle)
+        {
+            hit = _hit;
+            point = _point;
+            dist = _dist;
+            angle = _angle;
+        }
+    }
+    public struct EdgeInfo
+    {
+        public Vector3 pointA;
+        public Vector3 pointB;
+
+        public EdgeInfo(Vector3 _pointA, Vector3 _pointB)
+        {
+            pointA = _pointA;
+            pointB = _pointB;
+        }
+    }
+
+    void InitializeMesh()
+    {
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
+    }
+    
+    void Start()
+    {
+        StartCoroutine(FindTargetWithDelay(findTargetDelay));
+        InitializeMesh();
     }
     
     void LateUpdate()
@@ -38,6 +73,7 @@ public class PlayerFov : MonoBehaviour
 
     IEnumerator FindTargetWithDelay(float delay)
     {
+        // fire every delay seconds
         while (true)
         {
             yield return new WaitForSeconds(delay);
@@ -45,6 +81,7 @@ public class PlayerFov : MonoBehaviour
         }
     }
 
+    // main methods
     void FindVisibleEntities()
     {
         for (int i = 0; i < visibleEntities.Count; i++)
@@ -66,22 +103,11 @@ public class PlayerFov : MonoBehaviour
                 {
                     visibleEntities.Add(entity);
                     // do after see target
-                    // Debug.DrawLine(transform.position, entity.position);
                     entity.gameObject.GetComponent<MeshRenderer>().enabled = true;  // set entity visibility
                 }
             }
         }
     }
-    
-    public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
-    {
-        if (!angleIsGlobal)
-        {
-            angleInDegrees += transform.eulerAngles.y;
-        }
-        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
-    }
-
     void DrawFov()
     {
         int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
@@ -138,7 +164,7 @@ public class PlayerFov : MonoBehaviour
         viewMesh.RecalculateNormals();
     }
 
-    EdgeInfo FindEdge(ViewCastInfo minViewCast, ViewCastInfo maxViewCast)
+    private EdgeInfo FindEdge(ViewCastInfo minViewCast, ViewCastInfo maxViewCast)
     {
         float minAngle = minViewCast.angle;
         float maxAngle = maxViewCast.angle;
@@ -166,7 +192,7 @@ public class PlayerFov : MonoBehaviour
         return new EdgeInfo(minPoint, maxPoint);
     }
 
-    ViewCastInfo ViewCast(float globalAngle)
+    private ViewCastInfo ViewCast(float globalAngle)
     {
         Vector3 dir = DirFromAngle(globalAngle, true);
         RaycastHit hit;
@@ -180,32 +206,13 @@ public class PlayerFov : MonoBehaviour
             return new ViewCastInfo(false, transform.position + dir * viewRadius, viewRadius, globalAngle);
         }
     }
-
-    public struct ViewCastInfo
-    {
-        public bool hit;
-        public Vector3 point;
-        public float dist;
-        public float angle;
-
-        public ViewCastInfo(bool _hit, Vector3 _point, float _dist, float _angle)
-        {
-            hit = _hit;
-            point = _point;
-            dist = _dist;
-            angle = _angle;
-        }
-    }
     
-    public struct EdgeInfo
+    public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
-        public Vector3 pointA;
-        public Vector3 pointB;
-
-        public EdgeInfo(Vector3 _pointA, Vector3 _pointB)
+        if (!angleIsGlobal)
         {
-            pointA = _pointA;
-            pointB = _pointB;
+            angleInDegrees += transform.eulerAngles.y;
         }
+        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
 }

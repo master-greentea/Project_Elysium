@@ -1,30 +1,19 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public enum camDirection
-{
-    South,
-    SouthWest,
-    West,
-    NorthWest,
-    North,
-    NorthEast,
-    East,
-    SouthEast,
-    Count
-};
+{ South, SouthWest, West, NorthWest, North, NorthEast, East, SouthEast, Count };
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] public CharacterController characterController;
+    private CharacterController _characterController;
 
     // input
-    PrototypePlayerInput input;
+    private PrototypePlayerInput input;
 
     // direction
     private Vector3 targetDirection;
@@ -35,6 +24,8 @@ public class PlayerController : MonoBehaviour
 
     [Category("CM Main")] [SerializeField]
     private Transform mainCam;
+
+    [SerializeField] private float camLerpSpeed;
 
     // movement
     private Vector2 currentMovementInput;
@@ -71,16 +62,31 @@ public class PlayerController : MonoBehaviour
     // animations
     [Space(10)]
     [Header("Animation")]
-    [SerializeField] private AnimationChange animationChange;
-    Animator animator;
+    private AnimationChange _animationChange;
+    Animator _animator;
     const string PLAYER_IDLE = "NewIdle";
     const string PLAYER_RUN = "NewRun";
+    
+    // enabling input
+    void OnEnable()
+    {
+        input.PlayerControls.Enable();
+    }
+    void OnDisable()
+    {
+        input.PlayerControls.Disable();
+    }
 
-    void Awake()
+    void AssignComponents()
+    {
+        _animator = GetComponent<Animator>();
+        _characterController = GetComponent<CharacterController>();
+        _animationChange = GetComponent<AnimationChange>();
+    }
+
+    void SubscribeInputEvents()
     {
         input = new PrototypePlayerInput();
-        animator = GetComponent<Animator>();
-
         // input events
         // walking & running
         input.PlayerControls.Move.performed += OnMovementInput;
@@ -88,25 +94,24 @@ public class PlayerController : MonoBehaviour
         input.PlayerControls.Sprint.performed += context => isSprinting = context.ReadValueAsButton();
         // dashing
         canDash = true;
-        input.PlayerControls.Dash.performed += context => Dash();
+        input.PlayerControls.Dash.performed += Dash;
         // camera change
         input.PlayerControls.ChangeCameraLeft.performed += context => ChangeCamera("Left");
         input.PlayerControls.ChangeCameraRight.performed += context => ChangeCamera("Right");
-
-        currentCamDirection = camDirection.South;
     }
-    // event callback for Move
-    void OnMovementInput(InputAction.CallbackContext context)
+
+    void Awake()
     {
-        currentMovementInput = context.ReadValue<Vector2>();
-        isMoving = currentMovementInput.x != 0 || currentMovementInput.y != 0;
+        SubscribeInputEvents();
+        AssignComponents();
+        currentCamDirection = camDirection.South;
     }
 
     // change animation state
     void HandleAnimation()
     {
-        if (isMoving) { animationChange.ChangeAnimationState(animator, PLAYER_RUN, true, currentMovementInput.x < 0); animator.speed = characterController.velocity.magnitude * .2f; }
-        else { animationChange.ChangeAnimationState(animator, PLAYER_IDLE, false, currentMovementInput.x < 0); animator.speed = 1; }
+        if (isMoving) { _animationChange.ChangeAnimationState(_animator, PLAYER_RUN, true, currentMovementInput.x < 0); _animator.speed = _characterController.velocity.magnitude * .2f; }
+        else { _animationChange.ChangeAnimationState(_animator, PLAYER_IDLE, false, currentMovementInput.x < 0); _animator.speed = 1; }
     }
 
     void Update()
@@ -117,16 +122,14 @@ public class PlayerController : MonoBehaviour
         DirectionSwitch();
     }
 
-    // rotation
-    public void Rotate(Vector3 rotateTo, float rate)
-    {
-        // parse direction to quaternion
-        Quaternion targetRotation = Quaternion.LookRotation(rotateTo);
-        // rotate player
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rate);
+    // ACTION METHODS
+    // movement
+    private void OnMovementInput(InputAction.CallbackContext context)                                    
+    {                                                                                            
+        currentMovementInput = context.ReadValue<Vector2>();                                     
+        isMoving = currentMovementInput.x != 0 || currentMovementInput.y != 0;                   
     }
-
-    // walking & running
+    // movement (called per frame)
     private void Move()
     {
         // get target speed based on sprint or walk
@@ -137,7 +140,7 @@ public class PlayerController : MonoBehaviour
         if (inputMagnitude > 1f) inputMagnitude = 1f;
 
         // get current horizontal speed
-        float currentHorizontalSpeed = new Vector3(characterController.velocity.x, 0.0f, characterController.velocity.z).magnitude;
+        float currentHorizontalSpeed = new Vector3(_characterController.velocity.x, 0.0f, _characterController.velocity.z).magnitude;
         // accelerate or decelerate to target speed
         if (currentHorizontalSpeed < targetSpeed - .1f || currentHorizontalSpeed > targetSpeed + .1f)
         {
@@ -162,12 +165,20 @@ public class PlayerController : MonoBehaviour
             Rotate(new Vector3(move.x, 0, move.z), rotationSpeed);
         }
         // move player
-        if (isDashing) characterController.Move(transform.forward * Time.deltaTime * (dashDistance / dashDuration));
-        else characterController.Move(move.normalized * Time.deltaTime * moveSpeed);
+        if (isDashing) _characterController.Move(transform.forward * Time.deltaTime * (dashDistance / dashDuration));
+        else _characterController.Move(move.normalized * Time.deltaTime * moveSpeed);
+    }
+    // movement rotation
+    private void Rotate(Vector3 rotateTo, float rate)
+    {
+        // parse direction to quaternion
+        Quaternion targetRotation = Quaternion.LookRotation(rotateTo);
+        // rotate player
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rate);
     }
 
-    // dashing
-    private void Dash()
+    // dash
+    private void Dash(InputAction.CallbackContext context)
     {
         if (!isDashing && canDash)
         {
@@ -188,16 +199,6 @@ public class PlayerController : MonoBehaviour
         canDash = true;
     }
 
-    // enabling input
-    void OnEnable()
-    {
-        input.PlayerControls.Enable();
-    }
-    void OnDisable()
-    {
-        input.PlayerControls.Disable();
-    }
-    
     // change camera
     private void ChangeCamera(string direction)
     {
@@ -206,67 +207,52 @@ public class PlayerController : MonoBehaviour
         {
             camIndex--;
             if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
-            currentCamDirection = (camDirection)camIndex;
         }
         if (direction == "Left")
         {
             camIndex++;
             if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
-            currentCamDirection = (camDirection)camIndex;
         }
+        currentCamDirection = (camDirection)camIndex;
     }
     
     void DirectionSwitch()
     {
+        float angle = 0;
         switch (currentCamDirection)
         {
-            case camDirection.South:mainCam.eulerAngles = new Vector3(
-                    mainCam.eulerAngles.x,
-                    Mathf.LerpAngle(mainCam.eulerAngles.y, 0, Time.deltaTime),
-                    mainCam.eulerAngles.z);
+            case camDirection.South:
+                angle = 0;
                 break;
             case camDirection.SouthWest:
-                mainCam.eulerAngles = new Vector3(
-                    mainCam.eulerAngles.x,
-                    Mathf.LerpAngle(mainCam.eulerAngles.y, 45, Time.deltaTime),
-                    mainCam.eulerAngles.z);
+                angle = 45;
                 break;
             case camDirection.West:
-                mainCam.eulerAngles = new Vector3(
-                    mainCam.eulerAngles.x,
-                    Mathf.LerpAngle(mainCam.eulerAngles.y, 90, Time.deltaTime),
-                    mainCam.eulerAngles.z);
+                angle = 90;
                 break;
             case camDirection.NorthWest:
-                mainCam.eulerAngles = new Vector3(
-                    mainCam.eulerAngles.x,
-                    Mathf.LerpAngle(mainCam.eulerAngles.y, 135, Time.deltaTime),
-                    mainCam.eulerAngles.z);
+                angle = 135;
                 break;
             case camDirection.North:
-                mainCam.eulerAngles = new Vector3(
-                    mainCam.eulerAngles.x,
-                    Mathf.LerpAngle(mainCam.eulerAngles.y, 180, Time.deltaTime),
-                    mainCam.eulerAngles.z);
+                angle = 180;
                 break;
             case camDirection.NorthEast:
-                mainCam.eulerAngles = new Vector3(
-                    mainCam.eulerAngles.x,
-                    Mathf.LerpAngle(mainCam.eulerAngles.y, -135, Time.deltaTime),
-                    mainCam.eulerAngles.z);
+                angle = -135;
                 break;
             case camDirection.East:
-                mainCam.eulerAngles = new Vector3(
-                    mainCam.eulerAngles.x,
-                    Mathf.LerpAngle(mainCam.eulerAngles.y, -90, Time.deltaTime),
-                    mainCam.eulerAngles.z);
+                angle = -90;
                 break;
             case camDirection.SouthEast:
-                mainCam.eulerAngles = new Vector3(
-                    mainCam.eulerAngles.x,
-                    Mathf.LerpAngle(mainCam.eulerAngles.y, -45, Time.deltaTime),
-                    mainCam.eulerAngles.z);
+                angle = -45;
+                break;
+            default:
+                angle = 0;
                 break;
         }
+        
+        mainCam.eulerAngles = new Vector3(
+            mainCam.eulerAngles.x,
+            Mathf.LerpAngle(mainCam.eulerAngles.y, angle, Time.deltaTime * camLerpSpeed),
+            mainCam.eulerAngles.z);
     }
 }
