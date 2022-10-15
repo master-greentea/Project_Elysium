@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ceb9f872d4e6644f8cec5cabe1400c8, type: 3}
+  m_Name: Enemy_Config_Default
+  m_EditorClassIdentifier: 
+  restLookInterval: 2.5
+  restTimer: 0.87367195
+  restLookSpeed: 0.407
+  maxRest: 4
+  chaseSpeed: 4
+  chaseAccelerationDuration: 0.2
+  maxDistance: 0.5
+  trackSpeed: 3.5
+  trackAccelerationDuration: 0.5
+  mapTrackInterval: 1
+  trackTimer: 0.9958407
+  mapPositionCount: 3
+  trackNextDistance: 1
+  trackLookSpeed: 0.759
+  patrolSpeed: 1.5
+  patrolAccelerationDuration: 2
+  maxRoam: 3

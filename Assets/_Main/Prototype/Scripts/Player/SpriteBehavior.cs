@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSpriteBehavior : MonoBehaviour
+[RequireComponent(typeof(SpriteRenderer))]
+public class SpriteBehavior : MonoBehaviour
 {
-    [Header("testing")]
+    [Header("Orientation")]
     [Tooltip("Always face front")]
     [SerializeField] private bool faceFront;
     [Tooltip("Always face camera")]
