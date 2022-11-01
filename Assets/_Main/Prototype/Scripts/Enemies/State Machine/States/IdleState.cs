@@ -25,7 +25,7 @@ namespace Enemies
         {
             Rest(agent);
             // chase player
-            if (agent.IsPlayerDetected()) agent.enemyStateMachine.ChangeState(EnemyStateId.Chase);
+            if (agent.IsPlayerDetected()) agent.EnemyStateMachine.ChangeState(EnemyStateId.Chase);
         }
 
         public void Exit(EnemyAgent agent)
@@ -48,7 +48,7 @@ namespace Enemies
             // if have looked more than x times, enter patrol
             if (restCount > agent.config.maxRest)
             {
-                agent.enemyStateMachine.ChangeState(EnemyStateId.Patrol);
+                agent.EnemyStateMachine.ChangeState(EnemyStateId.Patrol);
             }
         }
     }

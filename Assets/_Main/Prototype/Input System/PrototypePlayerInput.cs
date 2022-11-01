@@ -218,7 +218,7 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
                 {
                     ""name"": """",
                     ""id"": ""f226135d-0e29-4fec-a809-7a5cf8e150dd"",
-                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
@@ -240,7 +240,7 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
                 {
                     ""name"": """",
                     ""id"": ""7bed7e00-b976-423c-8c25-ebabd28ce8e3"",
-                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",

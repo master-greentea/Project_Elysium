@@ -7,66 +7,63 @@ namespace Enemies
 {
     public class EnemyAgent : MonoBehaviour
     {
-        public EnemyStateMachine enemyStateMachine;
+        public EnemyStateMachine EnemyStateMachine;
         public EnemyStateId initialState;
         [HideInInspector] public ConfigEnemy config;
         [HideInInspector] public EnemyFov enemyFov;
-        [HideInInspector] public Transform _playerTransform;
-        [HideInInspector] public NavMeshAgent _navMeshAgent;
-        
+        [HideInInspector] public Transform playerTransform;
+        [HideInInspector] public NavMeshAgent navMeshAgent;
+
         // tracking
         [HideInInspector] public List<Vector3> mappedPlayerPositions;
         [HideInInspector] public bool trackMapped;
-        
-        // values
+        // timing values
         [HideInInspector] public float lerpElapsed;
 
-        void InitializeStateMachine()
+        private void InitializeStateMachine()
         {
-            enemyStateMachine = new EnemyStateMachine(this);
+            EnemyStateMachine = new EnemyStateMachine(this);
             // register all states
-            enemyStateMachine.RegisterState(new IdleState());
-            enemyStateMachine.RegisterState(new ChaseState());
-            enemyStateMachine.RegisterState(new TrackState());
-            enemyStateMachine.RegisterState(new PatrolState());
+            EnemyStateMachine.RegisterState(new IdleState());
+            EnemyStateMachine.RegisterState(new ChaseState());
+            EnemyStateMachine.RegisterState(new TrackState());
+            EnemyStateMachine.RegisterState(new PatrolState());
+            EnemyStateMachine.RegisterState(new StareState());
+            EnemyStateMachine.RegisterState(new InterceptState());
             // change to initial state
-            enemyStateMachine.ChangeState(initialState);
+            EnemyStateMachine.ChangeState(initialState);
         }
-        
-        void AssignComponents()
+        private void AssignComponents()
         {
-            _navMeshAgent = GetComponent<NavMeshAgent>();
-            _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+            navMeshAgent = GetComponent<NavMeshAgent>();
+            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
             enemyFov = GetComponent<EnemyFov>();
         }
-        
-        void Start()
+        private void Start()
         {
             InitializeStateMachine();
             AssignComponents();
         }
         
-        void Update()
+        private void Update()
         {
-            enemyStateMachine.Update();
+            EnemyStateMachine.Update();
             // Debug.Log("Current state: " + enemyStateMachine.currentState);
-
-            // Vector3 dir = _navMeshAgent.destination - transform.position;
-            // dir.y = 0;
-            // Quaternion rot = Quaternion.LookRotation(dir);
-            // transform.rotation = Quaternion.Lerp(transform.rotation, rot, 100 * Time.deltaTime);
+            // Debug.Log(IsSeenByPlayer());
         }
 
         // behavioral methods
+        // common method to lerp self speed
         public void SpeedChange(float targetSpeed, float lerpDuration)
         {
             if (lerpElapsed < lerpDuration)
             {
-                _navMeshAgent.speed = Mathf.Lerp(_navMeshAgent.speed, targetSpeed, lerpElapsed / lerpDuration);
+                navMeshAgent.speed = Mathf.Lerp(navMeshAgent.speed, targetSpeed, lerpElapsed / lerpDuration);
                 lerpElapsed += Time.deltaTime;
             }
         }
         
+        // check if player is detected either by in sight or within minimum distance
         public bool IsPlayerDetected()
         {
             if (enemyFov.objectsDetected.Count > 0)
@@ -79,10 +76,18 @@ namespace Enemies
                     }
                 }
             }
-
             return false;
         }
+
+        // check if player currently looking at self
+        public bool IsSeenByPlayer()
+        {
+            // Physics.OverlapSphereNonAlloc(transform.position, enemyFov.sightRange, new Collider[1], LayerMask.GetMask("Player")) > 0 &&
+            return  !Physics.Linecast(transform.position, playerTransform.position, enemyFov.obstacleLayers)
+                    && GetComponent<Renderer>().isVisible;
+        }
         
+        // map waypoints for tracking down player
         public void MapPlayerTrack()
         {
             if (mappedPlayerPositions.Count < config.mapPositionCount)
@@ -91,16 +96,17 @@ namespace Enemies
                 if (config.trackTimer < 0)
                 {
                     config.trackTimer += config.mapTrackInterval;
-                    mappedPlayerPositions.Add(_playerTransform.position);
+                    mappedPlayerPositions.Add(playerTransform.position);
                 }
             }
             else
             {
-                Debug.Log("Track Complete");
+                // Debug.Log("Track Complete");
                 trackMapped = true;
             }
         }
 
+        // make self turn to target
         public void LookAt(Vector3 target, float rotationSpeed)
         {
             Vector3 directionToTarget = target - transform.position;
@@ -111,7 +117,7 @@ namespace Enemies
         
         public Vector3 RandomWorldPos()
         {
-            PatrolBounds patrolBounds = GameObject.FindObjectOfType<PatrolBounds>();
+            PatrolBounds patrolBounds = FindObjectOfType<PatrolBounds>();
             Vector3 min = patrolBounds.min.position;
             Vector3 max = patrolBounds.max.position;
 
@@ -129,14 +135,17 @@ namespace Enemies
                 Gizmos.DrawSphere(t, .5f);
             }
             // path line
-            Gizmos.color = Color.black;
-            var agentPath = _navMeshAgent.path;
-            Vector3 previousCorner = transform.position;
-            foreach (var corner in agentPath.corners)
+            if (navMeshAgent)
             {
-                Gizmos.DrawLine(previousCorner, corner);
-                Gizmos.DrawSphere(corner, .1f);
-                previousCorner = corner;
+                Gizmos.color = Color.black;
+                var agentPath = navMeshAgent.path;
+                Vector3 previousCorner = transform.position;
+                foreach (var corner in agentPath.corners)
+                {
+                    Gizmos.DrawLine(previousCorner, corner);
+                    Gizmos.DrawSphere(corner, .1f);
+                    previousCorner = corner;
+                }
             }
         }
     }

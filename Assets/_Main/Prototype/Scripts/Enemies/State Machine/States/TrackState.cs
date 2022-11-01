@@ -28,7 +28,7 @@ namespace Enemies
             // follow track
             FollowMappedTrack(agent);
             // chase player
-            if (agent.IsPlayerDetected()) agent.enemyStateMachine.ChangeState(EnemyStateId.Chase);
+            if (agent.IsPlayerDetected()) agent.EnemyStateMachine.ChangeState(EnemyStateId.Chase);
         }
 
         public void Exit(EnemyAgent agent)
@@ -47,17 +47,17 @@ namespace Enemies
         {
             if (agent.mappedPlayerPositions.Count > 0)
             {
-                if (agent._navMeshAgent.remainingDistance < agent.config.trackNextDistance)
+                if (agent.navMeshAgent.remainingDistance < agent.config.trackNextDistance)
                 {
                     // set new destination
-                    agent._navMeshAgent.SetDestination(agent.mappedPlayerPositions[currentTrackIndex]);
-                    agent.LookAt(agent._navMeshAgent.destination, agent.config.trackLookSpeed);
+                    agent.navMeshAgent.SetDestination(agent.mappedPlayerPositions[currentTrackIndex]);
+                    agent.LookAt(agent.navMeshAgent.destination, agent.config.trackLookSpeed);
                     // iterate through destination list
                     if (currentTrackIndex < agent.mappedPlayerPositions.Count - 1) currentTrackIndex++;
                     // exit state if track fully mapped
                     else if (agent.trackMapped)
                     {
-                        agent.enemyStateMachine.ChangeState(EnemyStateId.Patrol);
+                        agent.EnemyStateMachine.ChangeState(EnemyStateId.Patrol);
                     }
                 }
             }

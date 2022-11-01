@@ -3110,7 +3110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 897920205}
   m_Layer: 0
-  m_Name: World Max
+  m_Name: Patrol Bounds Max
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3124,7 +3124,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 897920204}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -24.51, y: -10, z: -24.19}
+  m_LocalPosition: {x: -6.59, y: -10, z: -6.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4926,6 +4926,7 @@ Transform:
   - {fileID: 1481054290}
   - {fileID: 287130177}
   - {fileID: 1944308532}
+  - {fileID: 1683594414}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5388,7 +5389,7 @@ GameObject:
   - component: {fileID: 1683594414}
   - component: {fileID: 1683594413}
   m_Layer: 0
-  m_Name: Ai Manager
+  m_Name: Ai Patrol Bounds
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -5415,15 +5416,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683594412}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 897920205}
   - {fileID: 2019899600}
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_Father: {fileID: 1531864260}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1695203591
 GameObject:
@@ -6100,8 +6101,8 @@ MonoBehaviour:
   initialState: 0
   config: {fileID: 11400000, guid: f40b3f5199f517948b4a8db105eeb002, type: 2}
   enemyFov: {fileID: 0}
-  _playerTransform: {fileID: 1531864260}
-  _navMeshAgent: {fileID: 1754843931}
+  playerTransform: {fileID: 0}
+  navMeshAgent: {fileID: 0}
   mappedPlayerPositions: []
   trackMapped: 0
   lerpElapsed: 0
@@ -6118,7 +6119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sightRange: 15
-  angle: 50
+  angle: 90
   height: 1
   heightOffset: -1
   meshColor: {r: 1, g: 0.28433526, b: 0, a: 0.23529412}
@@ -6126,7 +6127,7 @@ MonoBehaviour:
   detectingLayers:
     serializedVersion: 2
     m_Bits: 1024
-  obstacleLayer:
+  obstacleLayers:
     serializedVersion: 2
     m_Bits: 128
   absoluteRange: 2
@@ -6745,7 +6746,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2019899600}
   m_Layer: 0
-  m_Name: World Min
+  m_Name: Patrol Bounds Min
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6759,7 +6760,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2019899599}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 24.15, y: -10, z: 23.94}
+  m_LocalPosition: {x: 6.31, y: -10, z: 6.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

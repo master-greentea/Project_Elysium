@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 2560
     height: 1349
   m_ShowMode: 4
-  m_Title: Project
+  m_Title: Game
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 538
+  controlID: 90
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 539
+  controlID: 91
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 530
+  controlID: 23
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -189,8 +189,8 @@ MonoBehaviour:
     y: 0
     width: 422
     height: 755
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -254,7 +254,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 540
+  controlID: 92
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -302,8 +302,8 @@ MonoBehaviour:
     y: 0
     width: 965
     height: 544
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -329,8 +329,8 @@ MonoBehaviour:
     y: 0
     width: 603
     height: 1299
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 29}
   m_Panes:
   - {fileID: 29}
@@ -465,7 +465,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 14fbffff766c0000d26c0000
+      m_ExpandedIDs: 14fbffff2a6e00005a6e0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -726,9 +726,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -1.306409, y: 11.084541, z: -0.49784005}
+    m_Target: {x: -0.12173376, y: 30.514978, z: -18.521008}
     speed: 2
-    m_Value: {x: -1.306409, y: 11.084541, z: -0.49784005}
+    m_Value: {x: -0.12173376, y: 30.514978, z: -18.521008}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -775,13 +775,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.68993205, y: 0.0010859704, z: -0.0010349347, w: 0.7238695}
+    m_Target: {x: 0.42485029, y: 0.019009182, z: -0.008922978, w: 0.90502334}
     speed: 2
-    m_Value: {x: 0.6899336, y: 0.0010859729, z: -0.001034937, w: 0.7238711}
+    m_Value: {x: 0.42484903, y: 0.019009126, z: -0.008922951, w: 0.90502065}
   m_Size:
-    m_Target: 19.19055
+    m_Target: 1.1157957
     speed: 2
-    m_Value: 19.19055
+    m_Value: 1.1157957
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -6444,8 +6444,8 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 62710000
-    m_LastClickedID: 29026
+    m_SelectedIDs: 6c710000
+    m_LastClickedID: 29036
     m_ExpandedIDs: 0000000040710000427100004471000046710000487100004a71000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -6474,7 +6474,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000040710000427100004471000046710000487100004a71000000ca9a3b
+    m_ExpandedIDs: 0000000040710000427100004471000046710000487100004a710000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -6553,7 +6553,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 828
-    width: 409
+    width: 991
     height: 523
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -6561,7 +6561,7 @@ MonoBehaviour:
     m_SaveData: []
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 28308
+  m_LastSelectedObjectID: 28034
 --- !u!114 &27
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -6585,7 +6585,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 828
-    width: 409
+    width: 991
     height: 523
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -6611,9 +6611,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 632
+    x: 992
     y: 828
-    width: 1323
+    width: 963
     height: 523
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -6643,9 +6643,9 @@ MonoBehaviour:
     m_SearchString: 
   m_ActionsTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: e4718b4a
-    m_LastClickedID: 1250652644
-    m_ExpandedIDs: 9ac74152
+    m_SelectedIDs: 286ed271
+    m_LastClickedID: 1909616168
+    m_ExpandedIDs: a4f76e8f9ac74152f51dc15b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -6679,8 +6679,8 @@ MonoBehaviour:
         selectedIndex: -1
         scroll: {x: 0, y: 0}
       - itemId: 656259478
-        selectedIndex: 13
-        scroll: {x: 0, y: 225}
+        selectedIndex: 0
+        scroll: {x: 0, y: 0}
       - itemId: -206068285
         selectedIndex: -1
         scroll: {x: 0, y: 0}
@@ -6801,7 +6801,7 @@ MonoBehaviour:
       \"isComposite\": false,\n                    \"isPartOfComposite\": false\n               
       },\n                {\n                    \"name\": \"\",\n                   
       \"id\": \"f226135d-0e29-4fec-a809-7a5cf8e150dd\",\n                    \"path\":
-      \"<Keyboard>/leftArrow\",\n                    \"interactions\": \"\",\n                   
+      \"<Keyboard>/q\",\n                    \"interactions\": \"\",\n                   
       \"processors\": \"\",\n                    \"groups\": \"KeyboardMouse\",\n                   
       \"action\": \"Change Camera Left\",\n                    \"isComposite\": false,\n                   
       \"isPartOfComposite\": false\n                },\n                {\n                   
@@ -6812,7 +6812,7 @@ MonoBehaviour:
       \"isComposite\": false,\n                    \"isPartOfComposite\": false\n               
       },\n                {\n                    \"name\": \"\",\n                   
       \"id\": \"7bed7e00-b976-423c-8c25-ebabd28ce8e3\",\n                    \"path\":
-      \"<Keyboard>/rightArrow\",\n                    \"interactions\": \"\",\n                   
+      \"<Keyboard>/e\",\n                    \"interactions\": \"\",\n                   
       \"processors\": \"\",\n                    \"groups\": \"KeyboardMouse\",\n                   
       \"action\": \"Change Camera Right\",\n                    \"isComposite\":
       false,\n                    \"isPartOfComposite\": false\n                },\n               

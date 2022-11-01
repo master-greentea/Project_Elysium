@@ -14,15 +14,13 @@ namespace Enemies
         [Range(0, 1)] public float restLookSpeed;
         public int maxRest;
         
-        [Space(10)]
-        [Header("Chase State")]
+        [Space(10)] [Header("Chase State")]
         public float chaseSpeed;
         public float chaseAccelerationDuration;
         [Space(10)]
         public float maxDistance;
 
-        [Space(10)]
-        [Header("Track State")]
+        [Space(10)] [Header("Track State")]
         public float trackSpeed;
         public float trackAccelerationDuration;
         [Space(10)]
@@ -32,11 +30,15 @@ namespace Enemies
         [Tooltip("Minimum distance to switch track to next destination")] public float trackNextDistance;
         [Range(0, 1)] public float trackLookSpeed;
 
-        [Space(10)]
-        [Header("Patrol State")]
+        [Space(10)] [Header("Patrol State")]
         public float patrolSpeed;
         public float patrolAccelerationDuration;
         public int maxRoam;
+
+        [Space(10)] [Header("Stare State")]
+        public float checkSeenByPlayerInterval;
+        [Tooltip ("How long before enemy turn to look at player")] public float delayBeforeTurnToPlayer;
+        [Tooltip ("How long before enemy goes into tracking state")] public float delayBeforeTrackPlayer;
     }
 }
 

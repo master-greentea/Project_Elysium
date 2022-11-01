@@ -8,6 +8,7 @@ namespace Enemies
     public class PatrolState : EnemyState
     {
         private int roamCount;
+        private float checkSeenByPlayerTimer;
 
         public EnemyStateId GetId()
         {
@@ -23,17 +24,22 @@ namespace Enemies
         public void Update(EnemyAgent agent)
         {
             agent.SpeedChange(agent.config.patrolSpeed, agent.config.patrolAccelerationDuration);
-            
             // roaming
-            if (!agent._navMeshAgent.hasPath)
+            if (!agent.navMeshAgent.hasPath)
             {
-                agent._navMeshAgent.SetDestination(agent.RandomWorldPos());
+                agent.navMeshAgent.SetDestination(agent.RandomWorldPos());
                 roamCount++;
             }
-            if (roamCount > agent.config.maxRoam) agent.enemyStateMachine.ChangeState(EnemyStateId.Idle);
-
+            if (roamCount > agent.config.maxRoam) agent.EnemyStateMachine.ChangeState(EnemyStateId.Idle);
             // chase player
-            if (agent.IsPlayerDetected()) agent.enemyStateMachine.ChangeState(EnemyStateId.Chase);
+            if (agent.IsPlayerDetected()) agent.EnemyStateMachine.ChangeState(EnemyStateId.Chase);
+            // stare at player (checked based on interval)
+            checkSeenByPlayerTimer -= Time.deltaTime;
+            if (checkSeenByPlayerTimer < 0)
+            {
+                checkSeenByPlayerTimer += agent.config.checkSeenByPlayerInterval;
+                if (agent.IsSeenByPlayer()) agent.EnemyStateMachine.ChangeState(EnemyStateId.Stare);
+            }
         }
 
         public void Exit(EnemyAgent agent)

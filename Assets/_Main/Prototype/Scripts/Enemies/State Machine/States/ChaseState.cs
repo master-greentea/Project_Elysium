@@ -22,7 +22,7 @@ namespace Enemies
             agent.SpeedChange(agent.config.chaseSpeed, agent.config.chaseAccelerationDuration);
             if (agent.IsPlayerDetected()) ChasePlayer(agent);
             // if lost player from sight
-            else agent.enemyStateMachine.ChangeState(EnemyStateId.Track);
+            else agent.EnemyStateMachine.ChangeState(EnemyStateId.Track);
         }
     
         public void Exit(EnemyAgent agent)
@@ -34,14 +34,14 @@ namespace Enemies
         private void ChasePlayer(EnemyAgent agent)
         {
             float distanceFromDestination =
-                (agent._playerTransform.position - agent._navMeshAgent.destination).magnitude;
+                (agent.playerTransform.position - agent.navMeshAgent.destination).magnitude;
             if (distanceFromDestination > agent.config.maxDistance)
             {
-                agent._navMeshAgent.SetDestination(agent._playerTransform.position -
-                                                   (agent._playerTransform.position - agent.transform.position)
-                                                   .normalized);
+                agent.navMeshAgent.SetDestination(agent.playerTransform.position -
+                                                  (agent.playerTransform.position - agent.transform.position)
+                                                  .normalized);
             }
-            agent.LookAt(agent._playerTransform.position, 1);
+            agent.LookAt(agent.playerTransform.position, 1);
         }
     }
 }

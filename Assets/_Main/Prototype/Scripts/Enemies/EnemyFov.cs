@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [ExecuteInEditMode]
 public class EnemyFov : MonoBehaviour
 {
     [Header("Wedge Mesh")]
-    [SerializeField] private float sightRange = 10;
+    [SerializeField] public float sightRange = 10;
     [SerializeField] [Range(15, 90)] private float angle = 30;
     [SerializeField] private float height = 1f;
     [SerializeField] private float heightOffset;
@@ -16,13 +17,13 @@ public class EnemyFov : MonoBehaviour
 
     [Space(10)] [Header("Object Detection")]
     [SerializeField] private int scanFrequency = 30;
-    [SerializeField] private LayerMask detectingLayers;
-    [SerializeField] private LayerMask obstacleLayer;
+    [SerializeField] public LayerMask detectingLayers;
+    [SerializeField] public LayerMask obstacleLayers;
     [SerializeField] private float absoluteRange;
-    [HideInInspector] public List<GameObject> objectsDetected = new List<GameObject>();
+    [HideInInspector] public List<GameObject> objectsDetected;
 
-    private Collider[] collidersInRange = new Collider[50];
-    private Collider[] collidersInAbsoluteRange = new Collider[50];
+    private readonly Collider[] collidersInRange = new Collider[50];
+    private readonly Collider[] collidersInAbsoluteRange = new Collider[50];
     private int scanCounter;
     private int scanAbsoluteCounter;
     private float scanInterval;
@@ -53,7 +54,7 @@ public class EnemyFov : MonoBehaviour
             QueryTriggerInteraction.Collide);
 
         objectsDetected.Clear();
-        for (int i = 0; i < scanCounter; ++i)
+        for (var i = 0; i < scanCounter; ++i)
         {
             GameObject obj = collidersInRange[i].gameObject;
             if (IsInSight(obj) || IsInAbsoluteRange(obj))
@@ -63,7 +64,7 @@ public class EnemyFov : MonoBehaviour
         }
     }
 
-    public bool IsInSight(GameObject obj)
+    private bool IsInSight(GameObject obj)
     {
         // if object is in vision height
         Vector3 origin = transform.position;
@@ -83,7 +84,7 @@ public class EnemyFov : MonoBehaviour
         // if object is not blocked by obstacle
         origin.y += height / 2;
         dest.y = origin.y;
-        if (Physics.Linecast(origin, dest, obstacleLayer))
+        if (Physics.Linecast(origin, dest, obstacleLayers))
         {
             return false;
         }
@@ -91,7 +92,7 @@ public class EnemyFov : MonoBehaviour
         return true;
     }
 
-    bool IsInAbsoluteRange(GameObject obj)
+    private bool IsInAbsoluteRange(GameObject obj)
     {
         for (int i = 0; i < scanAbsoluteCounter; ++i)
         {
@@ -104,7 +105,7 @@ public class EnemyFov : MonoBehaviour
         return false;
     }
 
-    Mesh CreateWedgeMesh()
+    private Mesh CreateWedgeMesh()
     {
         Mesh mesh = new Mesh();
 
@@ -176,7 +177,7 @@ public class EnemyFov : MonoBehaviour
             currentAngle += deltaAngle;
         }
 
-        for (int i = 0; i < numVertices; i++)
+        for (var i = 0; i < numVertices; i++)
         {
             triangles[i] = i;
         }
