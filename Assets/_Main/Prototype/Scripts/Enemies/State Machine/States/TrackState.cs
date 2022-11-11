@@ -29,6 +29,9 @@ namespace Enemies
             FollowMappedTrack(agent);
             // chase player
             if (agent.IsPlayerDetected()) agent.EnemyStateMachine.ChangeState(EnemyStateId.Chase);
+            // intercept player if player close by (?)
+            // if ((agent.transform.position - agent.playerTransform.position).magnitude <= 5f)
+            //     agent.EnemyStateMachine.ChangeState(EnemyStateId.Intercept);
         }
 
         public void Exit(EnemyAgent agent)

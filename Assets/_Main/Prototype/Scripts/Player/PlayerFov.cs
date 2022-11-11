@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class PlayerFov : MonoBehaviour
 {
@@ -24,7 +26,7 @@ public class PlayerFov : MonoBehaviour
     
     [Space(10)] [Header("Finding Target")]
     public float findTargetDelay;
-    
+
     // structs
     public struct ViewCastInfo
     {
@@ -87,6 +89,7 @@ public class PlayerFov : MonoBehaviour
         for (int i = 0; i < visibleEntities.Count; i++)
         {
             visibleEntities[i].gameObject.GetComponent<MeshRenderer>().enabled = false;
+            // visibleEntities[i].gameObject.GetComponent<VisualEffect>().GetComponent<Renderer>().renderingLayerMask = 1;
         } // reset entity visibility
         visibleEntities.Clear(); // reset entities list
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
@@ -103,7 +106,8 @@ public class PlayerFov : MonoBehaviour
                 {
                     visibleEntities.Add(entity);
                     // do after see target
-                    entity.gameObject.GetComponent<MeshRenderer>().enabled = true;  // set entity visibility
+                    entity.gameObject.GetComponent<MeshRenderer>().enabled = true;  // set entity 
+                    // entity.gameObject.GetComponent<VisualEffect>().renderingLayerMask = 0;
                 }
             }
         }

@@ -201,7 +201,7 @@ public class EnemyFov : MonoBehaviour
         if (fovMesh)
         {
             Gizmos.color = meshColor;
-            Gizmos.DrawMesh(fovMesh, transform.position, transform.rotation);
+            // Gizmos.DrawMesh(fovMesh, transform.position, transform.rotation);
         }
         
         // draw yellow for sight range
@@ -210,13 +210,13 @@ public class EnemyFov : MonoBehaviour
         
         // draw red for absolute range
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, absoluteRange);
+        // Gizmos.DrawWireSphere(transform.position, absoluteRange);
         
         // draw green around detected objects
         Gizmos.color = Color.green;
-        foreach (var obj in objectsDetected)
-        {
-            Gizmos.DrawSphere(obj.transform.position, .2f);
-        }
+        // foreach (var obj in objectsDetected)
+        // {
+        //     Gizmos.DrawSphere(obj.transform.position, .2f);
+        // }
     }
 }

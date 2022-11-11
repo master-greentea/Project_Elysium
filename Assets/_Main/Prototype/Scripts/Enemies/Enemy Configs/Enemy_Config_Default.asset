@@ -32,3 +32,5 @@ MonoBehaviour:
   checkSeenByPlayerInterval: 1
   delayBeforeTurnToPlayer: 1
   delayBeforeTrackPlayer: 0.25
+  interceptSpeed: 6
+  interceptAccelerationDuration: 0.1

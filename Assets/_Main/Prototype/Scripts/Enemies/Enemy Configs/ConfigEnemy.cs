@@ -39,6 +39,10 @@ namespace Enemies
         public float checkSeenByPlayerInterval;
         [Tooltip ("How long before enemy turn to look at player")] public float delayBeforeTurnToPlayer;
         [Tooltip ("How long before enemy goes into tracking state")] public float delayBeforeTrackPlayer;
+
+        [Space(10)] [Header("Intercept State")]
+        public float interceptSpeed;
+        public float interceptAccelerationDuration;
     }
 }
 
