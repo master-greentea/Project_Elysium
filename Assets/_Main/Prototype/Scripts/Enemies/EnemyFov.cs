@@ -201,7 +201,7 @@ public class EnemyFov : MonoBehaviour
         if (fovMesh)
         {
             Gizmos.color = meshColor;
-            // Gizmos.DrawMesh(fovMesh, transform.position, transform.rotation);
+            Gizmos.DrawMesh(fovMesh, transform.position, transform.rotation);
         }
         
         // draw yellow for sight range

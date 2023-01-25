@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.UI;
 
 public class CameraEffects : MonoBehaviour
 {
@@ -17,7 +16,7 @@ public class CameraEffects : MonoBehaviour
 
     void Start()
     {
-        vol.profile.TryGet<DepthOfField>( out dof );
+        vol.profile.TryGet( out dof );
     }
 
     // Update is called once per frame
