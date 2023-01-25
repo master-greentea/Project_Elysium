@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 
     // input
     private PrototypePlayerInput input;
+    private PlayerInput playerInput;
 
     // direction
     private Vector3 targetDirection;
