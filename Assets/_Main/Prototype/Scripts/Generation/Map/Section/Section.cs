@@ -12,9 +12,4 @@ public class Section : MonoBehaviour
         sectionID = gameObject.GetInstanceID().ToString();
         sectionOrigin = transform.position;
     }
-
-    void Start()
-    {
-        Debug.Log(sectionID);
-    }
 }

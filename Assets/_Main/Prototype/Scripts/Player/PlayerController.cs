@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 public enum camDirection
 { South, SouthWest, West, NorthWest, North, NorthEast, East, SouthEast, Count };
@@ -10,6 +11,7 @@ public enum camDirection
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance { get; private set; }
     private CharacterController _characterController;
 
     // input
@@ -27,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private Transform mainCam;
 
     [SerializeField] private float camLerpSpeed;
+    // new camera
+    private Vector2 currentMouseInput;
 
     // movement
     private Vector2 currentMovementInput;
@@ -68,6 +72,14 @@ public class PlayerController : MonoBehaviour
     const string PLAYER_IDLE = "NewIdle";
     const string PLAYER_RUN = "NewRun";
     
+    // test
+    private float cangle = 0;
+
+    [Space(10)] [Header("Test")] [SerializeField]
+    private bool isActiveCamera;
+    [SerializeField] private float cameraSpeed;
+    private bool isLookingBack;
+    
     // enabling input
     void OnEnable()
     {
@@ -99,10 +111,13 @@ public class PlayerController : MonoBehaviour
         // camera change
         input.PlayerControls.ChangeCameraLeft.performed += context => ChangeCamera("Left");
         input.PlayerControls.ChangeCameraRight.performed += context => ChangeCamera("Right");
+        input.PlayerControls.LookBack.performed += context => OnLookBack();
+        input.PlayerControls.LookBack.canceled += context => OnLookBackStop();
     }
 
     void Awake()
     {
+        Instance = this;
         SubscribeInputEvents();
         AssignComponents();
         currentCamDirection = camDirection.South;
@@ -118,9 +133,13 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         HandleAnimation();
+        DirectionSwitch(isActiveCamera);
         Move();
-        
-        DirectionSwitch();
+    }
+
+    void FixedUpdate()
+    {
+
     }
 
     // ACTION METHODS
@@ -156,8 +175,11 @@ public class PlayerController : MonoBehaviour
         
         // create move vector
         Vector3 direct = new Vector3(currentMovementInput.x, 0f, currentMovementInput.y).normalized;
-        float targetAngle = Mathf.Atan2(direct.x, direct.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+        float targetAngle = Mathf.Atan2(direct.x, direct.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y - (isLookingBack ? 180 : 0);
         Vector3 move = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+        // gravity
+        var gravityVector = new Vector3(0, _characterController.isGrounded ? 0 : -1, 0);
 
         // rotate player when moving
         if (isMoving)
@@ -167,7 +189,7 @@ public class PlayerController : MonoBehaviour
         }
         // move player
         if (isDashing) _characterController.Move(transform.forward * Time.deltaTime * (dashDistance / dashDuration));
-        else _characterController.Move(move.normalized * Time.deltaTime * moveSpeed);
+        else _characterController.Move((move.normalized + gravityVector) * Time.deltaTime * moveSpeed);
     }
     // movement rotation
     private void Rotate(Vector3 rotateTo, float rate)
@@ -217,7 +239,7 @@ public class PlayerController : MonoBehaviour
         currentCamDirection = (camDirection)camIndex;
     }
     
-    void DirectionSwitch()
+    void DirectionSwitch(bool isActiveCamera)
     {
         float angle = 0;
         switch (currentCamDirection)
@@ -251,9 +273,32 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         
-        mainCam.eulerAngles = new Vector3(
-            mainCam.eulerAngles.x,
-            Mathf.LerpAngle(mainCam.eulerAngles.y, angle, Time.deltaTime * camLerpSpeed),
-            mainCam.eulerAngles.z);
+        angle += isLookingBack ? 180 : 0;
+
+        if (isActiveCamera)
+        {
+            var mouseMovement = Mouse.current.delta.ReadValue();
+            var yRotation = mouseMovement.x * Time.deltaTime * cameraSpeed;
+            mainCam.eulerAngles = new Vector3(mainCam.eulerAngles.x, yRotation, 0);
+        }
+        else
+        {
+            mainCam.eulerAngles = new Vector3(
+                mainCam.eulerAngles.x,
+                Mathf.LerpAngle(mainCam.eulerAngles.y, 
+                    angle, Time.deltaTime * (isLookingBack ? camLerpSpeed * 3.5f : camLerpSpeed)),
+                0);
+        }
+
+        Cursor.lockState = isActiveCamera ? CursorLockMode.Locked : CursorLockMode.None;
+    }
+
+    void OnLookBack()
+    {
+        isLookingBack = true;
+    }
+    void OnLookBackStop()
+    {
+        isLookingBack = false;
     }
 }
