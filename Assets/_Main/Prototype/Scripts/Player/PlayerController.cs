@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -38,7 +39,6 @@ public class PlayerController : MonoBehaviour
     private bool isSprinting;
     private float moveSpeed;
     
-    [Space(10)]
     [Header("Movement")]
     [Tooltip("Default walking speed")]
     public float walkSpeed = 5f;
@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour
     // dash
     private bool isDashing;
     private bool canDash;
-    [Space(10)]
     [Header("Dash")]
     [Tooltip("How quickly can the player dash")]
     public float dashDistance = 2f;
@@ -65,7 +64,6 @@ public class PlayerController : MonoBehaviour
     public float dashCooldown = .5f;
     
     // animations
-    [Space(10)]
     [Header("Animation")]
     private AnimationChange _animationChange;
     Animator _animator;
@@ -75,11 +73,12 @@ public class PlayerController : MonoBehaviour
     // test
     private float cangle = 0;
 
-    [Space(10)] [Header("Test")] [SerializeField]
+    [Header("Test")] [SerializeField]
     private bool isActiveCamera;
     [SerializeField] private float cameraSpeed;
     private bool isLookingBack;
-    
+    private bool isLookDelay;
+
     // enabling input
     void OnEnable()
     {
@@ -225,54 +224,38 @@ public class PlayerController : MonoBehaviour
     // change camera
     private void ChangeCamera(string direction)
     {
-        int camIndex = (int)currentCamDirection;
-        if (direction == "Right")
+        if (!isLookDelay)
         {
-            camIndex--;
-            if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
+            var camIndex = (int)currentCamDirection;
+            switch (direction)
+            {
+                case "Right":
+                    camIndex--;
+                    if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
+                    break;
+                case "Left":
+                    camIndex++;
+                    if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
+                    break;
+            }
+            currentCamDirection = (camDirection)camIndex;
         }
-        if (direction == "Left")
-        {
-            camIndex++;
-            if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
-        }
-        currentCamDirection = (camDirection)camIndex;
     }
     
     void DirectionSwitch(bool isActiveCamera)
     {
-        float angle = 0;
-        switch (currentCamDirection)
+        float angle = currentCamDirection switch
         {
-            case camDirection.South:
-                angle = 0;
-                break;
-            case camDirection.SouthWest:
-                angle = 45;
-                break;
-            case camDirection.West:
-                angle = 90;
-                break;
-            case camDirection.NorthWest:
-                angle = 135;
-                break;
-            case camDirection.North:
-                angle = 180;
-                break;
-            case camDirection.NorthEast:
-                angle = -135;
-                break;
-            case camDirection.East:
-                angle = -90;
-                break;
-            case camDirection.SouthEast:
-                angle = -45;
-                break;
-            default:
-                angle = 0;
-                break;
-        }
-        
+            camDirection.South => 0,
+            camDirection.SouthWest => 45,
+            camDirection.West => 90,
+            camDirection.NorthWest => 135,
+            camDirection.North => 180,
+            camDirection.NorthEast => -135,
+            camDirection.East => -90,
+            camDirection.SouthEast => -45,
+        };
+
         angle += isLookingBack ? 180 : 0;
 
         if (isActiveCamera)
@@ -283,11 +266,12 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            mainCam.eulerAngles = new Vector3(
-                mainCam.eulerAngles.x,
-                Mathf.LerpAngle(mainCam.eulerAngles.y, 
-                    angle, Time.deltaTime * (isLookingBack ? camLerpSpeed * 3.5f : camLerpSpeed)),
-                0);
+            mainCam.eulerAngles = isLookDelay ? new Vector3(mainCam.eulerAngles.x, angle, 0) : 
+                new Vector3(
+                    mainCam.eulerAngles.x,
+                    Mathf.LerpAngle(mainCam.eulerAngles.y, 
+                    angle, Time.deltaTime * (isLookDelay ? camLerpSpeed * 5.5f : camLerpSpeed)),
+                    0);
         }
 
         Cursor.lockState = isActiveCamera ? CursorLockMode.Locked : CursorLockMode.None;
@@ -295,10 +279,24 @@ public class PlayerController : MonoBehaviour
 
     void OnLookBack()
     {
-        isLookingBack = true;
+        if (!isLookDelay)
+        {
+            isLookingBack = true;
+            isLookDelay = true;
+        }
     }
+
+    private Coroutine lookBackDelayRoutine;
     void OnLookBackStop()
     {
         isLookingBack = false;
+        if (lookBackDelayRoutine != null) StopCoroutine(lookBackDelayRoutine);
+        lookBackDelayRoutine = StartCoroutine(LookBackResetDelay());
+    }
+
+    private IEnumerator LookBackResetDelay()
+    {
+        yield return new WaitForNextFrameUnit();
+        isLookDelay = false;
     }
 }
