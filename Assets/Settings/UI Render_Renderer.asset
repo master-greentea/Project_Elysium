@@ -1,32 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3005876050388408657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11a7d5d7c1e400749ae0ac8fdf4fa88d, type: 3}
-  m_Name: ScanningLines
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  settings:
-    Event: 450
-    blitMaterial: {fileID: 2100000, guid: 776d190c376338e4c819f58dff201137, type: 2}
-    blitMaterialPassIndex: 0
-    setInverseViewMatrix: 0
-    requireDepthNormals: 0
-    srcType: 0
-    srcTextureId: _CameraColorTexture
-    srcTextureObject: {fileID: 0}
-    dstType: 0
-    dstTextureId: _BlitPassTexture
-    dstTextureObject: {fileID: 0}
-    overrideGraphicsFormat: 0
-    graphicsFormat: 4
 --- !u!114 &-2592432245004909729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,60 +54,6 @@ MonoBehaviour:
     dstTextureObject: {fileID: 0}
     overrideGraphicsFormat: 0
     graphicsFormat: 4
---- !u!114 &-892333492777870039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11a7d5d7c1e400749ae0ac8fdf4fa88d, type: 3}
-  m_Name: Distortion
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  settings:
-    Event: 1000
-    blitMaterial: {fileID: 2100000, guid: 7ec72786369aedf41af3f2d988f7a965, type: 2}
-    blitMaterialPassIndex: 0
-    setInverseViewMatrix: 0
-    requireDepthNormals: 0
-    srcType: 0
-    srcTextureId: _CameraColorTexture
-    srcTextureObject: {fileID: 0}
-    dstType: 0
-    dstTextureId: _BlitPassTexture
-    dstTextureObject: {fileID: 0}
-    overrideGraphicsFormat: 0
-    graphicsFormat: 4
---- !u!114 &-297998620468337367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11a7d5d7c1e400749ae0ac8fdf4fa88d, type: 3}
-  m_Name: Blur
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  settings:
-    Event: 100
-    blitMaterial: {fileID: 2100000, guid: 4889d66cb3d6c464a9d02038a61f2a84, type: 2}
-    blitMaterialPassIndex: 0
-    setInverseViewMatrix: 0
-    requireDepthNormals: 0
-    srcType: 0
-    srcTextureId: _CameraColorTexture
-    srcTextureObject: {fileID: 0}
-    dstType: 0
-    dstTextureId: _BlitPassTexture
-    dstTextureObject: {fileID: 0}
-    overrideGraphicsFormat: 0
-    graphicsFormat: 4
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,13 +70,10 @@ MonoBehaviour:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7,
       type: 3}
   m_RendererFeatures:
-  - {fileID: -297998620468337367}
   - {fileID: -2592432245004909729}
-  - {fileID: -3005876050388408657}
-  - {fileID: -892333492777870039}
   - {fileID: -2230748421123369978}
   - {fileID: 1757090105369114893}
-  m_RendererFeatureMap: 29a56d63d54bddfb5fc336c49bd405dcafa6be71a8fb48d6299dca856acb9df30694ad4721ca0ae10d39e13024706218
+  m_RendererFeatureMap: 5fc336c49bd405dc0694ad4721ca0ae10d39e13024706218
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 0}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -208,11 +124,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11a7d5d7c1e400749ae0ac8fdf4fa88d, type: 3}
-  m_Name: Film Grain
+  m_Name: Steve
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    Event: 300
+    Event: 1000
     blitMaterial: {fileID: 2100000, guid: 168f3d63d3443d443adc947e84a41d01, type: 2}
     blitMaterialPassIndex: 0
     setInverseViewMatrix: 0

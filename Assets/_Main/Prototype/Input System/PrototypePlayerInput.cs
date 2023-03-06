@@ -269,6 +269,56 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
                     ""action"": ""Look Back"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5b596fd6-e88f-4a97-b09a-22dce989edd2"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Look Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""UIControls"",
+            ""id"": ""06c510db-4ea7-418a-a224-ae5b9f0f4cd1"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""7bbeddaa-4066-4dcd-9796-9eceb6727bb8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""1aa479a0-4a46-4675-893b-1be8195ba82d"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d0dd5298-c863-4094-85cc-7ffea6a35c0d"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -300,6 +350,9 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
         m_PlayerControls_ChangeCameraLeft = m_PlayerControls.FindAction("Change Camera Left", throwIfNotFound: true);
         m_PlayerControls_ChangeCameraRight = m_PlayerControls.FindAction("Change Camera Right", throwIfNotFound: true);
         m_PlayerControls_LookBack = m_PlayerControls.FindAction("Look Back", throwIfNotFound: true);
+        // UIControls
+        m_UIControls = asset.FindActionMap("UIControls", throwIfNotFound: true);
+        m_UIControls_Pause = m_UIControls.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -428,6 +481,39 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
         }
     }
     public PlayerControlsActions @PlayerControls => new PlayerControlsActions(this);
+
+    // UIControls
+    private readonly InputActionMap m_UIControls;
+    private IUIControlsActions m_UIControlsActionsCallbackInterface;
+    private readonly InputAction m_UIControls_Pause;
+    public struct UIControlsActions
+    {
+        private @PrototypePlayerInput m_Wrapper;
+        public UIControlsActions(@PrototypePlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Pause => m_Wrapper.m_UIControls_Pause;
+        public InputActionMap Get() { return m_Wrapper.m_UIControls; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIControlsActions set) { return set.Get(); }
+        public void SetCallbacks(IUIControlsActions instance)
+        {
+            if (m_Wrapper.m_UIControlsActionsCallbackInterface != null)
+            {
+                @Pause.started -= m_Wrapper.m_UIControlsActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_UIControlsActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_UIControlsActionsCallbackInterface.OnPause;
+            }
+            m_Wrapper.m_UIControlsActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
+            }
+        }
+    }
+    public UIControlsActions @UIControls => new UIControlsActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -454,5 +540,9 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
         void OnChangeCameraLeft(InputAction.CallbackContext context);
         void OnChangeCameraRight(InputAction.CallbackContext context);
         void OnLookBack(InputAction.CallbackContext context);
+    }
+    public interface IUIControlsActions
+    {
+        void OnPause(InputAction.CallbackContext context);
     }
 }

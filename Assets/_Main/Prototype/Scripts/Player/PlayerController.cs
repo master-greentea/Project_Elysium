@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using Services.Animations;
 
 public enum camDirection
 { South, SouthWest, West, NorthWest, North, NorthEast, East, SouthEast, Count };
@@ -12,12 +13,10 @@ public enum camDirection
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController Instance { get; private set; }
     private CharacterController _characterController;
 
     // input
     private PrototypePlayerInput input;
-    private PlayerInput playerInput;
 
     // direction
     private Vector3 targetDirection;
@@ -25,10 +24,7 @@ public class PlayerController : MonoBehaviour
     [Header("Camera Switch")]
     public camDirection currentCamDirection;
     private bool playerLeft; // for changing animation of running left & right
-
-    [Category("CM Main")] [SerializeField]
-    private Transform mainCam;
-
+    [SerializeField] private Transform mainCam;
     [SerializeField] private float camLerpSpeed;
     // new camera
     private Vector2 currentMouseInput;
@@ -65,11 +61,8 @@ public class PlayerController : MonoBehaviour
     
     // animations
     [Header("Animation")]
-    private AnimationChange _animationChange;
     Animator _animator;
-    const string PLAYER_IDLE = "NewIdle";
-    const string PLAYER_RUN = "NewRun";
-    
+
     // test
     private float cangle = 0;
 
@@ -93,7 +86,6 @@ public class PlayerController : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
-        _animationChange = GetComponent<AnimationChange>();
     }
 
     void SubscribeInputEvents()
@@ -116,7 +108,6 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
         SubscribeInputEvents();
         AssignComponents();
         currentCamDirection = camDirection.South;
@@ -125,20 +116,20 @@ public class PlayerController : MonoBehaviour
     // change animation state
     void HandleAnimation()
     {
-        if (isMoving) { _animationChange.ChangeAnimationState(_animator, PLAYER_RUN, true, currentMovementInput.x < 0); _animator.speed = _characterController.velocity.magnitude * .2f; }
-        else { _animationChange.ChangeAnimationState(_animator, PLAYER_IDLE, false, currentMovementInput.x < 0); _animator.speed = 1; }
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0).ToString();
+        if (isMoving) { AnimationChange.ChangeAnimationState(_animator, currentState, "NewRun", true, currentMovementInput.x < 0); _animator.speed = _characterController.velocity.magnitude * .2f; }
+        else { AnimationChange.ChangeAnimationState(_animator, currentState, "NewIdle", false, currentMovementInput.x < 0); _animator.speed = 1; }
     }
 
     void Update()
     {
-        HandleAnimation();
-        DirectionSwitch(isActiveCamera);
-        Move();
+        if(!GameManager.gamePaused) HandleAnimation();
     }
 
     void FixedUpdate()
     {
-
+        DirectionSwitch(isActiveCamera);
+        Move();
     }
 
     // ACTION METHODS
@@ -224,7 +215,7 @@ public class PlayerController : MonoBehaviour
     // change camera
     private void ChangeCamera(string direction)
     {
-        if (!isLookDelay)
+        if (!isLookDelay && !GameManager.gamePaused)
         {
             var camIndex = (int)currentCamDirection;
             switch (direction)
@@ -258,6 +249,7 @@ public class PlayerController : MonoBehaviour
 
         angle += isLookingBack ? 180 : 0;
 
+        // active camera, need debugging
         if (isActiveCamera)
         {
             var mouseMovement = Mouse.current.delta.ReadValue();
@@ -277,6 +269,7 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = isActiveCamera ? CursorLockMode.Locked : CursorLockMode.None;
     }
 
+    // look back logic
     void OnLookBack()
     {
         if (!isLookDelay)
@@ -293,7 +286,6 @@ public class PlayerController : MonoBehaviour
         if (lookBackDelayRoutine != null) StopCoroutine(lookBackDelayRoutine);
         lookBackDelayRoutine = StartCoroutine(LookBackResetDelay());
     }
-
     private IEnumerator LookBackResetDelay()
     {
         yield return new WaitForNextFrameUnit();

@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using Random = UnityEngine.Random;
 
 public class CameraEffects : MonoBehaviour
 {
@@ -14,6 +16,8 @@ public class CameraEffects : MonoBehaviour
     [SerializeField] private float focusShiftGap;
     private bool doShift;
 
+    [SerializeField] private Material[] unscaledTimeMaterials;
+
     void Start()
     {
         vol.profile.TryGet( out dof );
@@ -23,8 +27,13 @@ public class CameraEffects : MonoBehaviour
     void Update()
     {
         FocusShift();
+        foreach (var material in unscaledTimeMaterials)
+        {
+            material.SetFloat("_unscaledTime", Time.unscaledTime);
+        }
+        unscaledTimeMaterials[0].SetFloat("_contrast", GameManager.gamePaused ? 22f : 100f);
     }
-    
+
     void FocusShift()
     {
         if (timeElapsed < focusShiftGap)

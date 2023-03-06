@@ -1,14 +1,22 @@
-﻿Shader "Custom/Steve IE (Distortion Only)"
+﻿Shader "Custom/Steve Image Effect"
 {
     Properties
     {
         _MainTex ("render texture", 2D) = "white"{}
-        _distortion ("distortion", Range(-1, 1)) = -.5
-        _scale ("scale", Range(0, 3)) = 1
-
-        _gscale ("glitch scale", Range(2, 800)) = 50
-        _speed ("glitch speed", Range(0, 10)) = 1
-        _contrast ("glitch contrast", Range(1, 30)) = 25
+        [Header(Weight)]
+        _effectWeight ("Effect Weight", Range(0, 1)) = 1
+        [Header(Distortion)]
+        _distortion ("Distortion", Range(-1, 1)) = -.5
+        _scale ("Scale", Range(0, 3)) = 1
+        [Header(Noise)]
+        _cintensity ("Chromatic Intensity", Range(0, 1)) = .2
+        _nintensity ("Noise Intensity", Range(0, 1)) = .2
+        [Header(Glitch)]
+        _gscale ("Glitch Scale", Range(2, 800)) = 50
+        _speed ("Glitch Speed", Range(0, 10)) = 1
+        _contrast ("Glitch Contrast", Range(1, 100)) = 25
+        [HideInInspector]
+        _unscaledTime ("Unscaled Time", float) = 0
     }
 
     SubShader
@@ -25,6 +33,8 @@
             #include "UnityCG.cginc"
 
             sampler2D _MainTex;
+            float _effectWeight;
+            
             float _distortion;
             float _scale;
 
@@ -34,6 +44,7 @@
             float _gscale;
             float _speed;
             float _contrast;
+            float _unscaledTime;
             #define MAX_OFFSET 0.12
 
             struct MeshData
@@ -58,7 +69,7 @@
 
             float rand(float2 pos)
             {
-                return frac(sin(dot(pos + _Time.y, 
+                return frac(sin(dot(pos + _unscaledTime, 
                     float2(12.9898f, 78.233f))) * 43758.5453123f);
             }
 
@@ -74,6 +85,30 @@
             float quinterp(float2 f)
             {
                 return f*f*f * (f * (f * 6.0f - 15.0f) + 10.0f);
+            }
+
+            float perlin2D(float2 pixel)
+            {
+                float2 pos00 = floor(pixel);
+                float2 pos10 = pos00 + float2(1.0f, 0.0f);
+                float2 pos01 = pos00 + float2(0.0f, 1.0f);
+                float2 pos11 = pos00 + float2(1.0f, 1.0f);
+                float2 rand00 = randUnitCircle(pos00);
+                float2 rand10 = randUnitCircle(pos10);
+                float2 rand01 = randUnitCircle(pos01);
+                float2 rand11 = randUnitCircle(pos11);
+                float dot00 = dot(rand00, pos00 - pixel);
+                float dot10 = dot(rand10, pos10 - pixel);
+                float dot01 = dot(rand01, pos01 - pixel);
+                float dot11 = dot(rand11, pos11 - pixel);
+
+                float2 d = frac(pixel);
+
+                float x1 = lerp(dot00, dot10, quinterp(d.x));
+                float x2 = lerp(dot01, dot11, quinterp(d.x));
+                float y  = lerp(x1, x2, quinterp(d.y));
+
+                return y;
             }
 
             float noise (float2 uv) {
@@ -102,9 +137,11 @@
                 n += (1 / 8.0)  * noise( uv * 4); 
                 n += (1 / 16.0) * noise( uv * 8);
                 
-                return n;
+                return n * _effectWeight;
             }
 
+
+            // 2022
             float4 frag (Interpolators i) : SV_Target
             {
                 float3 color = 0;
@@ -116,29 +153,32 @@
                 nUV.y = floor(nUV.yx);
                 
                 // the x component we'll use to sample the noise will change over time
-                nUV.x = _Time.y * _speed - _Time.z * 15;
+                nUV.x = _unscaledTime * _speed - _unscaledTime * 2 * 15;
 
                 // sample fractal noise using nUV
                 float fn = fractal_noise(nUV);
                 uv += float2(pow(fn, _contrast), 0);
+                
 
                 uv -= .5;
 
                 float radius = pow(length(uv), 2);
                 
-                float distort = 1 + radius * (_distortion - .2);
-                // / _Time.z * 15
+                float distort = 1 + radius * (_distortion * _effectWeight);
+                _scale = lerp(1, _scale, _effectWeight);
                 uv = uv * distort * _scale + .5;
 
                 float modifier = length(uv * 2 - 1) * .5;
-                float offset = MAX_OFFSET * _cintensity * modifier * (radius + .2);
+                _cintensity = _cintensity * _effectWeight;
+                float offset = MAX_OFFSET * _cintensity * modifier * radius;
                 float r = tex2D(_MainTex, uv - offset).r;
                 float g = tex2D(_MainTex, uv).g;
                 float b = tex2D(_MainTex, uv + offset).b;
-
-                // color = tex2D(_MainTex, uv);
-                color = float3(r,g,b);
                 
+                color += float3(r,g,b);
+
+                float n = perlin2D(i.uv * _ScreenParams.xy);
+                color -= n * _nintensity * _effectWeight;
 
 
                 return float4(color, 1.0);

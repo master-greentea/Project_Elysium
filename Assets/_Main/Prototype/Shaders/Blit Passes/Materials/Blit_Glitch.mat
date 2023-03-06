@@ -55,9 +55,9 @@ Material:
     - _Amount: 236
     - _Brightness: 15
     - _GlitchAmount: 75
-    - _GlitchScale: 0.00149
+    - _GlitchScale: 0.00173
     - _GradientAmount: 75
-    - _Height: 0.95
+    - _Height: 1
     - _LineAmount: 3
     - _LineSpeed: 0.1
     - _Mask_Tiling: 1280
@@ -66,7 +66,9 @@ Material:
     - _PixelationResolution: 7
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _UnscaledTime: 0
     - _Width: 1
+    - _unscaledTime: 8.852317
     m_Colors:
     - _Tiling_V2: {r: 1220, g: 1220, b: 0, a: 0}
   m_BuildTextureStacks: []
