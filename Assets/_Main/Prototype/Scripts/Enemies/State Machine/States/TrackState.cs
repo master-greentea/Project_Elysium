@@ -16,13 +16,12 @@ namespace Enemies
     
         public void Enter(EnemyAgent agent)
         {
-            agent.lerpElapsed = 0; // speed lerp
             ResetTrack(agent);
+            agent.ChangeSpeed(agent.config.trackSpeed, agent.config.trackAccelerationDuration);
         }
     
         public void Update(EnemyAgent agent)
         {
-            agent.SpeedChange(agent.config.trackSpeed, agent.config.trackAccelerationDuration);
             // map track overtime
             if (!agent.trackMapped) agent.MapPlayerTrack();
             // follow track

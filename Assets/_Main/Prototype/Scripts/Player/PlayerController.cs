@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
-using Services.Animations;
+using Stevehuu;
 
 public enum camDirection
 { South, SouthWest, West, NorthWest, North, NorthEast, East, SouthEast, Count };
@@ -75,11 +75,11 @@ public class PlayerController : MonoBehaviour
     // enabling input
     void OnEnable()
     {
-        input.PlayerControls.Enable();
+        input.Player.Enable();
     }
     void OnDisable()
     {
-        input.PlayerControls.Disable();
+        input.Player.Disable();
     }
 
     void AssignComponents()
@@ -93,17 +93,17 @@ public class PlayerController : MonoBehaviour
         input = new PrototypePlayerInput();
         // input events
         // walking & running
-        input.PlayerControls.Move.performed += OnMovementInput;
-        input.PlayerControls.Move.canceled += OnMovementInput;
-        input.PlayerControls.Sprint.performed += context => isSprinting = context.ReadValueAsButton();
+        input.Player.Move.performed += OnMovementInput;
+        input.Player.Move.canceled += OnMovementInput;
+        input.Player.Sprint.performed += context => isSprinting = context.ReadValueAsButton();
         // dashing
         canDash = true;
-        input.PlayerControls.Dash.performed += Dash;
+        input.Player.Dash.performed += Dash;
         // camera change
-        input.PlayerControls.ChangeCameraLeft.performed += context => ChangeCamera("Left");
-        input.PlayerControls.ChangeCameraRight.performed += context => ChangeCamera("Right");
-        input.PlayerControls.LookBack.performed += context => OnLookBack();
-        input.PlayerControls.LookBack.canceled += context => OnLookBackStop();
+        input.Player.ChangeCameraLeft.performed += context => ChangeCamera("Left");
+        input.Player.ChangeCameraRight.performed += context => ChangeCamera("Right");
+        input.Player.LookBack.performed += context => OnLookBack();
+        input.Player.LookBack.canceled += context => OnLookBackStop();
     }
 
     void Awake()
@@ -221,12 +221,12 @@ public class PlayerController : MonoBehaviour
             switch (direction)
             {
                 case "Right":
-                    camIndex--;
-                    if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
-                    break;
-                case "Left":
                     camIndex++;
                     if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
+                    break;
+                case "Left":
+                    camIndex--;
+                    if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
                     break;
             }
             currentCamDirection = (camDirection)camIndex;

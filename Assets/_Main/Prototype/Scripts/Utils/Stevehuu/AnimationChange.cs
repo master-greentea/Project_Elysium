@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Services.Animations
+namespace Stevehuu
 {
     public static class AnimationChange
     {

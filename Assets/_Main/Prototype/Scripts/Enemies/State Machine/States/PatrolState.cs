@@ -17,13 +17,12 @@ namespace Enemies
     
         public void Enter(EnemyAgent agent)
         {
-            agent.lerpElapsed = 0; // speed lerp
             roamCount = 0;
+            agent.ChangeSpeed(agent.config.patrolSpeed, agent.config.patrolAccelerationDuration);
         }
     
         public void Update(EnemyAgent agent)
         {
-            agent.SpeedChange(agent.config.patrolSpeed, agent.config.patrolAccelerationDuration);
             // roaming
             if (!agent.navMeshAgent.hasPath)
             {

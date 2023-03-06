@@ -12,11 +12,10 @@ namespace Enemies
 
         public void Enter(EnemyAgent agent)
         {
-            agent.lerpElapsed = 0; // speed lerp
+            agent.ChangeSpeed(agent.config.interceptSpeed, agent.config.interceptAccelerationDuration);
         }
         public void Update(EnemyAgent agent)
         {
-            agent.SpeedChange(agent.config.interceptSpeed, agent.config.interceptAccelerationDuration);
             if (interceptRefreshTimer < 0)
             {
                 interceptRefreshTimer += 1.5f;

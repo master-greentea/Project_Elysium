@@ -17,8 +17,6 @@ namespace Enemies
         // tracking
         [HideInInspector] public List<Vector3> mappedPlayerPositions;
         [HideInInspector] public bool trackMapped;
-        // timing values
-        [HideInInspector] public float lerpElapsed;
 
         private void InitializeStateMachine()
         {
@@ -48,22 +46,42 @@ namespace Enemies
         private void Update()
         {
             EnemyStateMachine.Update();
-            // Debug.Log("Current state: " + enemyStateMachine.currentState);
+
+            // debugs
             // Debug.Log(IsSeenByPlayer());
+            var distanceToPlayer = (playerTransform.position - transform.position).magnitude;
+            if (distanceToPlayer < 2) GameManager.isDead = true;
+            
         }
 
         // behavioral methods
-        // common method to lerp self speed
-        public void SpeedChange(float targetSpeed, float lerpDuration)
+        /// <summary>
+        /// Smoothly change self movement speed.
+        /// </summary>
+        /// <param name="targetSpeed">Speed to change to</param>
+        /// <param name="lerpDuration">How long does it take to change to that speed</param>
+        public void ChangeSpeed(float targetSpeed, float lerpDuration)
         {
-            if (lerpElapsed < lerpDuration)
+            if (activeSpeedChangeRoutine != null) StopCoroutine(activeSpeedChangeRoutine);
+            activeSpeedChangeRoutine = StartCoroutine(SpeedChangeRoutine(targetSpeed, lerpDuration));
+        }
+        // speed change coroutine
+        private Coroutine activeSpeedChangeRoutine;
+        private IEnumerator SpeedChangeRoutine(float targetSpeed, float lerpDuration)
+        {
+            var lerpElapsed = 0f;
+            while (lerpElapsed < lerpDuration)
             {
                 navMeshAgent.speed = Mathf.Lerp(navMeshAgent.speed, targetSpeed, lerpElapsed / lerpDuration);
                 lerpElapsed += Time.deltaTime;
+                yield return null;
             }
         }
         
-        // check if player is detected either by in sight or within minimum distance
+        /// <summary>
+        /// check if player is detected either by in sight or within minimum distance
+        /// </summary>
+        /// <returns>if player is detected either by in sight or within minimum distance</returns>
         public bool IsPlayerDetected()
         {
             if (enemyFov.objectsDetected.Count > 0)
@@ -78,8 +96,11 @@ namespace Enemies
             }
             return false;
         }
-
-        // check if player currently looking at self
+        
+        /// <summary>
+        /// check if player currently looking at self
+        /// </summary>
+        /// <returns>if player currently looking at self</returns>
         public bool IsSeenByPlayer()
         {
             // Physics.OverlapSphereNonAlloc(transform.position, enemyFov.sightRange, new Collider[1], LayerMask.GetMask("Player")) > 0 &&
@@ -87,7 +108,9 @@ namespace Enemies
                     && GetComponent<Renderer>().isVisible;
         }
         
-        // map waypoints for tracking down player
+        /// <summary>
+        /// Map waypoints to track player
+        /// </summary>
         public void MapPlayerTrack()
         {
             if (mappedPlayerPositions.Count < config.mapPositionCount)
@@ -106,7 +129,11 @@ namespace Enemies
             }
         }
 
-        // make self turn to target
+        /// <summary>
+        /// Orient self to target position
+        /// </summary>
+        /// <param name="target">Position to look at</param>
+        /// <param name="rotationSpeed">Speed of rotation</param>
         public void LookAt(Vector3 target, float rotationSpeed)
         {
             Vector3 directionToTarget = target - transform.position;
@@ -125,7 +152,9 @@ namespace Enemies
                 Random.Range(min.z, max.z));
         }
 
-        // debug gizmos
+        /// <summary>
+        /// Debug gizmos for enemy vision.
+        /// </summary>
         private void OnDrawGizmos()
         {
             // mapped player track

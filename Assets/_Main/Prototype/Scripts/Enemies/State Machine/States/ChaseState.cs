@@ -14,12 +14,11 @@ namespace Enemies
     
         public void Enter(EnemyAgent agent)
         {
-            agent.lerpElapsed = 0; // speed lerp
+            agent.ChangeSpeed(agent.config.chaseSpeed, agent.config.chaseAccelerationDuration);
         }
     
         public void Update(EnemyAgent agent)
         {
-            agent.SpeedChange(agent.config.chaseSpeed, agent.config.chaseAccelerationDuration);
             if (agent.IsPlayerDetected()) ChasePlayer(agent);
             // if lost player from sight
             else agent.EnemyStateMachine.ChangeState(EnemyStateId.Track);
