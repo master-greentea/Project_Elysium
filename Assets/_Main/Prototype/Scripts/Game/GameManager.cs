@@ -1,30 +1,42 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance {get; private set;}
-    public static bool gamePaused { get; protected set; }
-    private PrototypePlayerInput input;
-    
-    public static bool isDead;
-    
+    public static bool isGamePaused { get; private set; }
+    public static bool isGameEnded { get; protected set; }
+
     void Awake()
     {
-        Instance = this;
-        input = new PrototypePlayerInput();
-        input.UI.Enable();
-        input.UI.Pause.performed += TogglePause;
+        Services.GameManager = this;
+        Time.timeScale = 1;
+        isGameEnded = false;
+        isGamePaused = false;
     }
 
-    private static void TogglePause(InputAction.CallbackContext ctx)
+    public void TogglePause()
     {
-        gamePaused = !gamePaused;
-        VHSDisplay.Instance.DisplayStatus(gamePaused? VHSStatuses.Paused : VHSStatuses.Play);
-        Time.timeScale = gamePaused ? 0f : 1f;
+        if (isGameEnded) return;
+        isGamePaused = !isGamePaused;
+        Time.timeScale = isGamePaused ? 0f : 1f;
+        // pause menu set up
+        Services.VHSDisplay.DisplayStatus(isGamePaused? VHSStatuses.Paused : VHSStatuses.Play);
+        VHSButtonsManager.canvas.enabled = isGamePaused;
+        Services.VHSButtonsManager.SetSelected(VHSButtons.Resume);
+        TogglePlayerInput(Services.PlayerController.input.Player, false);
+        // deselect all buttons if un-pausing
+        if (isGamePaused) return;
+        Services.VHSButtonsManager.DeselectAll();
+        TogglePlayerInput(Services.PlayerController.input.Player, true);
+    }
+    
+    private void TogglePlayerInput(PrototypePlayerInput.PlayerActions actions, bool isActive)
+    {
+        if (isActive) actions.Enable();
+        else actions.Disable();
     }
 
     public virtual void EndGame()

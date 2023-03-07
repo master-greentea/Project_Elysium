@@ -31,7 +31,7 @@ public class CameraEffects : MonoBehaviour
         {
             material.SetFloat("_unscaledTime", Time.unscaledTime);
         }
-        unscaledTimeMaterials[0].SetFloat("_contrast", GameManager.gamePaused ? 22f : 100f);
+        unscaledTimeMaterials[0].SetFloat("_contrast", GameManager.isGamePaused ? 22f : 100f);
     }
 
     void FocusShift()

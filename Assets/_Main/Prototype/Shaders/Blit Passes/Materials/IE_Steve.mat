@@ -27,13 +27,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _cintensity: 0
-    - _contrast: 22
+    - _contrast: 100
     - _distortion: 0.298
     - _effectWeight: 1
     - _gscale: 800
     - _nintensity: 0.084
     - _scale: 0.95
     - _speed: 1.74
-    - _unscaledTime: 10.991342
+    - _unscaledTime: 117.58486
     m_Colors: []
   m_BuildTextureStacks: []

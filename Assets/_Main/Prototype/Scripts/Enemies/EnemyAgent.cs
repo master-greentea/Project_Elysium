@@ -50,7 +50,7 @@ namespace Enemies
             // debugs
             // Debug.Log(IsSeenByPlayer());
             var distanceToPlayer = (playerTransform.position - transform.position).magnitude;
-            if (distanceToPlayer < 2) GameManager.isDead = true;
+            if (distanceToPlayer < 2 && !GameManager.isGameEnded) Services.TimedGameMode.EndGame();
             
         }
 

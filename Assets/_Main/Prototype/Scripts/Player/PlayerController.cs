@@ -4,7 +4,6 @@ using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
 using Stevehuu;
 
 public enum camDirection
@@ -16,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController _characterController;
 
     // input
-    private PrototypePlayerInput input;
+    public PrototypePlayerInput input;
 
     // direction
     private Vector3 targetDirection;
@@ -66,11 +65,8 @@ public class PlayerController : MonoBehaviour
     // test
     private float cangle = 0;
 
-    [Header("Test")] [SerializeField]
-    private bool isActiveCamera;
-    [SerializeField] private float cameraSpeed;
-    private bool isLookingBack;
-    private bool isLookDelay;
+    [Header("Test")]
+    [SerializeField] private bool isLookingBack;
 
     // enabling input
     void OnEnable()
@@ -100,14 +96,17 @@ public class PlayerController : MonoBehaviour
         canDash = true;
         input.Player.Dash.performed += Dash;
         // camera change
-        input.Player.ChangeCameraLeft.performed += context => ChangeCamera("Left");
-        input.Player.ChangeCameraRight.performed += context => ChangeCamera("Right");
-        input.Player.LookBack.performed += context => OnLookBack();
-        input.Player.LookBack.canceled += context => OnLookBackStop();
+        input.Player.ChangeCameraLeft.performed += ctx => ChangeCamera("Left");
+        input.Player.ChangeCameraRight.performed += ctx => ChangeCamera("Right");
+        input.Player.LookBack.performed += ctx => OnLookBack(true);
+        input.Player.LookBack.canceled += ctx => OnLookBack(false);
+        // pausing
+        input.Player.Pause.performed += ctx => Services.GameManager.TogglePause();
     }
 
     void Awake()
     {
+        Services.PlayerController = this;
         SubscribeInputEvents();
         AssignComponents();
         currentCamDirection = camDirection.South;
@@ -116,6 +115,7 @@ public class PlayerController : MonoBehaviour
     // change animation state
     void HandleAnimation()
     {
+        if (GameManager.isGamePaused || GameManager.isGameEnded) return; // do not run on pause
         var currentState = _animator.GetCurrentAnimatorStateInfo(0).ToString();
         if (isMoving) { AnimationChange.ChangeAnimationState(_animator, currentState, "NewRun", true, currentMovementInput.x < 0); _animator.speed = _characterController.velocity.magnitude * .2f; }
         else { AnimationChange.ChangeAnimationState(_animator, currentState, "NewIdle", false, currentMovementInput.x < 0); _animator.speed = 1; }
@@ -123,12 +123,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if(!GameManager.gamePaused) HandleAnimation();
+        HandleAnimation();
     }
 
     void FixedUpdate()
     {
-        DirectionSwitch(isActiveCamera);
         Move();
     }
 
@@ -215,25 +214,42 @@ public class PlayerController : MonoBehaviour
     // change camera
     private void ChangeCamera(string direction)
     {
-        if (!isLookDelay && !GameManager.gamePaused)
+        if (isLookingBack || GameManager.isGamePaused || GameManager.isGameEnded) return; // prevent camera change when looking back
+        var camIndex = (int)currentCamDirection;
+        switch (direction)
         {
-            var camIndex = (int)currentCamDirection;
-            switch (direction)
-            {
-                case "Right":
-                    camIndex++;
-                    if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
-                    break;
-                case "Left":
-                    camIndex--;
-                    if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
-                    break;
-            }
-            currentCamDirection = (camDirection)camIndex;
+            case "Right":
+                camIndex++;
+                if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
+                break;
+            case "Left":
+                camIndex--;
+                if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
+                break;
+        }
+        currentCamDirection = (camDirection)camIndex;
+        if (camSwitchRoutineInstance != null) StopCoroutine(camSwitchRoutineInstance);
+        camSwitchRoutineInstance = StartCoroutine(CameraSwitchRoutine(GetTargetAngle()));
+    }
+
+    private Coroutine camSwitchRoutineInstance;
+    private IEnumerator CameraSwitchRoutine(float angle)
+    {
+        var lerpElapsed = 0f;
+        while (lerpElapsed < camLerpSpeed)
+        {
+            mainCam.eulerAngles = 
+                new Vector3(
+                    mainCam.eulerAngles.x,
+                    Mathf.LerpAngle(mainCam.eulerAngles.y, 
+                        angle, lerpElapsed / camLerpSpeed),
+                    0);
+            lerpElapsed += Time.deltaTime;
+            yield return null;
         }
     }
     
-    void DirectionSwitch(bool isActiveCamera)
+    float GetTargetAngle()
     {
         float angle = currentCamDirection switch
         {
@@ -248,47 +264,14 @@ public class PlayerController : MonoBehaviour
         };
 
         angle += isLookingBack ? 180 : 0;
-
-        // active camera, need debugging
-        if (isActiveCamera)
-        {
-            var mouseMovement = Mouse.current.delta.ReadValue();
-            var yRotation = mouseMovement.x * Time.deltaTime * cameraSpeed;
-            mainCam.eulerAngles = new Vector3(mainCam.eulerAngles.x, yRotation, 0);
-        }
-        else
-        {
-            mainCam.eulerAngles = isLookDelay ? new Vector3(mainCam.eulerAngles.x, angle, 0) : 
-                new Vector3(
-                    mainCam.eulerAngles.x,
-                    Mathf.LerpAngle(mainCam.eulerAngles.y, 
-                    angle, Time.deltaTime * (isLookDelay ? camLerpSpeed * 5.5f : camLerpSpeed)),
-                    0);
-        }
-
-        Cursor.lockState = isActiveCamera ? CursorLockMode.Locked : CursorLockMode.None;
+        return angle;
     }
 
     // look back logic
-    void OnLookBack()
+    void OnLookBack(bool isActive)
     {
-        if (!isLookDelay)
-        {
-            isLookingBack = true;
-            isLookDelay = true;
-        }
-    }
-
-    private Coroutine lookBackDelayRoutine;
-    void OnLookBackStop()
-    {
-        isLookingBack = false;
-        if (lookBackDelayRoutine != null) StopCoroutine(lookBackDelayRoutine);
-        lookBackDelayRoutine = StartCoroutine(LookBackResetDelay());
-    }
-    private IEnumerator LookBackResetDelay()
-    {
-        yield return new WaitForNextFrameUnit();
-        isLookDelay = false;
+        isLookingBack = isActive;
+        if (camSwitchRoutineInstance != null) StopCoroutine(camSwitchRoutineInstance);
+        mainCam.eulerAngles = new Vector3(mainCam.eulerAngles.x, GetTargetAngle(), 0);
     }
 }
