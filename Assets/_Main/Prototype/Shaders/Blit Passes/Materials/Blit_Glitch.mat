@@ -68,7 +68,7 @@ Material:
     - _QueueOffset: 0
     - _UnscaledTime: 0
     - _Width: 1
-    - _unscaledTime: 117.58486
+    - _unscaledTime: 0
     m_Colors:
     - _Tiling_V2: {r: 1220, g: 1220, b: 0, a: 0}
   m_BuildTextureStacks: []

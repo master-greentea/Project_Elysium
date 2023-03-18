@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     // cam based direction
     [Header("Camera Switch")]
     public camDirection currentCamDirection;
+    [HideInInspector] public bool isInvertedControls;
     private bool playerLeft; // for changing animation of running left & right
     [SerializeField] private Transform mainCam;
     [SerializeField] private float camLerpSpeed;
@@ -101,12 +102,18 @@ public class PlayerController : MonoBehaviour
         input.Player.LookBack.performed += ctx => OnLookBack(true);
         input.Player.LookBack.canceled += ctx => OnLookBack(false);
         // pausing
-        input.Player.Pause.performed += ctx => Services.GameManager.TogglePause();
+        input.Player.Pause.performed += ctx => Services.TimedGameMode.TogglePause();
+    }
+
+    void LoadControlSettings()
+    {
+        isInvertedControls = PlayerPrefs.GetInt("InvertCam") == 1;
     }
 
     void Awake()
     {
         Services.PlayerController = this;
+        LoadControlSettings();
         SubscribeInputEvents();
         AssignComponents();
         currentCamDirection = camDirection.South;
@@ -219,14 +226,14 @@ public class PlayerController : MonoBehaviour
         switch (direction)
         {
             case "Right":
-                camIndex++;
-                if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
+                camIndex += isInvertedControls ? -1 : 1;
                 break;
             case "Left":
-                camIndex--;
-                if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
+                camIndex += isInvertedControls ? 1 : -1;
                 break;
         }
+        if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
+        if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
         currentCamDirection = (camDirection)camIndex;
         if (camSwitchRoutineInstance != null) StopCoroutine(camSwitchRoutineInstance);
         camSwitchRoutineInstance = StartCoroutine(CameraSwitchRoutine(GetTargetAngle()));

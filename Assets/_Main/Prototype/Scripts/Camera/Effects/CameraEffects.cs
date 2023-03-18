@@ -31,7 +31,7 @@ public class CameraEffects : MonoBehaviour
         {
             material.SetFloat("_unscaledTime", Time.unscaledTime);
         }
-        unscaledTimeMaterials[0].SetFloat("_contrast", GameManager.isGamePaused ? 22f : 100f);
+        unscaledTimeMaterials[0].SetFloat("_contrast", GameManager.isGamePaused || GameManager.isGameEnded ? 22f : 100f);
     }
 
     void FocusShift()
@@ -53,5 +53,14 @@ public class CameraEffects : MonoBehaviour
             if (rand < .2f) {doShift = true;}
             timeElapsed = 0;
         }
+    }
+
+    private void OnDisable()
+    {
+        foreach (var material in unscaledTimeMaterials)
+        {
+            material.SetFloat("_unscaledTime", 0);
+        }
+        unscaledTimeMaterials[0].SetFloat("_contrast", 100f);
     }
 }

@@ -17,30 +17,43 @@ public class GameManager : MonoBehaviour
         isGamePaused = false;
     }
 
-    public void TogglePause()
-    {
-        if (isGameEnded) return;
-        isGamePaused = !isGamePaused;
-        Time.timeScale = isGamePaused ? 0f : 1f;
-        // pause menu set up
-        Services.VHSDisplay.DisplayStatus(isGamePaused? VHSStatuses.Paused : VHSStatuses.Play);
-        VHSButtonsManager.canvas.enabled = isGamePaused;
-        Services.VHSButtonsManager.SetSelected(VHSButtons.Resume);
-        TogglePlayerInput(Services.PlayerController.input.Player, false);
-        // deselect all buttons if un-pausing
-        if (isGamePaused) return;
-        Services.VHSButtonsManager.DeselectAll();
-        TogglePlayerInput(Services.PlayerController.input.Player, true);
-    }
-    
     private void TogglePlayerInput(PrototypePlayerInput.PlayerActions actions, bool isActive)
     {
         if (isActive) actions.Enable();
         else actions.Disable();
     }
 
+    public virtual void TogglePause()
+    {
+        if (isGameEnded) return;
+        isGamePaused = !isGamePaused;
+        Time.timeScale = isGamePaused ? 0f : 1f;
+        // menu setup
+        Services.VHSDisplay.DisplayStatus(isGamePaused? VHSStatuses.Paused : VHSStatuses.Play);
+        // turn on menu
+        VHSButtonsManager.canvas.enabled = isGamePaused;
+        Services.VHSButtonsManager.SwitchButtonSet("Menu");
+        // default to select resume
+        Services.VHSButtonsManager.SetButtonSelected(VHSButtons.Resume);
+        TogglePlayerInput(Services.PlayerController.input.Player, false);
+        // deselect all buttons if un-pausing
+        if (isGamePaused) return;
+        Services.VHSButtonsManager.DeselectAll();
+        TogglePlayerInput(Services.PlayerController.input.Player, true);
+    }
+
     public virtual void EndGame()
     {
-        
+        isGameEnded = true;
+        Time.timeScale = 0;
+        Services.VHSDisplay.DisplayStatus(VHSStatuses.Error);
+        // turn on menu
+        VHSButtonsManager.canvas.enabled = isGameEnded;
+        Services.VHSButtonsManager.SwitchButtonSet("Menu");
+        // default to select eject
+        Services.VHSButtonsManager.SetButtonSelected(VHSButtons.Eject);
+        // deactivate resume & rewind
+        Services.VHSButtonsManager.SetButtonActivate(VHSButtons.Resume, false);
+        Services.VHSButtonsManager.SetButtonActivate(VHSButtons.Rewind, false);
     }
 }

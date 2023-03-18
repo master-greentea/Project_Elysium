@@ -9,14 +9,14 @@ using UnityEngine.EventSystems;
 
 public enum VHSButtons
 {
-    Resume, Rewind, Settings, Eject, Back,
+    Resume, Rewind, Settings, Eject, Back, InvertCamera, SetTime, ConfirmTime, CancelTime
 }
 
 public class VHSButtonsManager : MonoBehaviour
 {
     private EventSystem EventSystem;
-    [SerializeField] private VHSButton[] vhsButtons;
-    [SerializeField] private string[] defaultTexts;
+    private VHSButton[] vhsButtons;
+    [SerializeField] private Canvas[] vhsButtonSets;
     public static Canvas canvas;
 
     private void Awake()
@@ -26,26 +26,21 @@ public class VHSButtonsManager : MonoBehaviour
         canvas = GetComponent<Canvas>();
     }
 
-    void Update()
-    {
-        foreach (var vhsButton in vhsButtons.Select((val, i) => new {val, i}))
-        {
-            // set button text based on whether they are selected
-            if (vhsButton.val.gameObject == EventSystem.currentSelectedGameObject)
-            {
-                vhsButton.val.SetText("> " + defaultTexts[vhsButton.i]);
-            }
-            else vhsButton.val.SetText(defaultTexts[vhsButton.i]);
-        }
-    }
-
     /// <summary>
     /// Set button to select
     /// </summary>
-    /// <param name="buttonToSelect">button to select</param>
-    public void SetSelected(VHSButtons buttonToSelect)
+    /// <param name="buttonIdToSelect">button to select</param>
+    public void SetButtonSelected(VHSButtons buttonIdToSelect)
     {
-        vhsButtons[(int)buttonToSelect].button.Select();
+        vhsButtons = FindObjectsOfType<VHSButton>();
+        foreach (var button in vhsButtons)
+        {
+            if (button.buttonId == buttonIdToSelect)
+            {
+                EventSystem.SetSelectedGameObject(button.gameObject);
+                return;
+            }
+        }
     }
     
     /// <summary>
@@ -57,31 +52,49 @@ public class VHSButtonsManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Deactivate a button
+    /// Toggle activation of a button
     /// </summary>
-    /// <param name="buttonToDeactivate">button to deactivate</param>
-    public void DeactivateButton(VHSButtons buttonToDeactivate)
+    /// <param name="buttonToDeactivate">button to activate / deactivate</param>
+    /// <param name="isActivated"></param>
+    public void SetButtonActivate(VHSButtons buttonToDeactivate, bool isActivated)
     {
-        vhsButtons[(int)buttonToDeactivate].button.enabled = false;
-        vhsButtons[(int)buttonToDeactivate].tmp.color = Color.black;
+        vhsButtons = FindObjectsOfType<VHSButton>();
+        foreach (var button in vhsButtons)
+        {
+            if (button.buttonId == buttonToDeactivate)
+            {
+                button.button.enabled = isActivated;
+                return;
+            }
+        }
     }
 
     /// <summary>
-    /// Switch to a different set of buttons, "Menu" or "Settings"
+    /// Switch to a different set of buttons
     /// </summary>
     /// <param name="set"></param>
     public void SwitchButtonSet(string set)
     {
-        for (var i = 0; i < vhsButtons.Length; i++)
+        // reset all buttons
+        foreach (var buttonSet in vhsButtonSets)
         {
-            switch (set)
+            buttonSet.enabled = false;
+            foreach (RectTransform child in buttonSet.GetComponent<RectTransform>())
+                child.gameObject.SetActive(false); // turn off all objects
+        }
+        // switch to new button set
+        var buttonSetId = set switch
+        {
+            "Menu" => 0,
+            "Settings" => 1,
+            "Rewind" => 2,
+        };
+        vhsButtonSets[buttonSetId].enabled = true; // turn on set canvas
+        foreach (RectTransform child in vhsButtonSets[buttonSetId].GetComponent<RectTransform>())
+        {
+            if (child.gameObject.TryGetComponent(typeof(VHSButton), out var btn))
             {
-                case "Menu":
-                    vhsButtons[i].gameObject.SetActive(i < 4);
-                    break;
-                case "Settings":
-                    vhsButtons[i].gameObject.SetActive(!(i < 4));
-                    break;
+                child.gameObject.SetActive(true); // turn on button objects
             }
         }
     }

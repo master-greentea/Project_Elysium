@@ -23,32 +23,42 @@ public class VHSDisplay : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
+    /// <summary>
+    /// Display current play time in default format
+    /// </summary>
+    /// <param name="timeToDisplay"></param>
     public void DisplayTime(float timeToDisplay)
     {
-        var minutes = Mathf.Floor(timeToDisplay / 60f);
-        var seconds = Mathf.RoundToInt(timeToDisplay % 60f);
-        var formattedMinutes = minutes.ToString();
-        var formattedSeconds = seconds.ToString();
-        
-        // format with 0 in front of single digit
-        if (minutes < 10) formattedMinutes += "0" + minutes;
-        if (seconds < 10) formattedSeconds += "0" + Mathf.RoundToInt(seconds);
-
-        timeDisplayText.text = formattedMinutes + ":" + formattedSeconds + " AM";
+        timeDisplayText.text = GetFormattedTime(timeToDisplay) + " AM";
     }
 
+    /// <summary>
+    /// Display current play time with a prefix
+    /// </summary>
+    /// <param name="timeToDisplay"></param>
+    /// <param name="prefix"></param>
     public void DisplayTime(float timeToDisplay, string prefix)
     {
-        var minutes = Mathf.Floor(timeToDisplay / 60f);
-        var seconds = Mathf.RoundToInt(timeToDisplay % 60f);
+        timeDisplayText.text = prefix + " " + GetFormattedTime(timeToDisplay);
+    }
+
+    /// <summary>
+    /// Get formatted time in string
+    /// </summary>
+    /// <param name="time">time to format</param>
+    /// <returns>Formatted time string</returns>
+    public string GetFormattedTime(float time)
+    {
+        var minutes = Mathf.Floor(time / 60f);
+        var seconds = Mathf.RoundToInt(time % 60f);
         var formattedMinutes = minutes.ToString();
         var formattedSeconds = seconds.ToString();
         
         // format with 0 in front of single digit
         if (minutes < 10) formattedMinutes = "0" + minutes;
         if (seconds < 10) formattedSeconds = "0" + Mathf.RoundToInt(seconds);
-
-        timeDisplayText.text = prefix + " " + formattedMinutes + ":" + formattedSeconds;
+        
+        return formattedMinutes + ":" + formattedSeconds;
     }
 
     public void DisplayStatus(VHSStatuses status)
