@@ -6,17 +6,30 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class VHSButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class VHSButton : MonoBehaviour, IPointerEnterHandler
 {
     private EventSystem EventSystem;
     public TextMeshProUGUI tmp;
     private string buttonText;
     public VHSButtons buttonId;
     [HideInInspector] public Button button;
-    [HideInInspector] public bool isMouseOver;
+    // services
+    private GameManager GameManager;
+    private PlayerController PlayerController;
+    private VHSDisplay VhsDisplay;
+    private VHSButtonsManager VhsButtonsManager;
+
+    void AssignServices()
+    {
+        VhsDisplay = Services.VHSDisplay;
+        VhsButtonsManager = Services.VHSButtonsManager;
+        GameManager = Services.GameManager;
+        PlayerController = Services.PlayerController;
+    }
 
     void Awake()
     {
+        AssignServices();
         button = GetComponent<Button>();
         EventSystem = EventSystem.current;
         buttonText = buttonId switch
@@ -26,7 +39,7 @@ public class VHSButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             VHSButtons.Settings => "Settings",
             VHSButtons.Eject => "Eject",
             VHSButtons.Back => "Back",
-            VHSButtons.InvertCamera => Services.PlayerController.isInvertedControls ? "Invert Camera: ON" : "Invert Camera: OFF",
+            VHSButtons.InvertCamera => PlayerController.isInvertedControls ? "Invert Camera: ON" : "Invert Camera: OFF",
             VHSButtons.SetTime => "Set Timestamp",
             VHSButtons.ConfirmTime => "Confirm",
             VHSButtons.CancelTime => "Cancel"
@@ -47,14 +60,7 @@ public class VHSButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
-        isMouseOver = true;
-        if (button.enabled) Services.VHSButtonsManager.SetButtonSelected(buttonId);
-    }
-
-    //Detect when Cursor leaves the GameObject
-    public void OnPointerExit(PointerEventData pointerEventData)
-    {
-        isMouseOver = false;
+        if (button.enabled) VhsButtonsManager.SetButtonSelected(buttonId);
     }
 
     /// <summary>
@@ -69,20 +75,20 @@ public class VHSButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     // menu functions
     public void Resume()
     {
-        Services.GameManager.TogglePause();
+        GameManager.TogglePause();
     }
 
     public void Rewind()
     {
-        Services.VHSButtonsManager.SwitchButtonSet("Rewind");
-        Services.VHSButtonsManager.SetButtonSelected(VHSButtons.Back);
+        VhsButtonsManager.SwitchButtonSet("Rewind");
+        VhsButtonsManager.SetButtonSelected(VHSButtons.Back);
     }
 
     public void Settings()
     {
-        Services.VHSDisplay.DisplayStatus(VHSStatuses.Settings);
-        Services.VHSButtonsManager.SwitchButtonSet("Settings");
-        Services.VHSButtonsManager.SetButtonSelected(VHSButtons.Back);
+        VhsDisplay.DisplayStatus(VHSStatuses.Settings);
+        VhsButtonsManager.SwitchButtonSet("Settings");
+        VhsButtonsManager.SetButtonSelected(VHSButtons.Back);
     }
 
     public void Eject()
@@ -93,15 +99,15 @@ public class VHSButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     // settings functions
     public void BackFromSettings()
     {
-        Services.VHSDisplay.DisplayStatus(VHSStatuses.Paused);
-        Services.VHSButtonsManager.SwitchButtonSet("Menu");
-        Services.VHSButtonsManager.SetButtonSelected(VHSButtons.Settings);
+        VhsDisplay.DisplayStatus(VHSStatuses.Paused);
+        VhsButtonsManager.SwitchButtonSet("Menu");
+        VhsButtonsManager.SetButtonSelected(VHSButtons.Settings);
     }
 
     public void InvertCamera()
     {
-        Services.PlayerController.isInvertedControls = !Services.PlayerController.isInvertedControls;
-        buttonText = Services.PlayerController.isInvertedControls ? "Invert Camera: ON" : "Invert Camera: OFF";
-        PlayerPrefs.SetInt("InvertCam", Services.PlayerController.isInvertedControls ? 1 : 0);
+        PlayerController.isInvertedControls = !PlayerController.isInvertedControls;
+        buttonText = PlayerController.isInvertedControls ? "Invert Camera: ON" : "Invert Camera: OFF";
+        PlayerPrefs.SetInt("InvertCam", PlayerController.isInvertedControls ? 1 : 0);
     }
 }

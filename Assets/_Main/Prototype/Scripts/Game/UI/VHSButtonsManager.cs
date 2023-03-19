@@ -26,21 +26,26 @@ public class VHSButtonsManager : MonoBehaviour
         canvas = GetComponent<Canvas>();
     }
 
+    public VHSButton GetButtonByID(VHSButtons buttonId)
+    {
+        vhsButtons = FindObjectsOfType<VHSButton>();
+        foreach (var button in vhsButtons)
+        {
+            if (button.buttonId == buttonId)
+            {
+                return button;
+            }
+        }
+        return null;
+    }
+
     /// <summary>
     /// Set button to select
     /// </summary>
     /// <param name="buttonIdToSelect">button to select</param>
     public void SetButtonSelected(VHSButtons buttonIdToSelect)
     {
-        vhsButtons = FindObjectsOfType<VHSButton>();
-        foreach (var button in vhsButtons)
-        {
-            if (button.buttonId == buttonIdToSelect)
-            {
-                EventSystem.SetSelectedGameObject(button.gameObject);
-                return;
-            }
-        }
+        EventSystem.SetSelectedGameObject(GetButtonByID(buttonIdToSelect).gameObject);
     }
     
     /// <summary>
@@ -58,15 +63,7 @@ public class VHSButtonsManager : MonoBehaviour
     /// <param name="isActivated"></param>
     public void SetButtonActivate(VHSButtons buttonToDeactivate, bool isActivated)
     {
-        vhsButtons = FindObjectsOfType<VHSButton>();
-        foreach (var button in vhsButtons)
-        {
-            if (button.buttonId == buttonToDeactivate)
-            {
-                button.button.enabled = isActivated;
-                return;
-            }
-        }
+        GetButtonByID(buttonToDeactivate).button.enabled = isActivated;
     }
 
     /// <summary>

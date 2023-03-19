@@ -11,19 +11,31 @@ public class RewindSet : MonoBehaviour
 {
     [SerializeField] private GameObject timeSetHolder;
     [SerializeField] private TextMeshProUGUI timerText;
-    [SerializeField] private GameObject confirmObject;
     private bool isSettingTime;
     // time
-    private float currentTime;
+    private int setTime;
+    private int rewindTime;
+    // services
+    private VHSDisplay VhsDisplay;
+    private VHSButtonsManager VhsButtonsManager;
+    private RewindPlayerController RewindPlayerController;
+
+    void AssignServices()
+    {
+        VhsDisplay = Services.VHSDisplay;
+        VhsButtonsManager = Services.VHSButtonsManager;
+        RewindPlayerController = Services.RewindPlayerController;
+    }
 
     void Awake()
     {
+        AssignServices();
         timeSetHolder.SetActive(false);
     }
 
     void Update()
     {
-        timeSetHolder.SetActive(isSettingTime);
+        // keyboard input for adding / decreasing time
         if (Keyboard.current[Key.LeftArrow].wasPressedThisFrame)
         {
             DecreaseTime();
@@ -32,72 +44,93 @@ public class RewindSet : MonoBehaviour
         {
             IncreaseTime();
         }
+        // during setting time
+        if (!isSettingTime) return;
+        rewindTime = Mathf.Clamp(rewindTime, 0, RewindPlayerController.maxRewindTime);
+        // do not allow confirm time if no rewind time is set
+        VhsButtonsManager.SetButtonActivate(VHSButtons.ConfirmTime, rewindTime != 0);
     }
 
     // button functions
     public void BackFromRewind()
     {
-        Services.VHSDisplay.DisplayStatus(VHSStatuses.Paused);
-        Services.VHSButtonsManager.SwitchButtonSet("Menu");
-        Services.VHSButtonsManager.SetButtonSelected(VHSButtons.Rewind);
+        VhsDisplay.DisplayStatus(VHSStatuses.Paused);
+        VhsButtonsManager.SwitchButtonSet("Menu");
+        VhsButtonsManager.SetButtonSelected(VHSButtons.Rewind);
     }
 
     public void BeginSetTime()
     {
-        Services.VHSButtonsManager.DeselectAll();
         isSettingTime = true;
-        currentTime = Services.TimedGameMode.survivedTime;
-        timerText.text = Services.VHSDisplay.GetFormattedTime(currentTime);
+        timeSetHolder.SetActive(true);
+        // default rewind time to 0
+        rewindTime = 0;
+        // default set time to current survived time
+        setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime);
+        timerText.text = VhsDisplay.GetFormattedTime(setTime);
+        timerText.color = Color.white;
         // de-activate other buttons
-        Services.VHSButtonsManager.SetButtonActivate(VHSButtons.Back, false);
-        Services.VHSButtonsManager.SetButtonActivate(VHSButtons.SetTime, false);
-        
-        EventSystem e = EventSystem.current;
-        e.SetSelectedGameObject(confirmObject);
+        VhsButtonsManager.SetButtonActivate(VHSButtons.Back, false);
+        VhsButtonsManager.SetButtonActivate(VHSButtons.SetTime, false);
+        // select cancel button by default
+        VhsButtonsManager.SetButtonSelected(VHSButtons.CancelTime);
     }
 
     public void DecreaseTime()
     {
-        currentTime--;
-        if (currentTime <= Services.TimedGameMode.survivedTime - 10)
+        // set rewind time (logic)
+        rewindTime++;
+        // set time on UI (visuals)
+        setTime--;
+        // clamp set time
+        if (setTime <= VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindPlayerController.maxRewindTime)
         {
-            currentTime = Services.TimedGameMode.survivedTime - 10;
+            setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindPlayerController.maxRewindTime;
             timerText.color = Color.red;
+            // TODO: shake animation
+            
         }
-        else if (currentTime <= 0)
+        if (setTime <= 0)
         {
-            currentTime = 0;
+            setTime = 0;
+            rewindTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime); // only rewind to 0
+            timerText.color = Color.red;
+            // TODO: shake animation
+
         }
-        else
-        {
-            timerText.color = Color.white;
-        }
-        timerText.text = Services.VHSDisplay.GetFormattedTime(currentTime);
+        timerText.text = VhsDisplay.GetFormattedTime(setTime);
     }
 
     public void IncreaseTime()
     {
-        currentTime++;
-        if (currentTime >= Services.TimedGameMode.survivedTime)
-        {
-            currentTime = Services.TimedGameMode.survivedTime;
-            timerText.color = Color.red;
-        }
-        else
-        {
-            timerText.color = Color.white;
-        }
-        timerText.text = Services.VHSDisplay.GetFormattedTime(currentTime);
+        // set rewind time (logic)
+        rewindTime--;
+        if (rewindTime == 0)
+            VhsButtonsManager.SetButtonSelected(VHSButtons.CancelTime);
+        // set time on UI (visuals)
+        setTime++;
+        if (setTime >= VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime))
+            setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime);
+        timerText.color = Color.white;
+        timerText.text = VhsDisplay.GetFormattedTime(setTime);
     }
 
     public void CancelSetTime()
     {
         isSettingTime = false;
+        timeSetHolder.SetActive(false);
         // re-activate other buttons
-        Services.VHSButtonsManager.SetButtonActivate(VHSButtons.Back, true);
-        Services.VHSButtonsManager.SetButtonActivate(VHSButtons.SetTime, true);
-        
-        Services.VHSButtonsManager.SetButtonSelected(VHSButtons.SetTime);
+        VhsButtonsManager.SetButtonActivate(VHSButtons.Back, true);
+        VhsButtonsManager.SetButtonActivate(VHSButtons.SetTime, true);
+        VhsButtonsManager.SetButtonSelected(VHSButtons.SetTime);
+    }
+
+    public void ConfirmSetTime()
+    {
+        CancelSetTime();
+        // start rewind
+        VhsDisplay.DisplayStatus(VHSStatuses.Rewind);
+        StartCoroutine(RewindPlayerController.RewindPosition(rewindTime));
     }
 }
     

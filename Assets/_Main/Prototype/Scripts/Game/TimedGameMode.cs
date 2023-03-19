@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TimedGameMode : GameManager
 {
-    public float survivedTime {get; private set;}
+    public static float survivedTime {get; private set;}
 
     void Awake()
     {
@@ -15,7 +15,8 @@ public class TimedGameMode : GameManager
     
     void Update()
     {
-        survivedTime += Time.deltaTime;
+        if (RewindPlayerController.isRewinding) survivedTime -= Time.deltaTime * RewindPlayerController.RewindSpeed;
+        else survivedTime += Time.deltaTime;
         Services.VHSDisplay.DisplayTime(survivedTime, "ST");
     }
 
@@ -23,6 +24,6 @@ public class TimedGameMode : GameManager
     {
         base.TogglePause();
         // only allow rewind when more than 10 seconds has passed
-        Services.VHSButtonsManager.SetButtonActivate(VHSButtons.Rewind, Services.TimedGameMode.survivedTime > 10);
+        // Services.VHSButtonsManager.SetButtonActivate(VHSButtons.Rewind, Services.TimedGameMode.survivedTime > 10);
     }
 }

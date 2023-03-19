@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public enum VHSStatuses
 {
-    Play, Paused, Error, Settings
+    Play, Paused, Error, Settings, Rewind
 }
 
 public class VHSDisplay : MonoBehaviour
@@ -61,6 +61,11 @@ public class VHSDisplay : MonoBehaviour
         return formattedMinutes + ":" + formattedSeconds;
     }
 
+    public int GetFormattedSecond(float time)
+    {
+        return Mathf.RoundToInt(time % 60f);
+    }
+
     public void DisplayStatus(VHSStatuses status)
     {
         // switch text
@@ -70,6 +75,7 @@ public class VHSDisplay : MonoBehaviour
             VHSStatuses.Paused => "// PAUSED",
             VHSStatuses.Error => "! ERROR",
             VHSStatuses.Settings => "// SETTINGS",
+            VHSStatuses.Rewind => "<< REWIND",
         };
         // change text animation
         switch (status)
@@ -79,6 +85,7 @@ public class VHSDisplay : MonoBehaviour
                 break;
             case VHSStatuses.Paused:
             case VHSStatuses.Settings:
+            case VHSStatuses.Rewind:
                 _animator.Play("VHS_Status_Paused");
                 break;
         }

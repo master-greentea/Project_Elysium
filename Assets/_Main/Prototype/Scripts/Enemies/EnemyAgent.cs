@@ -9,7 +9,7 @@ namespace Enemies
     {
         public EnemyStateMachine EnemyStateMachine;
         public EnemyStateId initialState;
-        [HideInInspector] public ConfigEnemy config;
+        public ConfigEnemy config;
         [HideInInspector] public EnemyFov enemyFov;
         [HideInInspector] public Transform playerTransform;
         [HideInInspector] public NavMeshAgent navMeshAgent;

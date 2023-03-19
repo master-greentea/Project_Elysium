@@ -6,6 +6,7 @@ public static class Services
 {
     // Player
     public static PlayerController PlayerController;
+    public static RewindPlayerController RewindPlayerController;
     // Managers
     public static GameManager GameManager;
     public static VHSDisplay VHSDisplay;
