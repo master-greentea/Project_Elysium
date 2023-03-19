@@ -13,24 +13,24 @@ MonoBehaviour:
   m_Name: Enemy_Config_Default
   m_EditorClassIdentifier: 
   restLookInterval: 2.5
-  restTimer: 2.4962995
+  restTimer: 1.0424434
   restLookSpeed: 0.407
   maxRest: 2
   chaseSpeed: 4.5
-  chaseAccelerationDuration: 0.2
+  chaseAcceleration: 10
   maxDistance: 0.5
   trackSpeed: 4
-  trackAccelerationDuration: 0.5
+  trackAcceleration: 8
   mapTrackInterval: 1
-  trackTimer: 0.99336857
+  trackTimer: 0.019308094
   mapPositionCount: 3
   trackNextDistance: 1
   trackLookSpeed: 0.759
   patrolSpeed: 2
-  patrolAccelerationDuration: 3
+  patrolAcceleration: 5
   maxRoam: 5
   checkSeenByPlayerInterval: 1
   delayBeforeTurnToPlayer: 1
-  delayBeforeTrackPlayer: 0.25
+  delayBeforeStateChange: 0.2
   interceptSpeed: 6
-  interceptAccelerationDuration: 0.1
+  interceptAcceleration: 11

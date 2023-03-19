@@ -14,7 +14,7 @@ namespace Enemies
     
         public void Enter(EnemyAgent agent)
         {
-            agent.ChangeSpeed(agent.config.chaseSpeed, agent.config.chaseAccelerationDuration);
+            agent.ChangeSpeed(agent.config.chaseSpeed, agent.config.chaseAcceleration);
         }
     
         public void Update(EnemyAgent agent)

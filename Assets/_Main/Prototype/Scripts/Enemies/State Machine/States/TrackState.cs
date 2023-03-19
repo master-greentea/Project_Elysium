@@ -17,7 +17,7 @@ namespace Enemies
         public void Enter(EnemyAgent agent)
         {
             ResetTrack(agent);
-            agent.ChangeSpeed(agent.config.trackSpeed, agent.config.trackAccelerationDuration);
+            agent.ChangeSpeed(agent.config.trackSpeed, agent.config.trackAcceleration);
         }
     
         public void Update(EnemyAgent agent)

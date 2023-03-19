@@ -18,13 +18,13 @@ public class RewindSet : MonoBehaviour
     // services
     private VHSDisplay VhsDisplay;
     private VHSButtonsManager VhsButtonsManager;
-    private RewindPlayerController RewindPlayerController;
+    private RewindManager RewindManager;
 
     void AssignServices()
     {
         VhsDisplay = Services.VHSDisplay;
         VhsButtonsManager = Services.VHSButtonsManager;
-        RewindPlayerController = Services.RewindPlayerController;
+        RewindManager = Services.RewindManager;
     }
 
     void Awake()
@@ -46,7 +46,7 @@ public class RewindSet : MonoBehaviour
         }
         // during setting time
         if (!isSettingTime) return;
-        rewindTime = Mathf.Clamp(rewindTime, 0, RewindPlayerController.maxRewindTime);
+        rewindTime = Mathf.Clamp(rewindTime, 0, RewindManager.maxRewindTime);
         // do not allow confirm time if no rewind time is set
         VhsButtonsManager.SetButtonActivate(VHSButtons.ConfirmTime, rewindTime != 0);
     }
@@ -82,16 +82,17 @@ public class RewindSet : MonoBehaviour
         rewindTime++;
         // set time on UI (visuals)
         setTime--;
-        // clamp set time
-        if (setTime <= VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindPlayerController.maxRewindTime)
+        // clamp set time to not exceed max allowed rewind time
+        if (setTime <= VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindManager.maxRewindTime)
         {
-            setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindPlayerController.maxRewindTime;
+            setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindManager.maxRewindTime;
             timerText.color = Color.red;
             timerText.GetComponent<Animator>().Play("SetTimeShake");
         }
-        if (setTime <= 0)
+        // clamp set time to not go under started at time
+        if (setTime <= Services.TimedGameMode.startAtSecond)
         {
-            setTime = 0;
+            setTime = VhsDisplay.GetFormattedSecond(Services.TimedGameMode.startAtSecond);
             rewindTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime); // only rewind to 0
             timerText.color = Color.red;
             timerText.GetComponent<Animator>().Play("SetTimeShake");
@@ -131,7 +132,8 @@ public class RewindSet : MonoBehaviour
         CancelSetTime();
         // start rewind
         VhsDisplay.DisplayStatus(VHSStatuses.Rewind);
-        StartCoroutine(RewindPlayerController.RewindPosition(rewindTime));
+        RewindManager.rewindTime = rewindTime;
+        StartCoroutine(RewindManager.RewindPosition(rewindTime));
     }
 }
     

@@ -6775,6 +6775,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxRewindTime: 5
+  rewindBlit: {fileID: 1260217176212577286, guid: c40be3174f62c4acf8c1216858c64956,
+    type: 2}
 --- !u!1 &1549638242
 GameObject:
   m_ObjectHideFlags: 0
@@ -7505,7 +7507,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &1754843928
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9544,7 +9546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 502005a07ef91184d8f2bd1ca180b6f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startAtSecond: 0
+  startAtSecond: 55
 --- !u!114 &2089005681
 MonoBehaviour:
   m_ObjectHideFlags: 0

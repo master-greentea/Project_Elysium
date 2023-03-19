@@ -18,7 +18,7 @@ namespace Enemies
         public void Enter(EnemyAgent agent)
         {
             roamCount = 0;
-            agent.ChangeSpeed(agent.config.patrolSpeed, agent.config.patrolAccelerationDuration);
+            agent.ChangeSpeed(agent.config.patrolSpeed, agent.config.patrolAcceleration);
         }
     
         public void Update(EnemyAgent agent)

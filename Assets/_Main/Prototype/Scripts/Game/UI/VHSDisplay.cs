@@ -103,11 +103,13 @@ public class VHSDisplay : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Display notification on the bottom right
     /// </summary>
     /// <param name="notification"></param>
     public void DisplayNotification(string notification)
     {
+        // TODO: add notification as a list
+        
         notificationText.text = notification;
     }
 }

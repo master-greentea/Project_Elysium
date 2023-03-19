@@ -54,8 +54,8 @@ Material:
     m_Floats:
     - _Amount: 236
     - _Brightness: 15
-    - _GlitchAmount: 35
-    - _GlitchScale: 0.00939
+    - _GlitchAmount: 100
+    - _GlitchScale: 0.00827
     - _GradientAmount: 75
     - _Height: 0.187
     - _LineAmount: 3
@@ -63,7 +63,7 @@ Material:
     - _Mask_Tiling: 1280
     - _Offset: 0.00149
     - _PixelationAmount: 600
-    - _PixelationResolution: 544
+    - _PixelationResolution: 35
     - _QueueControl: 0
     - _QueueOffset: 0
     - _UnscaledTime: 0

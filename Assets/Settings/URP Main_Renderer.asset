@@ -46,7 +46,8 @@ MonoBehaviour:
   - {fileID: 3760473581219316136}
   - {fileID: 1117401273468080712}
   - {fileID: -1874610802489084666}
-  m_RendererFeatureMap: a881d15bcce22f344852a2b889ce810f06358741680bfce5
+  - {fileID: 1260217176212577286}
+  m_RendererFeatureMap: a881d15bcce22f344852a2b889ce810f06358741680bfce5061cff47d8307d11
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -126,6 +127,33 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &1260217176212577286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11a7d5d7c1e400749ae0ac8fdf4fa88d, type: 3}
+  m_Name: Rewind Glitch
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    Event: 300
+    blitMaterial: {fileID: 2100000, guid: 5e31e15eb2727c34b933114d9ab22a07, type: 2}
+    blitMaterialPassIndex: 0
+    setInverseViewMatrix: 0
+    requireDepthNormals: 0
+    srcType: 0
+    srcTextureId: _CameraColorTexture
+    srcTextureObject: {fileID: 0}
+    dstType: 0
+    dstTextureId: _BlitPassTexture
+    dstTextureObject: {fileID: 0}
+    overrideGraphicsFormat: 0
+    graphicsFormat: 4
 --- !u!114 &3760473581219316136
 MonoBehaviour:
   m_ObjectHideFlags: 0

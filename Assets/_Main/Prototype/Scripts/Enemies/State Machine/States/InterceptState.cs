@@ -12,7 +12,7 @@ namespace Enemies
 
         public void Enter(EnemyAgent agent)
         {
-            agent.ChangeSpeed(agent.config.interceptSpeed, agent.config.interceptAccelerationDuration);
+            agent.ChangeSpeed(agent.config.interceptSpeed, agent.config.interceptAcceleration);
         }
         public void Update(EnemyAgent agent)
         {

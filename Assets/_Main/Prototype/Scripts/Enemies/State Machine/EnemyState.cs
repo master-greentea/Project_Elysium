@@ -6,7 +6,7 @@ namespace Enemies
 {
     public enum EnemyStateId
     {
-        Idle, Chase, Patrol, Track, Intercept, Stare
+        Idle, Chase, Patrol, Track, Intercept, Stare, Rewind
     }
     
     // abstract class for EnemyState with simple state transition methods

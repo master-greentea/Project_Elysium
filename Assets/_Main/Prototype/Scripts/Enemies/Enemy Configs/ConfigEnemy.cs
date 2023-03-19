@@ -16,13 +16,13 @@ namespace Enemies
         
         [Space(10)] [Header("Chase State")]
         public float chaseSpeed;
-        public float chaseAccelerationDuration;
+        public float chaseAcceleration;
         [Space(10)]
         public float maxDistance;
 
         [Space(10)] [Header("Track State")]
         public float trackSpeed;
-        public float trackAccelerationDuration;
+        public float trackAcceleration;
         [Space(10)]
         [Tooltip("How often positions are mapped during tracking")] public float mapTrackInterval;
         [HideInInspector] public float trackTimer;
@@ -32,17 +32,17 @@ namespace Enemies
 
         [Space(10)] [Header("Patrol State")]
         public float patrolSpeed;
-        public float patrolAccelerationDuration;
+        public float patrolAcceleration;
         public int maxRoam;
 
         [Space(10)] [Header("Stare State")]
         public float checkSeenByPlayerInterval;
         [Tooltip ("How long before enemy turn to look at player")] public float delayBeforeTurnToPlayer;
-        [Tooltip ("How long before enemy goes into tracking state")] public float delayBeforeTrackPlayer;
+        [Tooltip ("How long before enemy goes into tracking state")] public float delayBeforeStateChange;
 
         [Space(10)] [Header("Intercept State")]
         public float interceptSpeed;
-        public float interceptAccelerationDuration;
+        public float interceptAcceleration;
     }
 }
 

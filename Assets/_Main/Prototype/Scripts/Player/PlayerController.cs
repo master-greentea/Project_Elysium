@@ -123,16 +123,16 @@ public class PlayerController : MonoBehaviour
     // change animation state
     void HandleAnimation()
     {
-        if ((GameManager.isGamePaused && !RewindPlayerController.isRewinding) || GameManager.isGameEnded) return; // do not run on pause
+        if ((GameManager.isGamePaused && !RewindManager.isRewinding) || GameManager.isGameEnded) return; // do not run on pause
         var currentState = _animator.GetCurrentAnimatorStateInfo(0).ToString();
-        if (isMoving || RewindPlayerController.isRewindMoving)
+        if (isMoving || RewindManager.isRewindMoving)
         {
             AnimationChange.ChangeAnimationState(_animator, currentState, "NewRun", true, currentMovementInput.x < 0);
             _animator.speed = _characterController.velocity.magnitude * .2f;
         }
         else { 
             AnimationChange.ChangeAnimationState(_animator, currentState, "NewIdle", false, currentMovementInput.x < 0); 
-            _animator.speed = RewindPlayerController.isRewinding ? RewindPlayerController.RewindSpeed : 1;
+            _animator.speed = RewindManager.isRewinding ? RewindManager.RewindSpeed : 1;
         }   
     }
 
@@ -242,7 +242,8 @@ public class PlayerController : MonoBehaviour
         }
         if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
         if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
-        Services.RewindPlayerController.LogCamera(currentCamDirection);
+        // log camera position
+        Services.RewindManager.LogCamera(currentCamDirection);
         SwitchCamera((camDirection)camIndex, camLerpDuration);
     }
 

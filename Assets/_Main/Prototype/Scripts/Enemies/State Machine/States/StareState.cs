@@ -32,11 +32,9 @@ namespace Enemies
         IEnumerator TurnToPlayer(EnemyAgent agent)
         {
             yield return new WaitForSeconds(agent.config.delayBeforeTurnToPlayer);
-            agent.LookAt(agent.playerTransform.position, 10); // immediately looks at player
-            // do stuff
-            
-            yield return new WaitForSeconds(agent.config.delayBeforeTrackPlayer); // short delay then track
-            agent.EnemyStateMachine.ChangeState(EnemyStateId.Track);
+            agent.LookAt(agent.playerTransform.position, 100); // immediately looks at player
+            yield return new WaitForSeconds(agent.config.delayBeforeStateChange); // short delay then track or patrol
+            agent.EnemyStateMachine.ChangeState(agent.IsPlayerDetected() ? EnemyStateId.Track : EnemyStateId.Patrol);
         }
     }
 }

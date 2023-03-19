@@ -28,6 +28,7 @@ namespace Enemies
             EnemyStateMachine.RegisterState(new PatrolState());
             EnemyStateMachine.RegisterState(new StareState());
             EnemyStateMachine.RegisterState(new InterceptState());
+            EnemyStateMachine.RegisterState(new RewindState());
             // change to initial state
             EnemyStateMachine.ChangeState(initialState);
         }
@@ -37,8 +38,9 @@ namespace Enemies
             playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
             enemyFov = GetComponent<EnemyFov>();
         }
-        private void Start()
+        private void Awake()
         {
+            Services.EnemyAgent = this;
             InitializeStateMachine();
             AssignComponents();
         }
@@ -58,25 +60,13 @@ namespace Enemies
         /// Smoothly change self movement speed.
         /// </summary>
         /// <param name="targetSpeed">Speed to change to</param>
-        /// <param name="lerpDuration">How long does it take to change to that speed</param>
-        public void ChangeSpeed(float targetSpeed, float lerpDuration)
+        /// <param name="targetAcceleration">Acceleration to change to, default 8</param>
+        public void ChangeSpeed(float targetSpeed, float targetAcceleration)
         {
-            if (activeSpeedChangeRoutine != null) StopCoroutine(activeSpeedChangeRoutine);
-            activeSpeedChangeRoutine = StartCoroutine(SpeedChangeRoutine(targetSpeed, lerpDuration));
+            navMeshAgent.speed = targetSpeed;
+            navMeshAgent.acceleration = targetAcceleration;
         }
-        // speed change coroutine
-        private Coroutine activeSpeedChangeRoutine;
-        private IEnumerator SpeedChangeRoutine(float targetSpeed, float lerpDuration)
-        {
-            var lerpElapsed = 0f;
-            while (lerpElapsed < lerpDuration)
-            {
-                navMeshAgent.speed = Mathf.Lerp(navMeshAgent.speed, targetSpeed, lerpElapsed / lerpDuration);
-                lerpElapsed += Time.deltaTime;
-                yield return null;
-            }
-        }
-        
+
         /// <summary>
         /// check if player is detected either by in sight or within minimum distance
         /// </summary>
