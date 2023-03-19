@@ -16,6 +16,7 @@ public class VHSDisplay : MonoBehaviour
     [Header("VHS Texts")]
     [SerializeField] private TextMeshProUGUI timeDisplayText;
     [SerializeField] private TextMeshProUGUI statusDisplayText;
+    [SerializeField] private TextMeshProUGUI notificationText;
 
     void Awake()
     {
@@ -51,8 +52,8 @@ public class VHSDisplay : MonoBehaviour
     {
         var minutes = Mathf.Floor(time / 60f);
         var seconds = Mathf.RoundToInt(time % 60f);
-        var formattedMinutes = minutes.ToString();
-        var formattedSeconds = seconds.ToString();
+        var formattedMinutes = seconds == 60 ? (minutes++).ToString() : minutes.ToString();
+        var formattedSeconds = seconds == 60 ? "00" : seconds.ToString();
         
         // format with 0 in front of single digit
         if (minutes < 10) formattedMinutes = "0" + minutes;
@@ -61,11 +62,21 @@ public class VHSDisplay : MonoBehaviour
         return formattedMinutes + ":" + formattedSeconds;
     }
 
+    /// <summary>
+    /// Get formatted time in seconds
+    /// </summary>
+    /// <param name="time">time to format</param>
+    /// <returns>Formatted time in seconds</returns>
     public int GetFormattedSecond(float time)
     {
-        return Mathf.RoundToInt(time % 60f);
+        var minutes = Mathf.Floor(time / 60f);
+        return Mathf.RoundToInt(time % 60f) + (int)minutes * 60;
     }
 
+    /// <summary>
+    /// Change the status display to a new status
+    /// </summary>
+    /// <param name="status">status to change to</param>
     public void DisplayStatus(VHSStatuses status)
     {
         // switch text
@@ -89,5 +100,14 @@ public class VHSDisplay : MonoBehaviour
                 _animator.Play("VHS_Status_Paused");
                 break;
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="notification"></param>
+    public void DisplayNotification(string notification)
+    {
+        notificationText.text = notification;
     }
 }

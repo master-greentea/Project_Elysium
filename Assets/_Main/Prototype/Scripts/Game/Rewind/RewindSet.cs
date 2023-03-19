@@ -87,16 +87,14 @@ public class RewindSet : MonoBehaviour
         {
             setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindPlayerController.maxRewindTime;
             timerText.color = Color.red;
-            // TODO: shake animation
-            
+            timerText.GetComponent<Animator>().Play("SetTimeShake");
         }
         if (setTime <= 0)
         {
             setTime = 0;
             rewindTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime); // only rewind to 0
             timerText.color = Color.red;
-            // TODO: shake animation
-
+            timerText.GetComponent<Animator>().Play("SetTimeShake");
         }
         timerText.text = VhsDisplay.GetFormattedTime(setTime);
     }
@@ -110,7 +108,10 @@ public class RewindSet : MonoBehaviour
         // set time on UI (visuals)
         setTime++;
         if (setTime >= VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime))
+        {
             setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime);
+            timerText.GetComponent<Animator>().Play("SetTimeShake");
+        }
         timerText.color = Color.white;
         timerText.text = VhsDisplay.GetFormattedTime(setTime);
     }

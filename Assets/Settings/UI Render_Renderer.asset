@@ -73,7 +73,8 @@ MonoBehaviour:
   - {fileID: -2592432245004909729}
   - {fileID: -2230748421123369978}
   - {fileID: 1757090105369114893}
-  m_RendererFeatureMap: 5fc336c49bd405dc0694ad4721ca0ae10d39e13024706218
+  - {fileID: 2696369603700863285}
+  m_RendererFeatureMap: 5fc336c49bd405dc0694ad4721ca0ae10d39e130247062183531c05bde6d6b25
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 0}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -130,6 +131,33 @@ MonoBehaviour:
   settings:
     Event: 1000
     blitMaterial: {fileID: 2100000, guid: 168f3d63d3443d443adc947e84a41d01, type: 2}
+    blitMaterialPassIndex: 0
+    setInverseViewMatrix: 0
+    requireDepthNormals: 0
+    srcType: 0
+    srcTextureId: _CameraColorTexture
+    srcTextureObject: {fileID: 0}
+    dstType: 0
+    dstTextureId: _BlitPassTexture
+    dstTextureObject: {fileID: 0}
+    overrideGraphicsFormat: 0
+    graphicsFormat: 4
+--- !u!114 &2696369603700863285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11a7d5d7c1e400749ae0ac8fdf4fa88d, type: 3}
+  m_Name: Rewind Glitch
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    Event: 1000
+    blitMaterial: {fileID: 2100000, guid: 5e31e15eb2727c34b933114d9ab22a07, type: 2}
     blitMaterialPassIndex: 0
     setInverseViewMatrix: 0
     requireDepthNormals: 0

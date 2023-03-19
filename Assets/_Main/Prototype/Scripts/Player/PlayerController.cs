@@ -25,7 +25,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool isInvertedControls;
     private bool playerLeft; // for changing animation of running left & right
     [SerializeField] private Transform mainCam;
-    [SerializeField] private float camLerpSpeed;
+    [SerializeField] private float camLerpDuration;
+    private Coroutine camSwitchRoutineInstance;
     // new camera
     private Vector2 currentMouseInput;
 
@@ -97,8 +98,8 @@ public class PlayerController : MonoBehaviour
         canDash = true;
         input.Player.Dash.performed += Dash;
         // camera change
-        input.Player.ChangeCameraLeft.performed += ctx => ChangeCamera("Left");
-        input.Player.ChangeCameraRight.performed += ctx => ChangeCamera("Right");
+        input.Player.ChangeCameraLeft.performed += ctx => OnCameraInput("Left");
+        input.Player.ChangeCameraRight.performed += ctx => OnCameraInput("Right");
         input.Player.LookBack.performed += ctx => OnLookBack(true);
         input.Player.LookBack.canceled += ctx => OnLookBack(false);
         // pausing
@@ -122,10 +123,17 @@ public class PlayerController : MonoBehaviour
     // change animation state
     void HandleAnimation()
     {
-        if (GameManager.isGamePaused || GameManager.isGameEnded) return; // do not run on pause
+        if ((GameManager.isGamePaused && !RewindPlayerController.isRewinding) || GameManager.isGameEnded) return; // do not run on pause
         var currentState = _animator.GetCurrentAnimatorStateInfo(0).ToString();
-        if (isMoving) { AnimationChange.ChangeAnimationState(_animator, currentState, "NewRun", true, currentMovementInput.x < 0); _animator.speed = _characterController.velocity.magnitude * .2f; }
-        else { AnimationChange.ChangeAnimationState(_animator, currentState, "NewIdle", false, currentMovementInput.x < 0); _animator.speed = 1; }
+        if (isMoving || RewindPlayerController.isRewindMoving)
+        {
+            AnimationChange.ChangeAnimationState(_animator, currentState, "NewRun", true, currentMovementInput.x < 0);
+            _animator.speed = _characterController.velocity.magnitude * .2f;
+        }
+        else { 
+            AnimationChange.ChangeAnimationState(_animator, currentState, "NewIdle", false, currentMovementInput.x < 0); 
+            _animator.speed = RewindPlayerController.isRewinding ? RewindPlayerController.RewindSpeed : 1;
+        }   
     }
 
     void Update()
@@ -219,7 +227,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // change camera
-    private void ChangeCamera(string direction)
+    private void OnCameraInput(string direction)
     {
         if (isLookingBack || GameManager.isGamePaused || GameManager.isGameEnded) return; // prevent camera change when looking back
         var camIndex = (int)currentCamDirection;
@@ -234,26 +242,36 @@ public class PlayerController : MonoBehaviour
         }
         if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
         if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
-        currentCamDirection = (camDirection)camIndex;
-        if (camSwitchRoutineInstance != null) StopCoroutine(camSwitchRoutineInstance);
-        camSwitchRoutineInstance = StartCoroutine(CameraSwitchRoutine(GetTargetAngle()));
+        Services.RewindPlayerController.LogCamera(currentCamDirection);
+        SwitchCamera((camDirection)camIndex, camLerpDuration);
     }
 
-    private Coroutine camSwitchRoutineInstance;
-    private IEnumerator CameraSwitchRoutine(float angle)
+    /// <summary>
+    /// Switch camera to direction
+    /// </summary>
+    /// <param name="direction">camDirection to switch to</param>
+    public void SwitchCamera(camDirection direction, float lerpDuration)
+    {
+        currentCamDirection = direction;
+        if (camSwitchRoutineInstance != null) StopCoroutine(camSwitchRoutineInstance);
+        camSwitchRoutineInstance = StartCoroutine(CameraSwitchRoutine(GetTargetAngle(), lerpDuration));
+    }
+    
+    private IEnumerator CameraSwitchRoutine(float angle, float duration)
     {
         var lerpElapsed = 0f;
-        while (lerpElapsed < camLerpSpeed)
+        while (lerpElapsed < duration)
         {
             mainCam.eulerAngles = 
                 new Vector3(
                     mainCam.eulerAngles.x,
                     Mathf.LerpAngle(mainCam.eulerAngles.y, 
-                        angle, lerpElapsed / camLerpSpeed),
+                        angle, lerpElapsed / duration),
                     0);
             lerpElapsed += Time.deltaTime;
             yield return null;
         }
+        mainCam.eulerAngles = new Vector3(mainCam.eulerAngles.x, angle, 0);
     }
     
     float GetTargetAngle()

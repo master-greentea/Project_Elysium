@@ -26,15 +26,17 @@ public class VHSButtonsManager : MonoBehaviour
         canvas = GetComponent<Canvas>();
     }
 
+    /// <summary>
+    /// Get button reference by its ID
+    /// </summary>
+    /// <param name="buttonId">button ID</param>
+    /// <returns>VHSButton on button object</returns>
     public VHSButton GetButtonByID(VHSButtons buttonId)
     {
         vhsButtons = FindObjectsOfType<VHSButton>();
         foreach (var button in vhsButtons)
         {
-            if (button.buttonId == buttonId)
-            {
-                return button;
-            }
+            if (button.buttonId == buttonId) return button;
         }
         return null;
     }
