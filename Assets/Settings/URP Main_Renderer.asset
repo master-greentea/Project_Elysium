@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a7d5d7c1e400749ae0ac8fdf4fa88d, type: 3}
   m_Name: Rewind Glitch
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     Event: 300
     blitMaterial: {fileID: 2100000, guid: 5e31e15eb2727c34b933114d9ab22a07, type: 2}

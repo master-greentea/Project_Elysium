@@ -1535,6 +1535,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 168f3d63d3443d443adc947e84a41d01, type: 2}
   - {fileID: 2100000, guid: 8b4df3d4da7d046428b32b59f930a977, type: 2}
   - {fileID: 2100000, guid: 5e31e15eb2727c34b933114d9ab22a07, type: 2}
+  rewindBlit: {fileID: 1260217176212577286, guid: c40be3174f62c4acf8c1216858c64956,
+    type: 2}
+  rewindMaterial: {fileID: 2100000, guid: 5e31e15eb2727c34b933114d9ab22a07, type: 2}
 --- !u!1 &332919130
 GameObject:
   m_ObjectHideFlags: 0
@@ -6774,9 +6777,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26db54e81a4485948bb91124cd5d5dbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CameraEffects: {fileID: 330585549}
   maxRewindTime: 5
-  rewindBlit: {fileID: 1260217176212577286, guid: c40be3174f62c4acf8c1216858c64956,
-    type: 2}
 --- !u!1 &1549638242
 GameObject:
   m_ObjectHideFlags: 0
@@ -9546,7 +9548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 502005a07ef91184d8f2bd1ca180b6f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startAtSecond: 55
+  startAtSecond: 42
 --- !u!114 &2089005681
 MonoBehaviour:
   m_ObjectHideFlags: 0

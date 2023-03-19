@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Blit_GlitchRewind
-  m_Shader: {fileID: -6465566751694194690, guid: d432580db5692724ca19ed979faa3317,
+  m_Shader: {fileID: -6465566751694194690, guid: e3f8fcb0814c05b488fd2679e43386d1,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -55,19 +55,20 @@ Material:
     - _Amount: 236
     - _Brightness: 15
     - _GlitchAmount: 100
-    - _GlitchScale: 0.00827
+    - _GlitchScale: 0.01
     - _GradientAmount: 75
-    - _Height: 0.187
+    - _Height: 0.5
     - _LineAmount: 3
     - _LineSpeed: 0.1
     - _Mask_Tiling: 1280
     - _Offset: 0.00149
     - _PixelationAmount: 600
-    - _PixelationResolution: 35
+    - _PixelationResolution: 743
     - _QueueControl: 0
     - _QueueOffset: 0
     - _UnscaledTime: 0
-    - _Width: 0.556
+    - _Weight: 0
+    - _Width: 0.5
     - _unscaledTime: 0
     m_Colors:
     - _Tiling_V2: {r: 1220, g: 1220, b: 0, a: 0}

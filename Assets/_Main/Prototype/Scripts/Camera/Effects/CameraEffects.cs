@@ -17,6 +17,11 @@ public class CameraEffects : MonoBehaviour
     private bool doShift;
 
     [SerializeField] private Material[] unscaledTimeMaterials;
+    
+    // rewind
+    [Header("Rewind")]
+    [SerializeField] private ScriptableRendererFeature rewindBlit;
+    [SerializeField] private Material rewindMaterial;
 
     void Start()
     {
@@ -55,6 +60,38 @@ public class CameraEffects : MonoBehaviour
         }
     }
 
+    public void ToggleRewind(bool isOn)
+    {
+        if (isOn) rewindBlit.SetActive(true);
+        StartCoroutine(EffectWeightShift(rewindMaterial, isOn, .1f, rewindBlit));
+    }
+
+    private IEnumerator EffectWeightShift(Material effectMaterial, bool isOn, float duration)
+    {
+        var timer = 0f;
+        while (timer < duration)
+        {
+            effectMaterial.SetFloat("_Weight", Mathf.Lerp(effectMaterial.GetFloat("_Weight"), isOn? 1 : 0, timer / duration));
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        effectMaterial.SetFloat("_Weight", isOn ? 1 : 0);
+    }
+    
+    private IEnumerator EffectWeightShift(Material effectMaterial, bool isOn, float duration, ScriptableRendererFeature blit)
+    {
+        blit.SetActive(true);
+        var timer = 0f;
+        while (timer < duration)
+        {
+            effectMaterial.SetFloat("_Weight", Mathf.Lerp(effectMaterial.GetFloat("_Weight"), isOn? 1 : 0, timer / duration));
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        effectMaterial.SetFloat("_Weight", isOn ? 1 : 0);
+        blit.SetActive(isOn);
+    }
+
     private void OnDisable()
     {
         foreach (var material in unscaledTimeMaterials)
@@ -62,5 +99,6 @@ public class CameraEffects : MonoBehaviour
             material.SetFloat("_unscaledTime", 0);
         }
         unscaledTimeMaterials[0].SetFloat("_contrast", 100f);
+        rewindBlit.SetActive(false);
     }
 }

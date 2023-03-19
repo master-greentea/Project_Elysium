@@ -8,8 +8,8 @@ using UnityEngine.Rendering.Universal;
 
 public class RewindManager : MonoBehaviour
 {
+    [SerializeField] private CameraEffects CameraEffects;
     [Range(3, 10)] public int maxRewindTime;
-    [SerializeField] private ScriptableRendererFeature rewindBlit;
     public static bool isRewinding;
     public static bool canRewind { get; private set; }
     public static int rewindTime { get; set; }
@@ -145,7 +145,7 @@ public class RewindManager : MonoBehaviour
         VHSButtonsManager.canvas.enabled = false;
         Services.VHSDisplay.DisplayNotification("");
         // begin rewind effect
-        rewindBlit.SetActive(true);
+        CameraEffects.ToggleRewind(true);
         // begin enemy rewind
         Services.EnemyAgent.EnemyStateMachine.ChangeState(EnemyStateId.Rewind);
         // for each second in rewind
@@ -154,12 +154,14 @@ public class RewindManager : MonoBehaviour
             // play logged camera movement
             CheckCameraPositionLog();
             // set enemy rewind to last position
-            RewindState.positionToRewindTo = EnemyRewindInfoList[playerPositions.Count - i].position;
+            int positionIndex = playerPositions.Count - i;
+            positionIndex = Mathf.Clamp(positionIndex, 0, rewindTime - 1);
+            RewindState.positionToRewindTo = EnemyRewindInfoList[positionIndex].position;
             // begin player rewind movement
             var timer = 0f;
             while (timer < 1f / RewindSpeed)
             {
-                rewindDir = playerPositions[playerPositions.Count - i] - transform.position;
+                rewindDir = playerPositions[positionIndex] - transform.position;
                 isRewindMoving = rewindDir.magnitude > .5f; // check magnitude to determine whether moving or not
                 rewindDir = rewindDir.normalized; // get normalized vector for move
                 timer += Time.deltaTime;
@@ -174,15 +176,10 @@ public class RewindManager : MonoBehaviour
         // unpause game
         Services.TimedGameMode.TogglePause();
         // stop rewind effect
-        rewindBlit.SetActive(false);
+        CameraEffects.ToggleRewind(false);
         // end rewind
         isRewinding = false;
         canRewind = false;
         StartCoroutine(RewindCooldown());
-    }
-
-    void OnDisable()
-    {
-        rewindBlit.SetActive(false);
     }
 }
