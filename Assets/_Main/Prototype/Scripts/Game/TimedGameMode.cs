@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TimedGameMode : GameManager
 {
@@ -19,6 +20,11 @@ public class TimedGameMode : GameManager
         if (RewindManager.isRewinding) survivedTime -= Time.deltaTime * RewindManager.RewindSpeed;
         else survivedTime += Time.deltaTime;
         Services.VHSDisplay.DisplayTime(survivedTime);
+    }
+
+    public static void TimeSkip(float skipTimeAmount)
+    {
+        survivedTime += skipTimeAmount;
     }
 
     public override void TogglePause()

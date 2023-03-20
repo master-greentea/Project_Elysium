@@ -21,11 +21,15 @@ public class CameraEffects : MonoBehaviour
     // rewind
     [Header("Rewind")]
     [SerializeField] private ScriptableRendererFeature rewindBlit;
-    [SerializeField] private Material rewindMaterial;
+
+    // time skip
+    private float defaultGlitchScale;
+    private bool isTimeSkipping;
 
     void Start()
     {
         vol.profile.TryGet( out dof );
+        defaultGlitchScale = unscaledTimeMaterials[1].GetFloat("_GlitchScale");
     }
 
     // Update is called once per frame
@@ -36,6 +40,7 @@ public class CameraEffects : MonoBehaviour
         {
             material.SetFloat("_unscaledTime", Time.unscaledTime);
         }
+        if (SkipManager.isTimeSkipping) return;
         unscaledTimeMaterials[0].SetFloat("_contrast", GameManager.isGamePaused || GameManager.isGameEnded ? 22f : 100f);
     }
 
@@ -63,7 +68,14 @@ public class CameraEffects : MonoBehaviour
     public void ToggleRewind(bool isOn)
     {
         if (isOn) rewindBlit.SetActive(true);
-        StartCoroutine(EffectWeightShift(rewindMaterial, isOn, .1f, rewindBlit));
+        StartCoroutine(EffectWeightShift(unscaledTimeMaterials[2], isOn, .1f, rewindBlit));
+    }
+
+    public void TriggerTimeSkip()
+    {
+        unscaledTimeMaterials[0].SetFloat("_contrast", 9f);
+        unscaledTimeMaterials[1].SetFloat("_GlitchScale", .01f);
+        StartCoroutine(EffectReset(unscaledTimeMaterials[1], "_GlitchScale", defaultGlitchScale, .1f));
     }
 
     private IEnumerator EffectWeightShift(Material effectMaterial, bool isOn, float duration)
@@ -92,6 +104,12 @@ public class CameraEffects : MonoBehaviour
         blit.SetActive(isOn);
     }
 
+    private IEnumerator EffectReset(Material effectMaterial, string valueName, float defaultValue, float resetAfter)
+    {
+        yield return new WaitForSeconds(resetAfter);
+        effectMaterial.SetFloat(valueName, defaultValue);
+    }
+
     private void OnDisable()
     {
         foreach (var material in unscaledTimeMaterials)
@@ -100,5 +118,6 @@ public class CameraEffects : MonoBehaviour
         }
         unscaledTimeMaterials[0].SetFloat("_contrast", 100f);
         rewindBlit.SetActive(false);
+        unscaledTimeMaterials[1].SetFloat("_GlitchScale", defaultGlitchScale);
     }
 }

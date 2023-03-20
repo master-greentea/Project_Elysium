@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
     // movement
     private Vector2 currentMovementInput;
-    private bool isMoving;
+    public static bool isMoving;
     private bool isSprinting;
     private float moveSpeed;
     
@@ -65,7 +65,6 @@ public class PlayerController : MonoBehaviour
     Animator _animator;
 
     // test
-    private float cangle = 0;
 
     [Header("Test")]
     [SerializeField] private bool isLookingBack;
@@ -74,12 +73,10 @@ public class PlayerController : MonoBehaviour
     void OnEnable()
     {
         input.Player.Enable();
-        input.UIA.Enable();
     }
     void OnDisable()
     {
         input.Player.Disable();
-        input.UIA.Disable();
     }
 
     void AssignComponents()

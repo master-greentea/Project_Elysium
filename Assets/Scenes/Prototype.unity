@@ -1537,7 +1537,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5e31e15eb2727c34b933114d9ab22a07, type: 2}
   rewindBlit: {fileID: 1260217176212577286, guid: c40be3174f62c4acf8c1216858c64956,
     type: 2}
-  rewindMaterial: {fileID: 2100000, guid: 5e31e15eb2727c34b933114d9ab22a07, type: 2}
 --- !u!1 &332919130
 GameObject:
   m_ObjectHideFlags: 0
@@ -6577,10 +6576,11 @@ GameObject:
   - component: {fileID: 1531864261}
   - component: {fileID: 1531864264}
   - component: {fileID: 1531864262}
-  - component: {fileID: 1531864263}
   - component: {fileID: 1531864269}
+  - component: {fileID: 1531864270}
   - component: {fileID: 1531864265}
   - component: {fileID: 1531864268}
+  - component: {fileID: 1531864263}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -6773,6 +6773,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CameraEffects: {fileID: 330585549}
   maxRewindTime: 5
+--- !u!114 &1531864270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531864256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7927777015c55e045adb40a16737f868, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraEffects: {fileID: 330585549}
+  virtualCam: {fileID: 1549638243}
+  timeSkipAmount: 3
 --- !u!1 &1549638242
 GameObject:
   m_ObjectHideFlags: 0

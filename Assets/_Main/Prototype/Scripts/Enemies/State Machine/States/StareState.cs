@@ -34,7 +34,7 @@ namespace Enemies
             yield return new WaitForSeconds(agent.config.delayBeforeTurnToPlayer);
             agent.LookAt(agent.playerTransform.position, 100); // immediately looks at player
             yield return new WaitForSeconds(agent.config.delayBeforeStateChange); // short delay then track or patrol
-            agent.EnemyStateMachine.ChangeState(agent.IsPlayerDetected() ? EnemyStateId.Track : EnemyStateId.Patrol);
+            agent.EnemyStateMachine.ChangeState(agent.IsSeenByPlayer() ? EnemyStateId.Track : EnemyStateId.Patrol);
         }
     }
 }

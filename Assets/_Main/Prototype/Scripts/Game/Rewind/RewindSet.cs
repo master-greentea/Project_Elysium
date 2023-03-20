@@ -144,7 +144,7 @@ public class RewindSet : MonoBehaviour
         // start rewind
         VhsDisplay.DisplayStatus(VHSStatuses.Rewind);
         RewindManager.rewindTime = rewindTime;
-        StartCoroutine(RewindManager.RewindPosition(rewindTime));
+        StartCoroutine(RewindManager.Rewind(rewindTime));
     }
 }
     

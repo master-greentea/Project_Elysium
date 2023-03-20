@@ -14,6 +14,7 @@ public class RewindManager : MonoBehaviour
     public static bool canRewind { get; private set; }
     public static int rewindTime { get; set; }
     public const int RewindSpeed = 2;
+    private PlayerController _playerController;
     // positions
     private CharacterController _characterController;
     private static List<Vector3> playerPositions;
@@ -49,6 +50,7 @@ public class RewindManager : MonoBehaviour
     {
         Services.RewindManager = this;
         _characterController = GetComponent<CharacterController>();
+        _playerController = GetComponent<PlayerController>();
         playerPositions = new List<Vector3>(maxRewindTime);
         CameraRewindInfoList = new List<CameraRewindInfo>();
         EnemyRewindInfoList = new List<EnemyRewindInfo>(maxRewindTime);
@@ -72,7 +74,7 @@ public class RewindManager : MonoBehaviour
     {
         if (!isRewinding) return;
         // rewind player move
-        _characterController.Move(rewindDir * Time.deltaTime * Services.PlayerController.walkSpeed * RewindSpeed);
+        _characterController.Move(rewindDir * Time.deltaTime * _playerController.walkSpeed * RewindSpeed);
     }
 
     void LogInformationPerSecond()
@@ -129,14 +131,14 @@ public class RewindManager : MonoBehaviour
         {
             if (camLog.timeStampInSeconds == Services.VHSDisplay.GetFormattedSecond(TimedGameMode.survivedTime))
             {
-                Services.PlayerController.SwitchCamera(camLog.loggedDirection, .3f);
+                _playerController.SwitchCamera(camLog.loggedDirection, .3f);
                 CameraRewindInfoList.Remove(camLog);
                 break;
             }
         }
     }
 
-    public IEnumerator RewindPosition(int rewindSeconds)
+    public IEnumerator Rewind(int rewindSeconds)
     {
         isRewinding = true;
         // restart time scale for move
