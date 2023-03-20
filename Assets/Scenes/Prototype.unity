@@ -625,7 +625,7 @@ PrefabInstance:
     - target: {fileID: 1667818539651385170, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -359.99963
+      value: -359.9995
       objectReference: {fileID: 0}
     - target: {fileID: 1667818539651385170, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
@@ -4196,7 +4196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 1452925672}
+  m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &839919042
@@ -6019,7 +6019,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.29447666, g: 1, b: 0.24056602, a: 1}
+    m_HighlightedColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -6060,13 +6060,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1443833914}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6091,12 +6091,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1443833914}
   m_CullTransparentMesh: 1
---- !u!1 &1452925672 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1667818539651385171, guid: 76c4e7a4eb813724992fd1aba17dd93c,
-    type: 3}
-  m_PrefabInstance: {fileID: 1667818540413134267}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1452925673 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1667818539651385170, guid: 76c4e7a4eb813724992fd1aba17dd93c,
@@ -8761,7 +8755,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 0.1745283, b: 0.1745283, a: 1}
+    m_HighlightedColor: {r: 0.6431373, g: 0.6431373, b: 0.6431373, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -8802,13 +8796,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2020841694}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8853,6 +8847,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeSetHolder: {fileID: 1794377392}
   timerText: {fileID: 2132867562}
+  leftArrowText: {fileID: 1946954445}
+  rightArrowText: {fileID: 560324964}
 --- !u!1 &2033292413
 GameObject:
   m_ObjectHideFlags: 0

@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: -120, w: 0}
+  m_RaycastPadding: {x: 0, y: -20, z: -120, w: -20}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -148,8 +148,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tmp: {fileID: 1667818539675290515}
+  buttonId: 0
   button: {fileID: 0}
-  isMouseOver: 0
 --- !u!1 &1667818539675290525
 GameObject:
   m_ObjectHideFlags: 0

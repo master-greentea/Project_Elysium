@@ -74,10 +74,12 @@ public class PlayerController : MonoBehaviour
     void OnEnable()
     {
         input.Player.Enable();
+        input.UIA.Enable();
     }
     void OnDisable()
     {
         input.Player.Disable();
+        input.UIA.Disable();
     }
 
     void AssignComponents()

@@ -17,10 +17,10 @@ public class GameManager : MonoBehaviour
         isGamePaused = false;
     }
 
-    private void TogglePlayerInput(PrototypePlayerInput.PlayerActions actions, bool isActive)
+    private void TogglePlayerInput(PrototypePlayerInput actions, bool isActive)
     {
-        if (isActive) actions.Enable();
-        else actions.Disable();
+        if (isActive) actions.Player.Enable();
+        else actions.Player.Disable();
     }
 
     public virtual void TogglePause()
@@ -35,11 +35,11 @@ public class GameManager : MonoBehaviour
         Services.VHSButtonsManager.SwitchButtonSet("Menu");
         // default to select resume
         Services.VHSButtonsManager.SetButtonSelected(VHSButtons.Resume);
-        TogglePlayerInput(Services.PlayerController.input.Player, false);
+        TogglePlayerInput(Services.PlayerController.input, false);
         // deselect all buttons if un-pausing
         if (isGamePaused) return;
         Services.VHSButtonsManager.DeselectAll();
-        TogglePlayerInput(Services.PlayerController.input.Player, true);
+        TogglePlayerInput(Services.PlayerController.input, true);
     }
 
     public virtual void EndGame()

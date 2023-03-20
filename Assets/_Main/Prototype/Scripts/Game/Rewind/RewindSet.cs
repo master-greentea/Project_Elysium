@@ -5,12 +5,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
 public class RewindSet : MonoBehaviour
 {
+    // [SerializeField] private InputAction setTimeInputAction;
     [SerializeField] private GameObject timeSetHolder;
     [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI leftArrowText;
+    [SerializeField] private TextMeshProUGUI rightArrowText;
     private bool isSettingTime;
     // time
     private int setTime;
@@ -36,11 +40,11 @@ public class RewindSet : MonoBehaviour
     void Update()
     {
         // keyboard input for adding / decreasing time
-        if (Keyboard.current[Key.LeftArrow].wasPressedThisFrame)
+        if (Keyboard.current[Key.LeftArrow].wasPressedThisFrame || Gamepad.current[GamepadButton.DpadLeft].wasPressedThisFrame)
         {
             DecreaseTime();
         }
-        if (Keyboard.current[Key.RightArrow].wasPressedThisFrame)
+        if (Keyboard.current[Key.LeftArrow].wasPressedThisFrame || Gamepad.current[GamepadButton.DpadRight].wasPressedThisFrame)
         {
             IncreaseTime();
         }
@@ -69,6 +73,8 @@ public class RewindSet : MonoBehaviour
         setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime);
         timerText.text = VhsDisplay.GetFormattedTime(setTime);
         timerText.color = Color.white;
+        rightArrowText.text = "";
+        leftArrowText.text = "<";
         // de-activate other buttons
         VhsButtonsManager.SetButtonActivate(VHSButtons.Back, false);
         VhsButtonsManager.SetButtonActivate(VHSButtons.SetTime, false);
@@ -87,6 +93,7 @@ public class RewindSet : MonoBehaviour
         {
             setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindManager.maxRewindTime;
             timerText.color = Color.red;
+            leftArrowText.text = "";
             timerText.GetComponent<Animator>().Play("SetTimeShake");
         }
         // clamp set time to not go under started at time
@@ -95,8 +102,10 @@ public class RewindSet : MonoBehaviour
             setTime = VhsDisplay.GetFormattedSecond(Services.TimedGameMode.startAtSecond);
             rewindTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime); // only rewind to 0
             timerText.color = Color.red;
+            leftArrowText.text = "";
             timerText.GetComponent<Animator>().Play("SetTimeShake");
         }
+        rightArrowText.text = ">";
         timerText.text = VhsDisplay.GetFormattedTime(setTime);
     }
 
@@ -111,9 +120,11 @@ public class RewindSet : MonoBehaviour
         if (setTime >= VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime))
         {
             setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime);
+            rightArrowText.text = "";
             timerText.GetComponent<Animator>().Play("SetTimeShake");
         }
         timerText.color = Color.white;
+        leftArrowText.text = "<";
         timerText.text = VhsDisplay.GetFormattedTime(setTime);
     }
 
