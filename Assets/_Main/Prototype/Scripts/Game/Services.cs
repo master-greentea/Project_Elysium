@@ -8,6 +8,7 @@ public static class Services
     // Player
     public static PlayerController PlayerController;
     public static RewindManager RewindManager;
+    public static SkipManager SkipManager;
     // AI
     public static EnemyAgent EnemyAgent;
     // Managers

@@ -6,6 +6,7 @@ using System.Net.Security;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public enum VHSButtons
 {
@@ -18,12 +19,26 @@ public class VHSButtonsManager : MonoBehaviour
     private VHSButton[] vhsButtons;
     [SerializeField] private Canvas[] vhsButtonSets;
     public static Canvas canvas;
+    // services
+    private PlayerController PlayerController;
+    private VHSDisplay VhsDisplay;
+    
+    void AssignServices()
+    {
+        VhsDisplay = Services.VHSDisplay;
+        PlayerController = Services.PlayerController;
+    }
 
     private void Awake()
     {
         Services.VHSButtonsManager = this;
         EventSystem = EventSystem.current;
         canvas = GetComponent<Canvas>();
+    }
+
+    private void Start()
+    {
+        AssignServices();
     }
 
     /// <summary>
@@ -96,5 +111,45 @@ public class VHSButtonsManager : MonoBehaviour
                 child.gameObject.SetActive(true); // turn on button objects
             }
         }
+    }
+    
+    // menu functions
+    public void Resume()
+    {
+        Services.GameManager.TogglePause();
+    }
+
+    public void Rewind()
+    {
+        SwitchButtonSet("Rewind");
+        SetButtonSelected(VHSButtons.Back);
+    }
+
+    public void Settings()
+    {
+        VhsDisplay.DisplayStatus(VHSStatuses.Settings);
+        SwitchButtonSet("Settings");
+        SetButtonSelected(VHSButtons.Back);
+    }
+
+    public void Eject()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        // Application.Quit();
+    }
+    
+    // settings functions
+    public void BackFromSettings()
+    {
+        VhsDisplay.DisplayStatus(VHSStatuses.Paused);
+        SwitchButtonSet("Menu");
+        SetButtonSelected(VHSButtons.Settings);
+    }
+
+    public void InvertCamera()
+    {
+        PlayerController.isInvertedControls = !PlayerController.isInvertedControls;
+        GetButtonByID(VHSButtons.InvertCamera).buttonText = PlayerController.isInvertedControls ? "Invert Camera: ON" : "Invert Camera: OFF";
+        PlayerPrefs.SetInt("InvertCam", PlayerController.isInvertedControls ? 1 : 0);
     }
 }

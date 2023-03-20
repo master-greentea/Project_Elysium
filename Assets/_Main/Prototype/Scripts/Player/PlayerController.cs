@@ -242,7 +242,7 @@ public class PlayerController : MonoBehaviour
         if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
         if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
         // log camera position
-        Services.RewindManager.LogCamera(currentCamDirection);
+        RewindManager.LogCamera(currentCamDirection);
         SwitchCamera((camDirection)camIndex, camLerpDuration);
     }
 

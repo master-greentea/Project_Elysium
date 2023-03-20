@@ -35,7 +35,7 @@ namespace Enemies
     
         public void Update(EnemyAgent agent)
         {
-            agent.navMeshAgent.SetDestination(positionToRewindTo);
+            agent.navMeshAgent.Move((positionToRewindTo - agent.transform.position).normalized * (rewindSpeed * Time.fixedDeltaTime));
             if (!RewindManager.isRewinding) agent.EnemyStateMachine.ChangeState(stateToResetTo);
         }
 

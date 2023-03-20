@@ -235,8 +235,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1197863470}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Settings
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VHSButtonsManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1667818539651385170, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
@@ -534,8 +544,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1197863470}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Rewind
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VHSButtonsManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1667818539651385170, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
@@ -674,8 +694,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1197863470}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Eject
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VHSButtonsManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1667818539651385170, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
@@ -911,8 +941,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1197863470}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: BackFromSettings
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VHSButtonsManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1667818539651385170, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
@@ -8970,8 +9010,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1197863470}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: InvertCamera
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VHSButtonsManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1667818539651385170, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
@@ -9736,6 +9786,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1529755537}
     m_Modifications:
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1197863470}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667818539651385169, guid: 76c4e7a4eb813724992fd1aba17dd93c,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VHSButtonsManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1667818539651385170, guid: 76c4e7a4eb813724992fd1aba17dd93c,
         type: 3}
       propertyPath: m_Pivot.x

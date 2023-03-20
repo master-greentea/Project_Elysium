@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Enemies;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -17,8 +18,8 @@ public class RewindManager : MonoBehaviour
     private PlayerController _playerController;
     // positions
     private CharacterController _characterController;
-    private static List<Vector3> playerPositions;
-    private int lastSecond;
+    private static List<Vector3> PlayerPositionList;
+    private static int lastSecond;
     private Vector3 rewindDir;
     public static bool isRewindMoving;
     // camera input
@@ -51,7 +52,7 @@ public class RewindManager : MonoBehaviour
         Services.RewindManager = this;
         _characterController = GetComponent<CharacterController>();
         _playerController = GetComponent<PlayerController>();
-        playerPositions = new List<Vector3>(maxRewindTime);
+        PlayerPositionList = new List<Vector3>(maxRewindTime);
         CameraRewindInfoList = new List<CameraRewindInfo>();
         EnemyRewindInfoList = new List<EnemyRewindInfo>(maxRewindTime);
         lastSecond = -1;
@@ -79,26 +80,13 @@ public class RewindManager : MonoBehaviour
 
     void LogInformationPerSecond()
     {
-        // do not log position if is rewinding
-        if (isRewinding) return;
+        // do not log position if is rewinding or skipping
+        if (isRewinding || SkipManager.isTimeSkipping) return;
         // check if time has passed
-        int thisSecond = Services.VHSDisplay.GetFormattedSecond(TimedGameMode.survivedTime);
-        if (thisSecond <= lastSecond) return;
-        // log position
-        if (playerPositions.Count < playerPositions.Capacity)
-        {
-            playerPositions.Add(transform.position);
-            EnemyRewindInfoList.Add(new EnemyRewindInfo(Services.EnemyAgent.transform.position, Services.EnemyAgent.EnemyStateMachine.currentState));
-        }
-        else
-        {
-            playerPositions.RemoveAt(0);
-            EnemyRewindInfoList.RemoveAt(0);
-            playerPositions.Add(transform.position);
-            EnemyRewindInfoList.Add(new EnemyRewindInfo(Services.EnemyAgent.transform.position, Services.EnemyAgent.EnemyStateMachine.currentState));
-        }
-        // set new position log time
-        lastSecond = thisSecond;
+        if (Services.VHSDisplay.GetFormattedSecond(TimedGameMode.survivedTime) <= lastSecond) return;
+        // log player position, enemy position, and enemy state
+        LogPlayerPosition(transform.position);
+        LogEnemyPosition(Services.EnemyAgent.transform.position);
         // clean up camera log list
         foreach (var (value, i) in CameraRewindInfoList.Select((value, i) => ( value, i )))
         {
@@ -107,8 +95,38 @@ public class RewindManager : MonoBehaviour
             break;
         }
     }
+
+    public static void LogPlayerPosition(Vector3 position)
+    {
+        // log player position
+        if (PlayerPositionList.Count < PlayerPositionList.Capacity)
+        {
+            PlayerPositionList.Add(position);
+        }
+        else
+        {
+            PlayerPositionList.RemoveAt(0);
+            PlayerPositionList.Add(position);
+        }
+        lastSecond = Services.VHSDisplay.GetFormattedSecond(TimedGameMode.survivedTime);
+    }
+
+    public static void LogEnemyPosition(Vector3 position)
+    {
+        // log enemy position and enemy state
+        if (EnemyRewindInfoList.Count < EnemyRewindInfoList.Capacity)
+        {
+            EnemyRewindInfoList.Add(new EnemyRewindInfo(position, Services.EnemyAgent.EnemyStateMachine.currentState));
+        }
+        else
+        {
+            EnemyRewindInfoList.RemoveAt(0);
+            EnemyRewindInfoList.Add(new EnemyRewindInfo(position, Services.EnemyAgent.EnemyStateMachine.currentState));
+        }
+        lastSecond = Services.VHSDisplay.GetFormattedSecond(TimedGameMode.survivedTime);
+    }
     
-    public void LogCamera(camDirection direction)
+    public static void LogCamera(camDirection direction)
     {
         // do not log position if is rewinding
         if (isRewinding) return;
@@ -156,29 +174,34 @@ public class RewindManager : MonoBehaviour
             // play logged camera movement
             CheckCameraPositionLog();
             // set enemy rewind to last position
-            int positionIndex = playerPositions.Count - i;
+            int positionIndex = PlayerPositionList.Count - i;
             positionIndex = Mathf.Clamp(positionIndex, 0, rewindTime - 1);
             RewindState.positionToRewindTo = EnemyRewindInfoList[positionIndex].position;
             // begin player rewind movement
             var timer = 0f;
             while (timer < 1f / RewindSpeed)
             {
-                rewindDir = playerPositions[positionIndex] - transform.position;
+                rewindDir = PlayerPositionList[positionIndex] - transform.position;
                 isRewindMoving = rewindDir.magnitude > .5f; // check magnitude to determine whether moving or not
                 rewindDir = rewindDir.normalized; // get normalized vector for move
                 timer += Time.deltaTime;
                 yield return null;
             }
+            // rewind time
+            TimedGameMode.AddTime(-1);
         }
         isRewindMoving = false;
         // clean up player positions list
-        playerPositions.RemoveRange(playerPositions.Count - rewindTime, rewindTime);
+        PlayerPositionList.RemoveRange(PlayerPositionList.Count - rewindTime, rewindTime);
         // set new position log time
         lastSecond = Services.VHSDisplay.GetFormattedSecond(TimedGameMode.survivedTime);
-        // unpause game
-        Services.TimedGameMode.TogglePause();
         // stop rewind effect
         CameraEffects.ToggleRewind(false);
+        // unpause game after a short break
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(.5f);
+        // unpause game
+        Services.TimedGameMode.TogglePause();
         // end rewind
         isRewinding = false;
         canRewind = false;

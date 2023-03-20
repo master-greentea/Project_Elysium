@@ -84,7 +84,7 @@ public class CameraEffects : MonoBehaviour
         while (timer < duration)
         {
             effectMaterial.SetFloat("_Weight", Mathf.Lerp(effectMaterial.GetFloat("_Weight"), isOn? 1 : 0, timer / duration));
-            timer += Time.deltaTime;
+            timer += Time.unscaledDeltaTime;
             yield return null;
         }
         effectMaterial.SetFloat("_Weight", isOn ? 1 : 0);
@@ -97,7 +97,7 @@ public class CameraEffects : MonoBehaviour
         while (timer < duration)
         {
             effectMaterial.SetFloat("_Weight", Mathf.Lerp(effectMaterial.GetFloat("_Weight"), isOn? 1 : 0, timer / duration));
-            timer += Time.deltaTime;
+            timer += Time.unscaledDeltaTime;
             yield return null;
         }
         effectMaterial.SetFloat("_Weight", isOn ? 1 : 0);
@@ -106,7 +106,7 @@ public class CameraEffects : MonoBehaviour
 
     private IEnumerator EffectReset(Material effectMaterial, string valueName, float defaultValue, float resetAfter)
     {
-        yield return new WaitForSeconds(resetAfter);
+        yield return new WaitForSecondsRealtime(resetAfter);
         effectMaterial.SetFloat(valueName, defaultValue);
     }
 

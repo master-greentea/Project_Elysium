@@ -17,14 +17,13 @@ public class TimedGameMode : GameManager
     
     void Update()
     {
-        if (RewindManager.isRewinding) survivedTime -= Time.deltaTime * RewindManager.RewindSpeed;
-        else survivedTime += Time.deltaTime;
+        if (!RewindManager.isRewinding) survivedTime += Time.deltaTime;
         Services.VHSDisplay.DisplayTime(survivedTime);
     }
 
-    public static void TimeSkip(float skipTimeAmount)
+    public static void AddTime(float addTimeAmount)
     {
-        survivedTime += skipTimeAmount;
+        survivedTime += addTimeAmount;
     }
 
     public override void TogglePause()

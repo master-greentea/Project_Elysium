@@ -39,17 +39,20 @@ public class RewindSet : MonoBehaviour
 
     void Update()
     {
+        // during setting time
+        if (!isSettingTime) return;
         // keyboard input for adding / decreasing time
-        if (Keyboard.current[Key.LeftArrow].wasPressedThisFrame || Gamepad.current[GamepadButton.DpadLeft].wasPressedThisFrame)
+        if (Keyboard.current[Key.LeftArrow].wasPressedThisFrame || Gamepad.current[GamepadButton.DpadLeft].wasPressedThisFrame || 
+            Gamepad.current.leftStick.left.wasPressedThisFrame)
         {
             DecreaseTime();
         }
-        if (Keyboard.current[Key.LeftArrow].wasPressedThisFrame || Gamepad.current[GamepadButton.DpadRight].wasPressedThisFrame)
+        if (Keyboard.current[Key.RightArrow].wasPressedThisFrame || Gamepad.current[GamepadButton.DpadRight].wasPressedThisFrame ||
+            Gamepad.current.leftStick.right.wasPressedThisFrame)
         {
             IncreaseTime();
         }
-        // during setting time
-        if (!isSettingTime) return;
+        
         rewindTime = Mathf.Clamp(rewindTime, 0, RewindManager.maxRewindTime);
         // do not allow confirm time if no rewind time is set
         VhsButtonsManager.SetButtonActivate(VHSButtons.ConfirmTime, rewindTime != 0);

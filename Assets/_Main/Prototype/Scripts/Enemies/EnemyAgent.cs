@@ -14,6 +14,8 @@ namespace Enemies
         [HideInInspector] public Transform playerTransform;
         [HideInInspector] public NavMeshAgent navMeshAgent;
 
+        public static bool isMoving { get; private set; }
+
         // tracking
         [HideInInspector] public List<Vector3> mappedPlayerPositions;
         [HideInInspector] public bool trackMapped;
@@ -48,6 +50,7 @@ namespace Enemies
         private void Update()
         {
             EnemyStateMachine.Update();
+            isMoving = navMeshAgent.speed > 0;
 
             // debugs
             // Debug.Log(IsSeenByPlayer());
