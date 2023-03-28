@@ -42,11 +42,12 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Default sprinting speed")]
     public float sprintSpeed = 8f;
     [Space(10)]
-    [Tooltip("How fast the character accelerrats")]
+    [Tooltip("How fast the character accelerates")]
     public float speedChangeRate = 10f;
     [Tooltip("How fast the character rotates")]
     [Range(0.0f, 0.5f)]
     public float rotationSpeed = 0.1f;
+    public static float currentSpeed { get; private set; }
 
     // dash
     private bool isDashing;
@@ -126,18 +127,20 @@ public class PlayerController : MonoBehaviour
         var currentState = _animator.GetCurrentAnimatorStateInfo(0).ToString();
         if (isMoving || RewindManager.isRewindMoving)
         {
-            AnimationChange.ChangeAnimationState(_animator, currentState, "NewRun", true, currentMovementInput.x < 0);
+            AnimationChange.ChangeAnimationState(_animator, currentState, "NewRun", true,
+                RewindManager.isRewindMoving ? _characterController.velocity.x > 0 : currentMovementInput.x < 0);
             _animator.speed = _characterController.velocity.magnitude * .2f;
         }
         else { 
             AnimationChange.ChangeAnimationState(_animator, currentState, "NewIdle", false, currentMovementInput.x < 0); 
             _animator.speed = RewindManager.isRewinding ? RewindManager.RewindSpeed : 1;
-        }   
+        }
     }
 
     void Update()
     {
         HandleAnimation();
+        currentSpeed = _characterController.velocity.magnitude;
     }
 
     void FixedUpdate()
@@ -191,8 +194,8 @@ public class PlayerController : MonoBehaviour
             Rotate(new Vector3(move.x, 0, move.z), rotationSpeed);
         }
         // move player
-        if (isDashing) _characterController.Move(transform.forward * Time.deltaTime * (dashDistance / dashDuration));
-        else _characterController.Move((move.normalized + gravityVector) * Time.deltaTime * moveSpeed);
+        if (isDashing) _characterController.Move(transform.forward * (Time.deltaTime * (dashDistance / dashDuration)));
+        else _characterController.Move((move.normalized + gravityVector) * (Time.deltaTime * moveSpeed));
     }
     // movement rotation
     private void Rotate(Vector3 rotateTo, float rate)

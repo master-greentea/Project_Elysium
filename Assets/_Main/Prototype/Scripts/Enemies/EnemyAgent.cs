@@ -19,6 +19,10 @@ namespace Enemies
         // tracking
         [HideInInspector] public List<Vector3> mappedPlayerPositions;
         [HideInInspector] public bool trackMapped;
+        
+        // forecast
+        [SerializeField] public Transform forecastTransform;
+        [HideInInspector] public float forecastDistance;
 
         private void InitializeStateMachine()
         {
@@ -96,8 +100,27 @@ namespace Enemies
         public bool IsSeenByPlayer()
         {
             // Physics.OverlapSphereNonAlloc(transform.position, enemyFov.sightRange, new Collider[1], LayerMask.GetMask("Player")) > 0 &&
-            return  !Physics.Linecast(transform.position, playerTransform.position, enemyFov.obstacleLayers)
+            return !Physics.Linecast(transform.position, playerTransform.position, enemyFov.obstacleLayers)
                     && GetComponent<Renderer>().isVisible;
+        }
+
+        /// <summary>
+        /// check if the forecast is seen by player and in view
+        /// </summary>
+        /// <returns>if the forecast is seen by player and in view</returns>
+        public bool IsForecastSeenByPlayer()
+        {
+            // get camera planes
+            var planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+            var point = forecastTransform.position;
+            foreach (var plane in planes)
+            {
+                // check if forecast is seen in camera view
+                if (plane.GetDistanceToPoint(point) < 0)
+                    return false;
+            }
+            // if seen in view, then determine whether seen by player
+            return !Physics.Linecast(forecastTransform.position, playerTransform.position, enemyFov.obstacleLayers);
         }
         
         /// <summary>
@@ -147,7 +170,7 @@ namespace Enemies
         /// <summary>
         /// Debug gizmos for enemy vision.
         /// </summary>
-        private void OnDrawGizmos()
+        public void OnDrawGizmos()
         {
             // mapped player track
             foreach (Vector3 t in mappedPlayerPositions)
@@ -167,6 +190,9 @@ namespace Enemies
                     Gizmos.DrawSphere(corner, .1f);
                     previousCorner = corner;
                 }
+                // forecast
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireSphere(transform.position + transform.forward * forecastDistance, navMeshAgent.radius);
             }
         }
     }

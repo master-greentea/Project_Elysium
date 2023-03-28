@@ -53,7 +53,7 @@ public class RewindSet : MonoBehaviour
             IncreaseTime();
         }
         
-        rewindTime = Mathf.Clamp(rewindTime, 0, RewindManager.maxRewindTime);
+        rewindTime = Mathf.Clamp(rewindTime, 0, RewindManager.maxRewindTimeAmount);
         // do not allow confirm time if no rewind time is set
         VhsButtonsManager.SetButtonActivate(VHSButtons.ConfirmTime, rewindTime != 0);
     }
@@ -92,9 +92,9 @@ public class RewindSet : MonoBehaviour
         // set time on UI (visuals)
         setTime--;
         // clamp set time to not exceed max allowed rewind time
-        if (setTime <= VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindManager.maxRewindTime)
+        if (setTime <= VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindManager.maxRewindTimeAmount)
         {
-            setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindManager.maxRewindTime;
+            setTime = VhsDisplay.GetFormattedSecond(TimedGameMode.survivedTime) - RewindManager.maxRewindTimeAmount;
             timerText.color = Color.red;
             leftArrowText.text = "";
             timerText.GetComponent<Animator>().Play("SetTimeShake");
@@ -146,7 +146,7 @@ public class RewindSet : MonoBehaviour
         CancelSetTime();
         // start rewind
         VhsDisplay.DisplayStatus(VHSStatuses.Rewind);
-        RewindManager.rewindTime = rewindTime;
+        RewindManager.setRewindTime = rewindTime;
         StartCoroutine(RewindManager.Rewind(rewindTime));
     }
 }

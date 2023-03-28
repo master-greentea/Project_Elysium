@@ -9,10 +9,11 @@ public class SkipManager : MonoBehaviour
 {
     [SerializeField] private CameraEffects cameraEffects;
     [SerializeField] private CinemachineVirtualCamera virtualCam;
-    [SerializeField] [Range(3, 6)] private int timeSkipAmount;
+    [SerializeField] [Range(2, 6)] public int timeSkipAmount;
     private float playerSkipDistance;
     private float enemySkipDistance;
     public static bool isTimeSkipping;
+    public static bool canTimeSkip { get; private set; }
     private CinemachineFramingTransposer virtualCamFramingTransposer;
     private CharacterController _characterController;
 
@@ -21,14 +22,22 @@ public class SkipManager : MonoBehaviour
         Services.SkipManager = this;
         _characterController = GetComponent<CharacterController>();
         virtualCamFramingTransposer = virtualCam.GetCinemachineComponent<CinemachineFramingTransposer>();
-        playerSkipDistance = timeSkipAmount * Services.PlayerController.walkSpeed;
+        canTimeSkip = true;
+    }
+    
+    IEnumerator TimeSkipCooldown()
+    {
+        yield return new WaitForSeconds(15f);
+        Services.VHSDisplay.DisplayNotification("Rewind: Ready");
+        canTimeSkip = true;
     }
     
     void Update()
     {
+        // debug skip
         if (Keyboard.current[Key.G].wasPressedThisFrame)
         {
-            StartCoroutine(TimeSkip());
+            // StartCoroutine(TimeSkip());
         }
     }
 
@@ -51,13 +60,14 @@ public class SkipManager : MonoBehaviour
             : distance;
     }
 
-    private IEnumerator TimeSkip()
+    public IEnumerator TimeSkip()
     {
         isTimeSkipping = true;
         // instantly shift camera
         SetCameraDamping(0);
         cameraEffects.TriggerTimeSkip();
         CalculateEnemySkipInfo(out var et, out enemySkipDistance);
+        playerSkipDistance = timeSkipAmount * PlayerController.currentSpeed;
         // for each second that is skipped
         for (int i = 1; i <= timeSkipAmount; i++)
         {
@@ -77,5 +87,7 @@ public class SkipManager : MonoBehaviour
         // reset camera to smooth movement
         SetCameraDamping(1);
         isTimeSkipping = false;
+        canTimeSkip = false;
+        StartCoroutine(TimeSkipCooldown());
     }
 }

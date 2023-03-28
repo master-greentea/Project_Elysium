@@ -23,7 +23,7 @@ namespace Enemies
         public void Enter(EnemyAgent agent)
         {
             // calculate position and reset state from rewind info
-            rewindPositionIndex = RewindManager.EnemyRewindInfoList.Count - RewindManager.rewindTime;
+            rewindPositionIndex = RewindManager.EnemyRewindInfoList.Count - RewindManager.setRewindTime;
             stateToResetTo = RewindManager.EnemyRewindInfoList[rewindPositionIndex].stateId;
             // set rewind speed & acceleration
             rewindSpeed = agent.config.chaseSpeed * RewindManager.RewindSpeed;
@@ -42,7 +42,7 @@ namespace Enemies
         public void Exit(EnemyAgent agent)
         {
             // clean rewind info list
-            RewindManager.EnemyRewindInfoList.RemoveRange(rewindPositionIndex, RewindManager.rewindTime);
+            RewindManager.EnemyRewindInfoList.RemoveRange(rewindPositionIndex, RewindManager.setRewindTime);
             agent.navMeshAgent.angularSpeed = 260;
         }
     }
