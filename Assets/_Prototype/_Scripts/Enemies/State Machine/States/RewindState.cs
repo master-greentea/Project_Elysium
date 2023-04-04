@@ -26,22 +26,22 @@ namespace Enemies
             rewindPositionIndex = RewindManager.enemyRewindInfoList.Count - RewindManager.SetRewindTime;
             stateToResetTo = RewindManager.enemyRewindInfoList[rewindPositionIndex].stateId;
             // set rewind speed & acceleration
-            rewindSpeed = agent.config.chaseSpeed * RewindManager.RewindSpeed;
+            rewindSpeed = agent.config.chaseSpeed * RewindManager.RewindSpeed + (Services.PlayerController.walkSpeed - agent.config.chaseSpeed) * 2;
             rewindAcceleration = 50;
             agent.ChangeSpeed(rewindSpeed, rewindAcceleration);
             agent.navMeshAgent.angularSpeed = 1000;
-            Debug.Log("Entered rewind state, target position: " + positionToRewindTo);
         }
     
         public void Update(EnemyAgent agent)
         {
-            agent.navMeshAgent.Move((positionToRewindTo - agent.transform.position).normalized * (rewindSpeed * Time.fixedDeltaTime));
+            agent.navMeshAgent.SetDestination(positionToRewindTo);
             if (!RewindManager.isRewinding) agent.EnemyStateMachine.ChangeState(stateToResetTo);
         }
 
         public void Exit(EnemyAgent agent)
         {
             // clean rewind info list
+            agent.LookAt(agent.playerTransform.position, 100); // reset to look at player
             RewindManager.enemyRewindInfoList.RemoveRange(rewindPositionIndex, RewindManager.SetRewindTime);
             agent.navMeshAgent.angularSpeed = 260;
         }
