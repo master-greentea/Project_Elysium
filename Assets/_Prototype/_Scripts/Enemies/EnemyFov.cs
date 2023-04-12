@@ -206,7 +206,7 @@ public class EnemyFov : MonoBehaviour
         
         // draw yellow for sight range
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, sightRange);
+        // Gizmos.DrawWireSphere(transform.position, sightRange);
         
         // draw red for absolute range
         Gizmos.color = Color.red;
