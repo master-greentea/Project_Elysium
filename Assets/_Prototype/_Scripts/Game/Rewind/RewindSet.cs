@@ -21,13 +21,13 @@ public class RewindSet : MonoBehaviour
     private int rewindTime;
     // services
     private VHSDisplay VhsDisplay;
-    private VHSButtonsManager VhsButtonsManager;
+    private PauseManager VhsButtonsManager;
     private RewindManager RewindManager;
 
     void AssignServices()
     {
         VhsDisplay = Services.VHSDisplay;
-        VhsButtonsManager = Services.VHSButtonsManager;
+        VhsButtonsManager = Services.PauseManager;
         RewindManager = Services.RewindManager;
     }
 

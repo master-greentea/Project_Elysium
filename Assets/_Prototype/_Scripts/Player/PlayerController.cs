@@ -103,6 +103,28 @@ public class PlayerController : MonoBehaviour
         input.Player.LookBack.canceled += ctx => OnLookBack(false);
         // pausing
         input.Player.Pause.performed += ctx => Services.TimedGameMode.TogglePause();
+        // console
+        input.Player.Console.performed += ctx => Services.GameManager.ToggleConsole();
+    }
+
+    void UnsubscribeInputEvents()
+    {
+        // walking & running
+        input.Player.Move.performed -= OnMovementInput;
+        input.Player.Move.canceled -= OnMovementInput;
+        input.Player.Sprint.performed -= context => isSprinting = context.ReadValueAsButton();
+        // dashing
+        canDash = true;
+        input.Player.Dash.performed -= Dash;
+        // camera change
+        input.Player.ChangeCameraLeft.performed -= ctx => OnCameraInput("Left");
+        input.Player.ChangeCameraRight.performed -= ctx => OnCameraInput("Right");
+        input.Player.LookBack.performed -= ctx => OnLookBack(true);
+        input.Player.LookBack.canceled -= ctx => OnLookBack(false);
+        // pausing
+        input.Player.Pause.performed -= ctx => Services.TimedGameMode.TogglePause();
+        // console
+        input.Player.Console.performed -= ctx => Services.GameManager.ToggleConsole();
     }
 
     void LoadControlSettings()

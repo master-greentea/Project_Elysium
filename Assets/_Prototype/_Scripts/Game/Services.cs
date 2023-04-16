@@ -13,8 +13,9 @@ public static class Services
     public static EnemyAgent EnemyAgent;
     // Managers
     public static GameManager GameManager;
+    public static ConsoleManager ConsoleManager;
     public static VHSDisplay VHSDisplay;
-    public static VHSButtonsManager VHSButtonsManager;
+    public static PauseManager PauseManager;
     // Game modes
     public static TimedGameMode TimedGameMode;
 }

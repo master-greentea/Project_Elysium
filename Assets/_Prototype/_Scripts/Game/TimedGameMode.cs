@@ -30,6 +30,6 @@ public class TimedGameMode : GameManager
     {
         base.TogglePause();
         // only allow rewind when more than 10 seconds has passed
-        Services.VHSButtonsManager.SetButtonActivate(VHSButtons.Rewind, RewindManager.CanRewind);
+        Services.PauseManager.SetButtonActivate(VHSButtons.Rewind, RewindManager.CanRewind);
     }
 }

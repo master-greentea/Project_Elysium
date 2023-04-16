@@ -165,7 +165,7 @@ public class RewindManager : MonoBehaviour
         // restart time scale for move
         Time.timeScale = 1;
         // turn off menu
-        VHSButtonsManager.canvas.enabled = false;
+        PauseManager.canvas.enabled = false;
         Services.VHSDisplay.DisplayNotification("");
         // begin rewind effect
         cameraEffects.ToggleRewind(true);

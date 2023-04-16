@@ -89,6 +89,15 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Console"",
+                    ""type"": ""Button"",
+                    ""id"": ""eaaa3df6-f678-44f2-8077-25a1c7e34a41"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -331,6 +340,28 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc49783e-0a69-44c6-9ff8-6359b390cead"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6fecf51b-fad8-4b47-81a0-5891b1cd99a8"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Console"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -881,6 +912,7 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
         m_Player_ChangeCameraRight = m_Player.FindAction("Change Camera Right", throwIfNotFound: true);
         m_Player_LookBack = m_Player.FindAction("Look Back", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
+        m_Player_Console = m_Player.FindAction("Console", throwIfNotFound: true);
         // UIA
         m_UIA = asset.FindActionMap("UIA", throwIfNotFound: true);
         m_UIA_Navigate = m_UIA.FindAction("Navigate", throwIfNotFound: true);
@@ -959,6 +991,7 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
     private readonly InputAction m_Player_ChangeCameraRight;
     private readonly InputAction m_Player_LookBack;
     private readonly InputAction m_Player_Pause;
+    private readonly InputAction m_Player_Console;
     public struct PlayerActions
     {
         private @PrototypePlayerInput m_Wrapper;
@@ -970,6 +1003,7 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
         public InputAction @ChangeCameraRight => m_Wrapper.m_Player_ChangeCameraRight;
         public InputAction @LookBack => m_Wrapper.m_Player_LookBack;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
+        public InputAction @Console => m_Wrapper.m_Player_Console;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1000,6 +1034,9 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
                 @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Console.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnConsole;
+                @Console.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnConsole;
+                @Console.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnConsole;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1025,6 +1062,9 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @Console.started += instance.OnConsole;
+                @Console.performed += instance.OnConsole;
+                @Console.canceled += instance.OnConsole;
             }
         }
     }
@@ -1161,6 +1201,7 @@ public partial class @PrototypePlayerInput : IInputActionCollection2, IDisposabl
         void OnChangeCameraRight(InputAction.CallbackContext context);
         void OnLookBack(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnConsole(InputAction.CallbackContext context);
     }
     public interface IUIAActions
     {

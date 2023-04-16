@@ -10,10 +10,11 @@ using UnityEngine.SceneManagement;
 
 public enum VHSButtons
 {
-    Resume, Rewind, Settings, Eject, Back, InvertCamera, SetTime, ConfirmTime, CancelTime
+    Resume, Rewind, Settings, Eject, Back, InvertCamera, SetTime, ConfirmTime, CancelTime,
+    ConsoleResume
 }
 
-public class VHSButtonsManager : MonoBehaviour
+public class PauseManager : MonoBehaviour
 {
     private EventSystem EventSystem;
     private VHSButton[] vhsButtons;
@@ -31,7 +32,7 @@ public class VHSButtonsManager : MonoBehaviour
 
     private void Awake()
     {
-        Services.VHSButtonsManager = this;
+        Services.PauseManager = this;
         EventSystem = EventSystem.current;
         canvas = GetComponent<Canvas>();
     }

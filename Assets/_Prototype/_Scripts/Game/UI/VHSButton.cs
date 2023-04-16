@@ -27,7 +27,8 @@ public class VHSButton : MonoBehaviour, IPointerEnterHandler
             VHSButtons.InvertCamera => Services.PlayerController.isInvertedControls ? "Invert Camera: ON" : "Invert Camera: OFF",
             VHSButtons.SetTime => "Set Timestamp",
             VHSButtons.ConfirmTime => "Confirm",
-            VHSButtons.CancelTime => "Cancel"
+            VHSButtons.CancelTime => "Cancel",
+            VHSButtons.ConsoleResume => "Resume",
         };
         SetText(buttonText);
     }
@@ -45,7 +46,7 @@ public class VHSButton : MonoBehaviour, IPointerEnterHandler
     
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
-        if (button.enabled) Services.VHSButtonsManager.SetButtonSelected(buttonId);
+        if (button.enabled) Services.PauseManager.SetButtonSelected(buttonId);
     }
 
     /// <summary>
