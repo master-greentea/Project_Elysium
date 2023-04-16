@@ -59,7 +59,7 @@ public class ConsoleManager : MonoBehaviour
             case "/clear":
                 chatLog = "// Console cleared.";
                 return true;
-            case "/reset":
+            case "/reboot":
                 StartCoroutine(ConsoleReboot());
                 chatGPT.ResetChat(chatGPT._initialPrompt);
                 return true;
@@ -97,7 +97,7 @@ public class ConsoleManager : MonoBehaviour
         catch (Exception e)
         {
             Debug.Log(e.Message);
-            chatLog += "<br>" + npcName + " " + "ERROR";
+            chatLog += "<br>" + npcName + " " + "Error. Please reboot console.";
         }
     }
 
