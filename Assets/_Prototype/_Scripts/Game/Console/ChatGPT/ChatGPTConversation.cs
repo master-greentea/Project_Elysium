@@ -1,50 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine.Events;
 
 namespace ChatGPTWrapper {
 
     public class ChatGPTConversation : MonoBehaviour
     {
-        [SerializeField]
-        private string _apiKey = null;
-
+        [SerializeField] private string _apiKey = null;
         public enum Model {
             ChatGPT,
             Davinci,
             Curie
         }
-        [SerializeField]
-        public Model _model = Model.ChatGPT;
+        [SerializeField] public Model _model = Model.ChatGPT;
         private string _selectedModel = null;
-        [SerializeField]
-        private int _maxTokens = 3072;
-        [SerializeField]
-        private float _temperature = 0.6f;
-        
+        [SerializeField] private int _maxTokens = 3072;
+        [SerializeField] private float _temperature = 0.6f;
         private string _uri;
         private List<(string, string)> _reqHeaders;
-        
-
         private Requests requests = new Requests();
         private Prompt _prompt;
         private Chat _chat;
         private string _lastUserMsg;
         private string _lastChatGPTMsg;
-
-        [SerializeField]
-        private string _chatbotName = "ChatGPT";
-
-        [TextArea(4,6)]
-        public string _initialPrompt = "You are ChatGPT, a large language model trained by OpenAI.";
-
-
+        [SerializeField] private string _chatbotName = "ChatGPT";
+        public string _initialPrompt;
         public UnityStringEvent chatGPTResponse = new UnityStringEvent();
-
-
-
+        
         public void Init()
         {
+            // read api key
+            string[] apiLines = System.IO.File.ReadAllLines(@"Assets/_Prototype/_Scripts/Game/Console/api_keys.txt");
+            _apiKey = apiLines[0];
+
             _reqHeaders = new List<(string, string)>
             { 
                 ("Authorization", $"Bearer {_apiKey}"),

@@ -13,70 +13,48 @@ public class ConsoleManager : MonoBehaviour
     public static Canvas canvas;
     [Header("GPT Settings")]
     [SerializeField] private ChatGPTConversation chatGPT;
+    private ConsoleCommandManager consoleCommandManager;
     [SerializeField] private ConsoleSettings consoleSettings;
     [Header("Console UI")]
     [SerializeField] public TMP_InputField consoleInput;
     [SerializeField] private TextMeshProUGUI consoleOutput;
     
-    private string npcName;
-    private string inputName;
+    public static string consoleName;
+    public static string inputName;
     
-    private string chatLog = "";
+    public static string chatLog = "";
     
     void Awake()
     {
         Services.ConsoleManager = this;
+        consoleCommandManager = chatGPT.GetComponent<ConsoleCommandManager>();
         canvas = GetComponent<Canvas>();
     }
 
     void Start()
     {
         chatLog += consoleOutput.text;
-        npcName = consoleSettings.consoleName;
+        consoleName = consoleSettings.consoleName;
         inputName = consoleSettings.inputName;
         chatGPT._initialPrompt = consoleSettings.gptInitialPrompt;
-        Debug.Log(chatGPT._initialPrompt);
         //Enable ChatGPT
         chatGPT.Init();
+        chatLog = $"{consoleName} Console initialized.";
     }
 
     void Update()
     {
 		if (Keyboard.current.enterKey.wasPressedThisFrame)
         {
-            if (!CheckConsoleCommands()) SubmitChatMessage();
+            if (!consoleCommandManager.CheckConsoleCommand(consoleInput.text)) SubmitChatMessage();
             consoleInput.text = "";
         }
         // update chat log
         consoleOutput.text = chatLog;
     }
 
-    bool CheckConsoleCommands()
-    {
-        consoleInput.text = consoleInput.text.ToLower();
-        switch (consoleInput.text)
-        {
-            case "/clear":
-                chatLog = "// Console cleared.";
-                return true;
-            case "/reboot":
-                StartCoroutine(ConsoleReboot());
-                chatGPT.ResetChat(chatGPT._initialPrompt);
-                return true;
-        }
-        return false;
-    }
-
-    IEnumerator ConsoleReboot()
-    {
-        chatLog = "// Console rebooting...";
-        yield return new WaitForSecondsRealtime(.5f);
-        chatLog = "// Console rebooting...\n// Console rebooted.";
-    }
-
     public void ReceiveChatGPTReply(string message)
     {
-        print(message);
         try
         {
             if (!message.EndsWith("}"))
@@ -92,22 +70,28 @@ public class ConsoleManager : MonoBehaviour
             }
             ConsoleJSONReceiver npcJSON = JsonUtility.FromJson<ConsoleJSONReceiver>(message);
             string responseLine = npcJSON.consoleReply;
-            chatLog += "<br>" + npcName + " " + responseLine;
+            chatLog += $"\n{consoleName} {responseLine}";
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
-            chatLog += "<br>" + npcName + " " + "Error. Please reboot console.";
+            Debug.Log(message);
+            chatLog += $"\n{consoleName} Error. Please reboot console. Use => /reboot";
         }
     }
 
-    public void SubmitChatMessage()
+    private void SubmitChatMessage()
     {
         if (consoleInput.text == "") return;
-        Debug.Log("Message sent: " + consoleInput.text);
         chatGPT.SendToChatGPT("{\"consoleInput\":\"" + consoleInput.text + "\"}");
-        chatLog += "<br>" + inputName + " " + consoleInput.text;
+        // add input into chatlog
+        chatLog += "\n" + inputName + " " + consoleInput.text;
         // clear input field
         consoleInput.text = "";
+        // TODO: start response coroutine
+    }
+
+    IEnumerator AwaitingResponseRoutine(float waitTime)
+    {
+        yield return new WaitForSecondsRealtime(waitTime);
     }
 }

@@ -1876,7 +1876,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   m_LocalRotation: {x: 0.1706652, y: 0, z: 0, w: 0.9853291}
-  m_LocalPosition: {x: 0.16972888, y: 6, z: -13.998293}
+  m_LocalPosition: {x: 0.16937602, y: 6, z: -13.998293}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3634,7 +3634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c84e0e6a7e1bee840967909b197d54c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chatGPT: {fileID: 1468740670}
+  chatGPT: {fileID: 1241285383}
   consoleSettings: {fileID: 11400000, guid: b07d7d468e009034a8658602280b40d0, type: 2}
   consoleInput: {fileID: 1021633798}
   consoleOutput: {fileID: 1614165997}
@@ -6455,6 +6455,119 @@ MonoBehaviour:
   timeDisplayText: {fileID: 1469693249}
   statusDisplayText: {fileID: 1261501765}
   notificationText: {fileID: 570691205}
+--- !u!1 &1241285381
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1241285384}
+  - component: {fileID: 1241285382}
+  - component: {fileID: 1241285383}
+  m_Layer: 0
+  m_Name: ConsoleGPT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1241285382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241285381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f22f91a2c487204ca9e46079423e964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  consoleCommands:
+  - isActive: 1
+    commandString: clear
+    triggerEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1241285382}
+          m_TargetAssemblyTypeName: ConsoleCommandManager, Assembly-CSharp
+          m_MethodName: ConsoleCommand_Clear
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - isActive: 1
+    commandString: reboot
+    triggerEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1241285382}
+          m_TargetAssemblyTypeName: ConsoleCommandManager, Assembly-CSharp
+          m_MethodName: ConsoleCommand_Reboot
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &1241285383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241285381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e61546bea7f2a74795ab29cfc5f9657, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _apiKey: 
+  _model: 0
+  _maxTokens: 3072
+  _temperature: 0.6
+  _chatbotName: ChatGPT
+  _initialPrompt: 
+  chatGPTResponse:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 556453059}
+        m_TargetAssemblyTypeName: ConsoleManager, Assembly-CSharp
+        m_MethodName: ReceiveChatGPTReply
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!4 &1241285384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241285381}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.35782433, y: -3.9893725, z: 2.4594696}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1261501763
 GameObject:
   m_ObjectHideFlags: 0
@@ -7301,71 +7414,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1667818540413134267}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1468740668
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1468740669}
-  - component: {fileID: 1468740670}
-  m_Layer: 0
-  m_Name: ConsoleGPT
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1468740669
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1468740668}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.3044078, y: -1.7588545, z: 22.2307}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 14
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1468740670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1468740668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e61546bea7f2a74795ab29cfc5f9657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _apiKey: 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
-  _model: 0
-  _maxTokens: 3072
-  _temperature: 0.6
-  _chatbotName: ChatGPT
-  _initialPrompt: 
-  chatGPTResponse:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 556453059}
-        m_TargetAssemblyTypeName: ConsoleManager, Assembly-CSharp
-        m_MethodName: ReceiveChatGPTReply
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &1469693247
 GameObject:
   m_ObjectHideFlags: 0
@@ -8218,7 +8266,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1549638242}
   m_LocalRotation: {x: 0.1706652, y: -0, z: -0, w: 0.9853291}
-  m_LocalPosition: {x: 0.16972888, y: 5, z: -13.998293}
+  m_LocalPosition: {x: 0.16937602, y: 5, z: -13.998293}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

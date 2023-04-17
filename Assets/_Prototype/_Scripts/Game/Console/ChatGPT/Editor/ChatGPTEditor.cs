@@ -30,25 +30,25 @@ namespace ChatGPTWrapper {
 			serializedObject.Update();
 			
 			EditorGUILayout.LabelField("Parameters", EditorStyles.boldLabel);
+			GUI.enabled = false;
 			EditorGUILayout.PropertyField(_apiKey);
+			GUI.enabled = true;
 			EditorGUILayout.PropertyField(_model);
 
 			if (_model.enumValueIndex != 0) {
 				EditorGUILayout.PropertyField(_maxTokens);
 				EditorGUILayout.PropertyField(_temperature);
 			}
-
-			EditorGUILayout.Space(5);
-
 			EditorGUILayout.LabelField("Prompt", EditorStyles.boldLabel);
-
 			if (_model.enumValueIndex != 0) {
 				EditorGUILayout.PropertyField(_chatbotName);
 			}
+			GUI.enabled = false;
 			EditorGUILayout.PropertyField(_initialPrompt);
-
-			EditorGUILayout.Space(20);
-
+			GUI.enabled = true;
+			
+			EditorGUILayout.Space(10);
+			
 			EditorGUILayout.PropertyField(chatGPTResponse);
 			
 
