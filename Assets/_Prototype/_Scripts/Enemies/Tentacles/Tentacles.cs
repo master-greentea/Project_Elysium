@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class Tentacles : MonoBehaviour
@@ -16,9 +17,8 @@ public class Tentacles : MonoBehaviour
     private List<Vector3> attachablePoints = new List<Vector3>();
 
     [Header("Tentacle Values")]
-    public float startScale = 1;
-    public float endScale = 1;
-    public float startRoll = 0, endRoll = 0;
+    public GameObject tentaclePrefab;
+    private List<GameObject> spawnedPrefabs;
 
     private void OnValidate() {
         // apply scale and roll at each node
@@ -32,6 +32,12 @@ public class Tentacles : MonoBehaviour
     void Update()
     {
         CheckDistance();
+        foreach (var VARIABLE in attachablePoints)
+        {
+            FABRIK f = Instantiate(tentaclePrefab, transform).GetComponent<FABRIK>();
+            f.effectorPoint = VARIABLE;
+            attachablePoints.Remove(VARIABLE);
+        }
     }
 
     void CheckDistance()
@@ -49,6 +55,11 @@ public class Tentacles : MonoBehaviour
 
     void GetPoints()
     {
+        // foreach (var t in spawnedPrefabs)
+        // {
+        //     Destroy(t);
+        // }
+        // spawnedPrefabs.Clear();
         attachablePoints.Clear();
         foreach (var col in Physics.OverlapSphere(transform.position, attachableRadius, attachableLayers, QueryTriggerInteraction.Collide))
         {
@@ -61,6 +72,8 @@ public class Tentacles : MonoBehaviour
                 if (hit.point == worldVert )
                 {
                     attachablePoints.Add(hit.point);
+                    // spawnedPrefabs.Add(f.gameObject);
+                    // tentacleGuider.position = hit.point;
                     Debug.DrawLine(transform.position, hit.point, Color.green, checkDistanceInterval - .01f);
                 }
             }

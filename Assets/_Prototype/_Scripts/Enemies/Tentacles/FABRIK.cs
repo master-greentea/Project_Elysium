@@ -8,8 +8,8 @@ public class FABRIK : MonoBehaviour
     [Header("IK Properties")]
     public Transform rootJoint;
     public Transform tipJoint;
-    public Transform effectorTarget;
-    public Transform poleTarget;
+    // public Transform effectorTarget;
+    public Vector3 effectorPoint;
     public int iterations = 4;
     public float tolerance = 0.01f;
 
@@ -71,7 +71,7 @@ public class FABRIK : MonoBehaviour
         {
             if (i == jointPositions.Length - 1)
             {
-                jointPositions[i] = effectorTarget.position;
+                jointPositions[i] = effectorPoint;
             }
             else
             {
@@ -97,7 +97,7 @@ public class FABRIK : MonoBehaviour
 
     float GetTipToEffectorDistance()
     {
-        return Vector3.Distance(jointPositions[jointPositions.Length - 1], effectorTarget.position);
+        return Vector3.Distance(jointPositions[jointPositions.Length - 1], effectorPoint);
     }
 
     void Update()
