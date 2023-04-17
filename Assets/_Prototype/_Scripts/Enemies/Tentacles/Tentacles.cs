@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SplineMesh;
 using UnityEngine;
 
-[RequireComponent(typeof(Spline))]
 public class Tentacles : MonoBehaviour
 {
     private Vector3 lastPosition;
@@ -21,22 +19,9 @@ public class Tentacles : MonoBehaviour
     public float startScale = 1;
     public float endScale = 1;
     public float startRoll = 0, endRoll = 0;
-    private Spline spline { get => GetComponent<Spline>(); }
 
     private void OnValidate() {
         // apply scale and roll at each node
-        float currentLength = 0;
-        foreach (CubicBezierCurve curve in spline.GetCurves()) {
-            float startRate = currentLength / spline.Length;
-            currentLength += curve.Length;
-            float endRate = currentLength / spline.Length;
-
-            curve.n1.Scale = Vector2.one * (startScale + (endScale - startScale) * startRate);
-            curve.n2.Scale = Vector2.one * (startScale + (endScale - startScale) * endRate);
-
-            curve.n1.Roll = startRoll + (endRoll - startRoll) * startRate;
-            curve.n2.Roll = startRoll + (endRoll - startRoll) * endRate;
-        }
     }
     
     void Start()
@@ -76,9 +61,6 @@ public class Tentacles : MonoBehaviour
                 if (hit.point == worldVert )
                 {
                     attachablePoints.Add(hit.point);
-                    Vector3 localHitPoint = transform.InverseTransformPoint(hit.point);
-                    spline.nodes[1].Position = localHitPoint;
-                    spline.nodes[1].Direction = localHitPoint + new Vector3(0, .5f, 0);
                     Debug.DrawLine(transform.position, hit.point, Color.green, checkDistanceInterval - .01f);
                 }
             }
