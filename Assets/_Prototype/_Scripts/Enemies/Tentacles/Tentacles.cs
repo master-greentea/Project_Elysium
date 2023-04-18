@@ -18,6 +18,8 @@ public class Tentacles : MonoBehaviour
 
     [Header("Tentacle Values")]
     public GameObject tentaclePrefab;
+    [SerializeField] private int tentacleAmount;
+    private List<FABRIK> tentacleFABRIKs;
     private List<GameObject> spawnedPrefabs;
 
     private void OnValidate() {
@@ -27,17 +29,29 @@ public class Tentacles : MonoBehaviour
     void Start()
     {
         lastPosition = transform.position;
+        tentacleFABRIKs = new List<FABRIK>();
+        for (int i = 0; i < tentacleAmount; i++)
+        {
+            FABRIK f = Instantiate(tentaclePrefab, transform).GetComponent<FABRIK>();
+            tentacleFABRIKs.Add(f);
+            Debug.Log("tentacle added");
+        }
     }
     
     void Update()
     {
         CheckDistance();
-        foreach (var VARIABLE in attachablePoints)
+
+        foreach (var f in tentacleFABRIKs)
         {
-            FABRIK f = Instantiate(tentaclePrefab, transform).GetComponent<FABRIK>();
-            f.effectorPoint = VARIABLE;
-            attachablePoints.Remove(VARIABLE);
+            foreach (var point in attachablePoints)
+            {
+                f.effectorPoint = point;
+                attachablePoints.Remove(point);
+                break;
+            }
         }
+        
     }
 
     void CheckDistance()

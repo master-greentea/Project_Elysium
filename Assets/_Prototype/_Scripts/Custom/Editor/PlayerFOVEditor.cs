@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(PlayerFov))]
-public class Editor_PlayerFOV : Editor
+public class PlayerFOVEditor : Editor
 {
     void OnSceneGUI()
     {

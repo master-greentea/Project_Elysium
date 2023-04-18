@@ -38,10 +38,12 @@ public class ConsoleManager : MonoBehaviour
         chatLog += consoleOutput.text;
         consoleName = consoleSettings.consoleName;
         inputName = consoleSettings.inputName;
-        chatGPT._initialPrompt = consoleSettings.gptInitialPrompt;
+        chatGPT._initialPrompt = consoleSettings.GPTInitialPrompt;
         //Enable ChatGPT
         // chatGPT.Init();
         // chatLog = $"{consoleName} Console initialized.";
+        
+        chatLog = $"{consoleName} Console not initialized. Command mode only.";
     }
 
     void Update()
@@ -83,7 +85,7 @@ public class ConsoleManager : MonoBehaviour
         catch (Exception e)
         {
             Debug.Log(message);
-            chatLog += $"\n{consoleName} Error. Please reboot console. Use => /reboot";
+            chatLog += $"\n{consoleName} Error. Please reboot console. Use => <color=#e32954>/reboot</color>";
         }
     }
 

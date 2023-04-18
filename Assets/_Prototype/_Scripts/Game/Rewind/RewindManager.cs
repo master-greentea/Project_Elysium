@@ -14,7 +14,7 @@ public class RewindManager : MonoBehaviour
     [Range(3, 10)] public int maxRewindTimeAmount;
     [SerializeField] private bool canRewindOnStart;
     [SerializeField] private bool rewindCooldownIsDoubleTime;
-    [SerializeField] private float rewindCooldown;
+    [SerializeField, ConditionalHide("rewindCooldownIsDoubleTime", true)] private float rewindCooldown;
     
     public static bool isRewinding;
     public static bool CanRewind { get; private set; }
@@ -170,7 +170,7 @@ public class RewindManager : MonoBehaviour
         // begin rewind effect
         cameraEffects.ToggleRewind(true);
         // begin enemy rewind
-        Services.EnemyAgent.EnemyStateMachine.ChangeState(EnemyStateId.Rewind);
+        if (Services.EnemyAgent) Services.EnemyAgent.EnemyStateMachine.ChangeState(EnemyStateId.Rewind);
         // for each second in rewind
         for (int i = 1; i <= rewindSeconds; i++)
         {
@@ -179,7 +179,7 @@ public class RewindManager : MonoBehaviour
             // set enemy rewind to last position
             int positionIndex = _playerPositionList.Count - i;
             positionIndex = Mathf.Clamp(positionIndex, 0, SetRewindTime - 1);
-            RewindState.positionToRewindTo = enemyRewindInfoList[positionIndex].position;
+            if (Services.EnemyAgent) RewindState.positionToRewindTo = enemyRewindInfoList[positionIndex].position;
             // begin player rewind movement
             var timer = 0f;
             while (timer < 1f / (RewindSpeed + .1f))

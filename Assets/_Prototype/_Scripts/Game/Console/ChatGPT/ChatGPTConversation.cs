@@ -31,8 +31,8 @@ namespace ChatGPTWrapper {
         public void Init()
         {
             // read api key
-            string[] apiLines = System.IO.File.ReadAllLines(@"Assets/_Prototype/_Scripts/Game/Console/api_keys.txt");
-            _apiKey = apiLines[0];
+            // string[] apiLines = System.IO.File.ReadAllLines(@"Assets/_Prototype/_Scripts/Game/Console/api_keys.txt");
+            // _apiKey = apiLines[0];
 
             _reqHeaders = new List<(string, string)>
             { 
