@@ -2204,7 +2204,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   m_LocalRotation: {x: 0.1706652, y: 0, z: 0, w: 0.9853291}
-  m_LocalPosition: {x: 0.16937602, y: 6, z: -13.998293}
+  m_LocalPosition: {x: 0.16972888, y: 6, z: -13.998293}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6884,6 +6884,10 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    hasParameter: 0
+    triggerEventWithParameter:
+      m_PersistentCalls:
+        m_Calls: []
   - isActive: 1
     commandString: reboot
     triggerEvent:
@@ -6893,6 +6897,43 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: ConsoleCommandManager, Assembly-CSharp
           m_MethodName: ConsoleCommand_Reboot
           m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    hasParameter: 0
+    triggerEventWithParameter:
+      m_PersistentCalls:
+        m_Calls: []
+  - isActive: 1
+    commandString: init
+    triggerEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1241285382}
+          m_TargetAssemblyTypeName: ConsoleCommandManager, Assembly-CSharp
+          m_MethodName: ConsoleCommand_Init
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    hasParameter: 1
+    triggerEventWithParameter:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1241285382}
+          m_TargetAssemblyTypeName: ConsoleCommandManager, Assembly-CSharp
+          m_MethodName: ConsoleCommand_Init
+          m_Mode: 0
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8490,6 +8531,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guidanceBallTransform: {fileID: 287130177}
+  guidanceBallBlockMask:
+    serializedVersion: 2
+    m_Bits: 448
 --- !u!114 &1531864272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8647,7 +8691,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1549638242}
   m_LocalRotation: {x: 0.1706652, y: -0, z: -0, w: 0.9853291}
-  m_LocalPosition: {x: 0.16937602, y: 5, z: -13.998293}
+  m_LocalPosition: {x: 0.16972888, y: 5, z: -13.998293}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9449,7 +9493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &1754843928
 MeshRenderer:
   m_ObjectHideFlags: 0

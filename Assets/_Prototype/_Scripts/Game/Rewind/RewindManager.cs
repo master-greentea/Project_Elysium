@@ -90,7 +90,7 @@ public class RewindManager : MonoBehaviour
         if (Services.VHSDisplay.GetFormattedSecond(TimedGameMode.SurvivedTime) <= _lastSecond) return;
         // log player position, enemy position, and enemy state
         LogPlayerPosition(transform.position);
-        LogEnemyPosition(Services.EnemyAgent.transform.position);
+        if (Services.EnemyAgent) LogEnemyPosition(Services.EnemyAgent.transform.position);
         // clean up camera log list
         foreach (var (value, i) in _cameraRewindInfoList.Select((value, i) => ( value, i )))
         {

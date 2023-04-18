@@ -7,7 +7,7 @@ namespace ChatGPTWrapper {
 
     public class ChatGPTConversation : MonoBehaviour
     {
-        [SerializeField] private string _apiKey = null;
+        [SerializeField] public string _apiKey = null;
         public enum Model {
             ChatGPT,
             Davinci,
@@ -56,6 +56,8 @@ namespace ChatGPTWrapper {
                     _selectedModel = "text-curie-001";
                     break;
             }
+
+            ConsoleManager.consoleInitialized = true;
         }
 
         public void ResetChat(string initialPrompt) {

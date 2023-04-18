@@ -24,6 +24,8 @@ public class ConsoleManager : MonoBehaviour
     
     public static string chatLog = "";
     
+    public static bool consoleInitialized = false;
+    
     void Awake()
     {
         Services.ConsoleManager = this;
@@ -38,19 +40,25 @@ public class ConsoleManager : MonoBehaviour
         inputName = consoleSettings.inputName;
         chatGPT._initialPrompt = consoleSettings.gptInitialPrompt;
         //Enable ChatGPT
-        chatGPT.Init();
-        chatLog = $"{consoleName} Console initialized.";
+        // chatGPT.Init();
+        // chatLog = $"{consoleName} Console initialized.";
     }
 
     void Update()
     {
 		if (Keyboard.current.enterKey.wasPressedThisFrame)
         {
-            if (!consoleCommandManager.CheckConsoleCommand(consoleInput.text)) SubmitChatMessage();
+            if (consoleInput.text == "") return;
+            // add input into chatlog
+            chatLog += "\n" + inputName + " " + consoleInput.text;
+            // clear input field
+            if (!consoleCommandManager.CheckConsoleCommand(consoleInput.text) && consoleInitialized) SubmitChatMessage();
             consoleInput.text = "";
         }
         // update chat log
         consoleOutput.text = chatLog;
+        // clean up chat log
+        if (chatLog.Length > 1000) chatLog = chatLog.Substring(chatLog.Length - 1000);
     }
 
     public void ReceiveChatGPTReply(string message)
@@ -83,11 +91,6 @@ public class ConsoleManager : MonoBehaviour
     {
         if (consoleInput.text == "") return;
         chatGPT.SendToChatGPT("{\"consoleInput\":\"" + consoleInput.text + "\"}");
-        // add input into chatlog
-        chatLog += "\n" + inputName + " " + consoleInput.text;
-        // clear input field
-        consoleInput.text = "";
-        // TODO: start response coroutine
     }
 
     IEnumerator AwaitingResponseRoutine(float waitTime)

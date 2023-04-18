@@ -5,6 +5,7 @@ using UnityEngine;
 public class GuidanceBallBehavior : MonoBehaviour
 {
     [SerializeField] private Transform guidanceBallTransform;
+    [SerializeField] private LayerMask guidanceBallBlockMask;
     private Transform t;
     private Vector3 guidanceDir;
     private float defaultDist;
@@ -21,7 +22,7 @@ public class GuidanceBallBehavior : MonoBehaviour
         guidanceDir = (t.forward * .5f + new Vector3(0, .2f, 0)).normalized;
         RaycastHit hit;
         if (Physics.SphereCast(t.localPosition, .2f, guidanceDir, out hit, defaultDist,
-                Services.EnemyAgent.enemyFov.obstacleLayers))
+                guidanceBallBlockMask))
         {
             guidanceDist = hit.distance;
         }
