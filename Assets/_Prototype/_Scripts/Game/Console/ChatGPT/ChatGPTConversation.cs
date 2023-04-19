@@ -28,11 +28,16 @@ namespace ChatGPTWrapper {
         public string _initialPrompt;
         public UnityStringEvent chatGPTResponse = new UnityStringEvent();
         
+        [SerializeField] private bool _debugAPIFromFile;
+        
         public void Init()
         {
             // read api key
-            // string[] apiLines = System.IO.File.ReadAllLines(@"Assets/_Prototype/_Scripts/Game/Console/api_keys.txt");
-            // _apiKey = apiLines[0];
+            if (_debugAPIFromFile)
+            {
+                string[] apiLines = System.IO.File.ReadAllLines(@"Assets/_Prototype/_Scripts/Game/Console/api_keys.txt");
+                _apiKey = apiLines[0];
+            }
 
             _reqHeaders = new List<(string, string)>
             { 
@@ -57,7 +62,7 @@ namespace ChatGPTWrapper {
                     break;
             }
 
-            ConsoleManager.consoleInitialized = true;
+            Services.ConsoleManager.consoleInitialized = true;
         }
 
         public void ResetChat(string initialPrompt) {

@@ -24,7 +24,7 @@ public class ConsoleManager : MonoBehaviour
     
     public static string chatLog = "";
     
-    public static bool consoleInitialized = false;
+    [SerializeField] public bool consoleInitialized;
     
     void Awake()
     {

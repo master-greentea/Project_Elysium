@@ -9,7 +9,8 @@ public class FABRIK : MonoBehaviour
     public Transform rootJoint;
     public Transform tipJoint;
     // public Transform effectorTarget;
-    public Vector3 effectorPoint;
+    public Vector3 targetEffectorPoint;
+    private Vector3 effectorPoint;
     public int iterations = 4;
     public float tolerance = 0.01f;
 
@@ -130,6 +131,20 @@ public class FABRIK : MonoBehaviour
             jointTransforms[i].position = jointPositions[i];
             jointTransforms[i].rotation = Quaternion.LookRotation(jointPositions[i] - jointPositions[i + 1], jointTransforms[i].up);
         }
+        
+        MoveTowardsTarget();
+        RandomTarget();
+    }
+
+    void MoveTowardsTarget()
+    {
+        effectorPoint = Vector3.Lerp(effectorPoint, targetEffectorPoint, Time.deltaTime * 5);
+    }
+
+    void RandomTarget()
+    {
+        if (Random.value < .01f)
+            targetEffectorPoint = Random.insideUnitSphere * 2 + transform.position;
     }
 
     void OnDrawGizmos()

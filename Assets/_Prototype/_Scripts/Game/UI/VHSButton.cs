@@ -29,6 +29,7 @@ public class VHSButton : MonoBehaviour, IPointerEnterHandler
             VHSButtons.ConfirmTime => "Confirm",
             VHSButtons.CancelTime => "Cancel",
             VHSButtons.ConsoleResume => "Resume",
+            VHSButtons.SettingsAPI => "Edit API Key",
         };
         SetText(buttonText);
     }

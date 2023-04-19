@@ -34,7 +34,6 @@ public class Tentacles : MonoBehaviour
         {
             FABRIK f = Instantiate(tentaclePrefab, transform).GetComponent<FABRIK>();
             tentacleFABRIKs.Add(f);
-            Debug.Log("tentacle added");
         }
     }
     
@@ -46,7 +45,8 @@ public class Tentacles : MonoBehaviour
         {
             foreach (var point in attachablePoints)
             {
-                f.effectorPoint = point;
+                if ((f.targetEffectorPoint - point).magnitude > 3) continue;
+                f.targetEffectorPoint = point;
                 attachablePoints.Remove(point);
                 break;
             }

@@ -12,7 +12,7 @@ namespace ChatGPTWrapper {
 		SerializedProperty _chatbotName;
 		SerializedProperty _initialPrompt;
 		SerializedProperty chatGPTResponse;
-
+		SerializedProperty _debugAPI;
 
 		private void OnEnable() 
 		{
@@ -23,7 +23,7 @@ namespace ChatGPTWrapper {
 			_chatbotName = serializedObject.FindProperty("_chatbotName");
 			_initialPrompt = serializedObject.FindProperty("_initialPrompt");
 			chatGPTResponse = serializedObject.FindProperty("chatGPTResponse");
-
+			_debugAPI = serializedObject.FindProperty("_debugAPIFromFile");
 		}
 		public override void OnInspectorGUI()
 		{
@@ -50,6 +50,8 @@ namespace ChatGPTWrapper {
 			EditorGUILayout.Space(10);
 			
 			EditorGUILayout.PropertyField(chatGPTResponse);
+
+			EditorGUILayout.PropertyField(_debugAPI);
 			
 
 			serializedObject.ApplyModifiedProperties();

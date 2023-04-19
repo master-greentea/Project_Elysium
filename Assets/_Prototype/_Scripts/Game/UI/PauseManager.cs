@@ -7,11 +7,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public enum VHSButtons
 {
     Resume, Rewind, Settings, Eject, Back, InvertCamera, SetTime, ConfirmTime, CancelTime,
-    ConsoleResume
+    ConsoleResume, SettingsAPI,
 }
 
 public class PauseManager : MonoBehaviour
@@ -23,7 +24,10 @@ public class PauseManager : MonoBehaviour
     // services
     private PlayerController PlayerController;
     private VHSDisplay VhsDisplay;
-    
+    // api
+    [Header("API Settings")]
+    [SerializeField] public TMP_InputField apiInputField;
+
     void AssignServices()
     {
         VhsDisplay = Services.VHSDisplay;
@@ -152,5 +156,30 @@ public class PauseManager : MonoBehaviour
         PlayerController.isInvertedControls = !PlayerController.isInvertedControls;
         GetButtonByID(VHSButtons.InvertCamera).buttonText = PlayerController.isInvertedControls ? "Invert Camera: ON" : "Invert Camera: OFF";
         PlayerPrefs.SetInt("InvertCam", PlayerController.isInvertedControls ? 1 : 0);
+    }
+
+    public void EditAPI()
+    {
+        apiInputField.interactable = true;
+        apiInputField.readOnly = false;
+        apiInputField.ActivateInputField();
+        apiInputField.Select();
+        apiInputField.textComponent.color = Color.white;
+        SetButtonActivate(VHSButtons.SettingsAPI, false);
+        SetButtonActivate(VHSButtons.Back, false);
+        SetButtonActivate(VHSButtons.InvertCamera, false);
+    }
+
+    public void ConfirmAPI()
+    {
+        apiInputField.DeactivateInputField();
+        apiInputField.interactable = false;
+        apiInputField.readOnly = true;
+        apiInputField.textComponent.color = Color.gray;
+        SetButtonActivate(VHSButtons.SettingsAPI, true);
+        SetButtonActivate(VHSButtons.Back, true);
+        SetButtonActivate(VHSButtons.InvertCamera, true);
+        if (EventSystem.current.alreadySelecting) return;
+        SetButtonSelected(VHSButtons.SettingsAPI);
     }
 }

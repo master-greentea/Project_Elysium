@@ -26,11 +26,11 @@ public class ConsoleCommandManager : MonoBehaviour
     public bool CheckConsoleCommand(string input)
     {
         if (input == "") return false;
-        input = input.ToLower();
         input = input.TrimEnd();
         if (input[0] != '/') return false;
         // handle commands
         string currentCommandString = input.Contains(' ') ? input.Split(' ')[0].Substring(1) : input.Substring(1);
+        currentCommandString = currentCommandString.ToLower();
         foreach (var cc in consoleCommands)
         {
             // ignore if command is not active or not matched with a command string
@@ -90,13 +90,12 @@ public class ConsoleCommandManager : MonoBehaviour
     public void ConsoleCommand_Init(string parameters)
     {
         // check if already initialized
-        if (ConsoleManager.consoleInitialized)
+        if (Services.ConsoleManager.consoleInitialized)
         {
             ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} Console already initialized.";
             return;
         }
         chatGPT._apiKey = parameters;
-        Debug.Log(chatGPT._apiKey);
         chatGPT.Init();
         ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} Console initialized.";
     }
@@ -107,13 +106,20 @@ public class ConsoleCommandManager : MonoBehaviour
     public void ConsoleCommand_Init()
     {
         // check if already initialized
-        if (ConsoleManager.consoleInitialized)
+        if (Services.ConsoleManager.consoleInitialized)
         {
             ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} Console already initialized.";
             return;
         }
-        ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} Console command requires API key. " +
+        if (Services.PauseManager.apiInputField.text == "") 
+        {
+            ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} API not found. " +
                                   "Use => <color=#e32954>/init APIKey</color>";
+            return;
+        }
+        chatGPT._apiKey = Services.PauseManager.apiInputField.text;
+        chatGPT.Init();
+        ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} Console initialized.";
     }
 }
 
