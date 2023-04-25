@@ -22,6 +22,9 @@ public class FABRIK : MonoBehaviour
     private Transform[] jointTransforms;
     private Vector3[] jointPositions;
 
+    [HideInInspector] public MeshRenderer enemyMeshRenderer;
+    [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
+
     void Awake()
     {
         var numberOfJoints = 0;
@@ -134,6 +137,7 @@ public class FABRIK : MonoBehaviour
         
         MoveTowardsTarget();
         RandomTarget();
+        skinnedMeshRenderer.enabled = enemyMeshRenderer.enabled;
     }
 
     void MoveTowardsTarget()

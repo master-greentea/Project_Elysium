@@ -106,7 +106,7 @@ public class PlayerFov : MonoBehaviour
                 {
                     visibleEntities.Add(entity);
                     // do after see target
-                    entity.gameObject.GetComponent<MeshRenderer>().enabled = true;  // set entity 
+                    entity.gameObject.GetComponent<MeshRenderer>().enabled = true;  // set entity
                     // entity.gameObject.GetComponent<VisualEffect>().renderingLayerMask = 0;
                 }
             }

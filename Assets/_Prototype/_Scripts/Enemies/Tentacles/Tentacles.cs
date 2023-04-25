@@ -21,6 +21,7 @@ public class Tentacles : MonoBehaviour
     [SerializeField] private int tentacleAmount;
     private List<FABRIK> tentacleFABRIKs;
     private List<GameObject> spawnedPrefabs;
+    [SerializeField] private MeshRenderer enemyMeshRenderer;
 
     private void OnValidate() {
         // apply scale and roll at each node
@@ -33,6 +34,7 @@ public class Tentacles : MonoBehaviour
         for (int i = 0; i < tentacleAmount; i++)
         {
             FABRIK f = Instantiate(tentaclePrefab, transform).GetComponent<FABRIK>();
+            f.enemyMeshRenderer = enemyMeshRenderer;
             tentacleFABRIKs.Add(f);
         }
     }

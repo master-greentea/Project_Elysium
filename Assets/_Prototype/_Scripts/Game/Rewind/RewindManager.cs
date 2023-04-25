@@ -65,6 +65,7 @@ public class RewindManager : MonoBehaviour
 
     IEnumerator RewindCooldown()
     {
+        CanRewind = false;
         yield return new WaitForSeconds(rewindCooldownIsDoubleTime ? SetRewindTime * 2 : SetRewindTime + rewindCooldown);
         Services.VHSDisplay.DisplayNotification("Rewind: Ready");
         CanRewind = true;
