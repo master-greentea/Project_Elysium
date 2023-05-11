@@ -11280,7 +11280,7 @@ GameObject:
   - component: {fileID: 1944308532}
   - component: {fileID: 1944308534}
   - component: {fileID: 1944308533}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: ViewMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
