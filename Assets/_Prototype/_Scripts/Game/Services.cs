@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using Enemies;
-using UnityEngine;
 
 public static class Services
 {
@@ -13,9 +10,10 @@ public static class Services
     public static EnemyAgent EnemyAgent;
     // Managers
     public static GameManager GameManager;
-    public static ConsoleManager ConsoleManager;
     public static VHSDisplay VHSDisplay;
-    public static PauseManager PauseManager;
+    // Menus
+    public static PauseMenuManager PauseMenuManager;
+    public static ConsoleMenuManager ConsoleMenuManager;
     // Game modes
     public static TimedGameMode TimedGameMode;
 }

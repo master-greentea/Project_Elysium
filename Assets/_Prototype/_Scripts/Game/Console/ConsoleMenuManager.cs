@@ -5,17 +5,20 @@ using TMPro;
 using ChatGPTWrapper;
 using System;
 using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class ConsoleManager : MonoBehaviour
+public class ConsoleMenuManager : MonoBehaviour
 {
     public static Canvas canvas;
     [Header("GPT Settings")]
     [SerializeField] private ChatGPTConversation chatGPT;
     private ConsoleCommandManager consoleCommandManager;
     [SerializeField] private ConsoleSettings consoleSettings;
+
     [Header("Console UI")]
+    [SerializeField] private VHSButton firstSelectedButton;
     [SerializeField] public TMP_InputField consoleInput;
     [SerializeField] private TextMeshProUGUI consoleOutput;
     
@@ -26,14 +29,14 @@ public class ConsoleManager : MonoBehaviour
     
     [SerializeField] public bool consoleInitialized;
     
-    void Awake()
+    private void Awake()
     {
-        Services.ConsoleManager = this;
+        Services.ConsoleMenuManager = this;
         consoleCommandManager = chatGPT.GetComponent<ConsoleCommandManager>();
         canvas = GetComponent<Canvas>();
     }
 
-    void Start()
+    private void Start()
     {
         chatLog += consoleOutput.text;
         consoleName = consoleSettings.consoleName;
@@ -46,12 +49,12 @@ public class ConsoleManager : MonoBehaviour
         chatLog = $"{consoleName} Console not initialized. Command mode only.";
     }
 
-    void Update()
+    private void Update()
     {
 		if (Keyboard.current.enterKey.wasPressedThisFrame)
         {
             if (consoleInput.text == "") return;
-            // add input into chatlog
+            // add input into chat log
             chatLog += "\n" + inputName + " " + consoleInput.text;
             // clear input field
             if (!consoleCommandManager.CheckConsoleCommand(consoleInput.text) && consoleInitialized) SubmitChatMessage();
@@ -61,6 +64,15 @@ public class ConsoleManager : MonoBehaviour
         consoleOutput.text = chatLog;
         // clean up chat log
         if (chatLog.Length > 1000) chatLog = chatLog.Substring(chatLog.Length - 1000);
+    }
+    
+    public void ToggleConsole()
+    { 
+        GameManager.PauseGame(true);
+        Services.VHSDisplay.DisplayStatus(GameManager.IsGamePaused? 5 : 0);
+        canvas.enabled = GameManager.IsGamePaused;
+        Services.ConsoleMenuManager.consoleInput.interactable = GameManager.IsGamePaused;
+        firstSelectedButton.button.Select();
     }
 
     public void ReceiveChatGPTReply(string message)
@@ -95,7 +107,7 @@ public class ConsoleManager : MonoBehaviour
         chatGPT.SendToChatGPT("{\"consoleInput\":\"" + consoleInput.text + "\"}");
     }
 
-    IEnumerator AwaitingResponseRoutine(float waitTime)
+    private IEnumerator AwaitingResponseRoutine(float waitTime)
     {
         yield return new WaitForSecondsRealtime(waitTime);
     }

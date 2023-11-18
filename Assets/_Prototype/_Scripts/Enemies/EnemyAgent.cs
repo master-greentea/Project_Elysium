@@ -59,7 +59,7 @@ namespace Enemies
             // debugs
             // Debug.Log(IsSeenByPlayer());
             var distanceToPlayer = (playerTransform.position - transform.position).magnitude;
-            if (distanceToPlayer < 2 && !GameManager.isGameEnded) Services.GameManager.EndGame();
+            if (distanceToPlayer < 1 && !GameManager.IsGameEnded) GameManager.EndGame();
         }
 
         // behavioral methods

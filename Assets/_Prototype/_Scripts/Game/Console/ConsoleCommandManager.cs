@@ -1,17 +1,15 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using ChatGPTWrapper;
-using UnityEditor;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using Debug = UnityEngine.Debug;
 
 public class ConsoleCommandManager : MonoBehaviour
 { 
     private ChatGPTConversation chatGPT;
     [SerializeField] private ConsoleCommand[] consoleCommands;
+    [SerializeField] private TMP_InputField apiInputField;
 
     private void Awake()
     {
@@ -54,7 +52,7 @@ public class ConsoleCommandManager : MonoBehaviour
             return true;
         }
         // return true if no command was found, but print a console response first
-        ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} Console command not found.";
+        ConsoleMenuManager.chatLog += $"\n{ConsoleMenuManager.consoleName} Console command not found.";
         return true;
     }
 
@@ -64,7 +62,7 @@ public class ConsoleCommandManager : MonoBehaviour
     /// </summary>
     public void ConsoleCommand_Clear()
     {
-        ConsoleManager.chatLog = $"{ConsoleManager.consoleName} Console cleared.";
+        ConsoleMenuManager.chatLog = $"{ConsoleMenuManager.consoleName} Console cleared.";
     }
 
     /// <summary>
@@ -77,10 +75,10 @@ public class ConsoleCommandManager : MonoBehaviour
     }
     IEnumerator ConsoleCommandRoutine_Reboot()
     {
-        ConsoleManager.chatLog = $"{ConsoleManager.consoleName} Console rebooting...";
+        ConsoleMenuManager.chatLog = $"{ConsoleMenuManager.consoleName} Console rebooting...";
         yield return new WaitForSecondsRealtime(.5f);
-        ConsoleManager.chatLog = $"{ConsoleManager.consoleName} Console rebooting..." +
-                                 $"\n{ConsoleManager.consoleName} Console rebooted.";
+        ConsoleMenuManager.chatLog = $"{ConsoleMenuManager.consoleName} Console rebooting..." +
+                                 $"\n{ConsoleMenuManager.consoleName} Console rebooted.";
     }
     
     /// <summary>
@@ -90,14 +88,14 @@ public class ConsoleCommandManager : MonoBehaviour
     public void ConsoleCommand_Init(string parameters)
     {
         // check if already initialized
-        if (Services.ConsoleManager.consoleInitialized)
+        if (Services.ConsoleMenuManager.consoleInitialized)
         {
-            ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} Console already initialized.";
+            ConsoleMenuManager.chatLog += $"\n{ConsoleMenuManager.consoleName} Console already initialized.";
             return;
         }
         chatGPT._apiKey = parameters;
         chatGPT.Init();
-        ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} Console initialized.";
+        ConsoleMenuManager.chatLog += $"\n{ConsoleMenuManager.consoleName} Console initialized.";
     }
     
     /// <summary>
@@ -106,20 +104,20 @@ public class ConsoleCommandManager : MonoBehaviour
     public void ConsoleCommand_Init()
     {
         // check if already initialized
-        if (Services.ConsoleManager.consoleInitialized)
+        if (Services.ConsoleMenuManager.consoleInitialized)
         {
-            ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} Console already initialized.";
+            ConsoleMenuManager.chatLog += $"\n{ConsoleMenuManager.consoleName} Console already initialized.";
             return;
         }
-        if (Services.PauseManager.apiInputField.text == "") 
+        if (apiInputField.text == "") 
         {
-            ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} API not found. " +
+            ConsoleMenuManager.chatLog += $"\n{ConsoleMenuManager.consoleName} API not found. " +
                                   "Use => <color=#e32954>/init APIKey</color>";
             return;
         }
-        chatGPT._apiKey = Services.PauseManager.apiInputField.text;
+        chatGPT._apiKey = apiInputField.text;
         chatGPT.Init();
-        ConsoleManager.chatLog += $"\n{ConsoleManager.consoleName} Console initialized.";
+        ConsoleMenuManager.chatLog += $"\n{ConsoleMenuManager.consoleName} Console initialized.";
     }
 }
 

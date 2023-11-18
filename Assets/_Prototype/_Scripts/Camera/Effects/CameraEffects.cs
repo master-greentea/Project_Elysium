@@ -41,7 +41,7 @@ public class CameraEffects : MonoBehaviour
             material.SetFloat("_unscaledTime", Time.unscaledTime);
         }
         if (SkipManager.isTimeSkipping) return;
-        unscaledTimeMaterials[0].SetFloat("_contrast", GameManager.isGamePaused || GameManager.isGameEnded ? 22f : 100f);
+        unscaledTimeMaterials[0].SetFloat("_contrast", GameManager.IsGamePaused || GameManager.IsGameEnded ? 22f : 100f);
     }
 
     void FocusShift()

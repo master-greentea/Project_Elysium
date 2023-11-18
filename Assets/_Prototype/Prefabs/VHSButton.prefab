@@ -34,7 +34,7 @@ RectTransform:
   m_Children:
   - {fileID: 1667818539675290524}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -123,8 +123,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1667818539651385174}
-        m_TargetAssemblyTypeName: VHSButton, Assembly-CSharp
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: VHSButtonsManager, Assembly-CSharp
         m_MethodName: Resume
         m_Mode: 1
         m_Arguments:
@@ -147,9 +147,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1173866747b07a4468fa48d6b41c16fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tmp: {fileID: 1667818539675290515}
-  buttonId: 0
-  button: {fileID: 0}
+  button: {fileID: 1667818539651385169}
+  buttonTextMeshPro: {fileID: 1667818539675290515}
+  buttonText: 
 --- !u!1 &1667818539675290525
 GameObject:
   m_ObjectHideFlags: 0

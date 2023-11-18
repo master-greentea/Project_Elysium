@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Enemies;
 using UnityEngine;
-using UnityEngine.Analytics;
 
 public class RewindManager : MonoBehaviour
 {
@@ -166,7 +164,7 @@ public class RewindManager : MonoBehaviour
         // restart time scale for move
         Time.timeScale = 1;
         // turn off menu
-        PauseManager.canvas.enabled = false;
+        PauseMenuManager.pauseCanvas.enabled = false;
         Services.VHSDisplay.DisplayNotification("");
         // begin rewind effect
         cameraEffects.ToggleRewind(true);
@@ -205,7 +203,7 @@ public class RewindManager : MonoBehaviour
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(.5f);
         // unpause game
-        Services.TimedGameMode.TogglePause();
+        Services.PauseMenuManager.TogglePause();
         // end rewind
         isRewinding = false;
         CanRewind = false;

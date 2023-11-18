@@ -62,7 +62,7 @@ namespace ChatGPTWrapper {
                     break;
             }
 
-            Services.ConsoleManager.consoleInitialized = true;
+            Services.ConsoleMenuManager.consoleInitialized = true;
         }
 
         public void ResetChat(string initialPrompt) {

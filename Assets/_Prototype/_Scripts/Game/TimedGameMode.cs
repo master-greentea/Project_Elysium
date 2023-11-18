@@ -19,17 +19,12 @@ public class TimedGameMode : GameManager
     {
         if (!RewindManager.isRewinding) SurvivedTime += Time.deltaTime;
         Services.VHSDisplay.DisplayTime(SurvivedTime);
+        // only allow rewind when more than 10 seconds has passed
+        // Services.PauseManager.SetButtonActivate(VHSButtons.Rewind, RewindManager.CanRewind);
     }
 
     public static void AddTime(float addTimeAmount)
     {
         SurvivedTime += addTimeAmount;
-    }
-
-    public override void TogglePause()
-    {
-        base.TogglePause();
-        // only allow rewind when more than 10 seconds has passed
-        Services.PauseManager.SetButtonActivate(VHSButtons.Rewind, RewindManager.CanRewind);
     }
 }

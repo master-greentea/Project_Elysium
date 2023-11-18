@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum VHSStatuses
 {
-    Play, Paused, Error, Settings, Rewind, Console
+    Play, 
+    Paused, 
+    Error, 
+    Settings, 
+    Rewind, 
+    Console
 }
 
 public class VHSDisplay : MonoBehaviour
 {
     private Animator _animator;
+    private VHSStatuses statuses;
     [Header("VHS Texts")]
     [SerializeField] private TextMeshProUGUI timeDisplayText;
     [SerializeField] private TextMeshProUGUI statusDisplayText;
@@ -72,15 +74,11 @@ public class VHSDisplay : MonoBehaviour
         var minutes = Mathf.Floor(time / 60f);
         return Mathf.RoundToInt(time % 60f) + (int)minutes * 60;
     }
-
-    /// <summary>
-    /// Change the status display to a new status
-    /// </summary>
-    /// <param name="status">status to change to</param>
-    public void DisplayStatus(VHSStatuses status)
+    
+    public void DisplayStatus(int statusIndex)
     {
         // switch text
-        statusDisplayText.text = status switch
+        statusDisplayText.text = (VHSStatuses)statusIndex switch
         {
             VHSStatuses.Play => "> PLAY",
             VHSStatuses.Paused => "// PAUSED",
@@ -90,7 +88,7 @@ public class VHSDisplay : MonoBehaviour
             VHSStatuses.Console => ".CONSOLE",
         };
         // change text animation
-        switch (status)
+        switch ((VHSStatuses)statusIndex)
         {
             case VHSStatuses.Play:
             case VHSStatuses.Console:

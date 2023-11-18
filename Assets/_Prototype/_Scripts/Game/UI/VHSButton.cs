@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,55 +5,39 @@ using UnityEngine.UI;
 
 public class VHSButton : MonoBehaviour, IPointerEnterHandler
 {
-    private EventSystem EventSystem;
-    public TextMeshProUGUI tmp;
+    [SerializeField] public Button button;
+    [SerializeField] private TextMeshProUGUI buttonTextMeshPro;
     [HideInInspector] public string buttonText;
-    public VHSButtons buttonId;
-    [HideInInspector] public Button button;
 
-    void Awake()
+    private void Awake()
     {
-        button = GetComponent<Button>();
-        EventSystem = EventSystem.current;
-        buttonText = buttonId switch
-        {
-            VHSButtons.Resume => "Resume",
-            VHSButtons.Rewind => "Rewind",
-            VHSButtons.Settings => "Settings",
-            VHSButtons.Eject => "Eject",
-            VHSButtons.Back => "Back",
-            VHSButtons.InvertCamera => Services.PlayerController.isInvertedControls ? "Invert Camera: ON" : "Invert Camera: OFF",
-            VHSButtons.SetTime => "Set Timestamp",
-            VHSButtons.ConfirmTime => "Confirm",
-            VHSButtons.CancelTime => "Cancel",
-            VHSButtons.ConsoleResume => "Resume",
-            VHSButtons.SettingsAPI => "Edit API Key",
-        };
-        SetText(buttonText);
+        buttonText = buttonTextMeshPro.text;
     }
 
-    void Update()
+    private void Update()
     {
-        if (gameObject == EventSystem.currentSelectedGameObject)
+        if (gameObject == EventSystem.current.currentSelectedGameObject)
         {
            SetText("> " + buttonText);
         }
-        else SetText(buttonText);
+        else
+        {
+            SetText(buttonText);
+        }
         // button activation visual
-        tmp.color = button.enabled ? Color.white : Color.black;
+        buttonTextMeshPro.color = button.enabled ? Color.white : Color.black;
     }
     
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
-        if (button.enabled) Services.PauseManager.SetButtonSelected(buttonId);
+        if (button.enabled)
+        {
+            button.Select();
+        }
     }
-
-    /// <summary>
-    /// Set the text on the button to a specific phrase
-    /// </summary>
-    /// <param name="text">Text to set to</param>
+    
     private void SetText(string text)
     {
-        tmp.text = text;
+        buttonTextMeshPro.text = text;
     }
 }

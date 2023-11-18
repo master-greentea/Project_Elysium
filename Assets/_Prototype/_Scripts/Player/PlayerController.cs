@@ -102,9 +102,9 @@ public class PlayerController : MonoBehaviour
         input.Player.LookBack.performed += ctx => OnLookBack(true);
         input.Player.LookBack.canceled += ctx => OnLookBack(false);
         // pausing
-        input.Player.Pause.performed += ctx => Services.TimedGameMode.TogglePause();
+        input.Player.Pause.performed += ctx => Services.PauseMenuManager.TogglePause();
         // console
-        input.Player.Console.performed += ctx => Services.GameManager.ToggleConsole();
+        input.Player.Console.performed += ctx => Services.ConsoleMenuManager.ToggleConsole();
     }
 
     void UnsubscribeInputEvents()
@@ -122,9 +122,9 @@ public class PlayerController : MonoBehaviour
         input.Player.LookBack.performed -= ctx => OnLookBack(true);
         input.Player.LookBack.canceled -= ctx => OnLookBack(false);
         // pausing
-        input.Player.Pause.performed -= ctx => Services.TimedGameMode.TogglePause();
+        input.Player.Pause.performed -= ctx => Services.PauseMenuManager.TogglePause();
         // console
-        input.Player.Console.performed -= ctx => Services.GameManager.ToggleConsole();
+        input.Player.Console.performed -= ctx => Services.ConsoleMenuManager.ToggleConsole();
     }
 
     void LoadControlSettings()
@@ -140,11 +140,17 @@ public class PlayerController : MonoBehaviour
         AssignComponents();
         currentCamDirection = camDirection.South;
     }
+    
+    public void TogglePlayerInput(bool isActive)
+    {
+        if (isActive) input.Player.Enable();
+        else input.Player.Disable();
+    }
 
     // change animation state
     void HandleAnimation()
     {
-        if ((GameManager.isGamePaused && !RewindManager.isRewinding) || GameManager.isGameEnded) return; // do not run on pause
+        if ((GameManager.IsGamePaused && !RewindManager.isRewinding) || GameManager.IsGameEnded) return; // do not run on pause
         var currentState = _animator.GetCurrentAnimatorStateInfo(0).ToString();
         if (isMoving || RewindManager.isRewindMoving)
         {
@@ -252,7 +258,7 @@ public class PlayerController : MonoBehaviour
     // change camera
     private void OnCameraInput(string direction)
     {
-        if (isLookingBack || GameManager.isGamePaused || GameManager.isGameEnded) return; // prevent camera change when looking back
+        if (isLookingBack || GameManager.IsGamePaused || GameManager.IsGameEnded) return; // prevent camera change when looking back
         var camIndex = (int)currentCamDirection;
         switch (direction)
         {
