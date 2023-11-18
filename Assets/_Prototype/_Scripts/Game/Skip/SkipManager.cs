@@ -67,7 +67,7 @@ public class SkipManager : MonoBehaviour
         SetCameraDamping(0);
         cameraEffects.TriggerTimeSkip();
         CalculateEnemySkipInfo(out var et, out enemySkipDistance);
-        playerSkipDistance = timeSkipAmount * PlayerController.currentSpeed;
+        playerSkipDistance = timeSkipAmount * PlayerController.PlayerCurrentSpeed;
         // for each second that is skipped
         for (int i = 1; i <= timeSkipAmount; i++)
         {

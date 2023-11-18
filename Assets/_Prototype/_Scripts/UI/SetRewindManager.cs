@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class SetRewindManager : MonoBehaviour
 {
     // [SerializeField] private InputAction setTimeInputAction;
+    [SerializeField] private VHSButton rewindButton;
     [SerializeField] private VHSButton confirmButton;
     [SerializeField] private VHSButton cancelButton;
     [SerializeField] private GameObject timeSetHolder;
@@ -15,22 +16,12 @@ public class SetRewindManager : MonoBehaviour
     private int setTime;
     private int rewindTime;
     // services
-    private VHSDisplay vhsDisplay;
-    private RewindManager rewindManager;
-
-    void AssignServices()
-    {
-        vhsDisplay = Services.VHSDisplay;
-        rewindManager = Services.RewindManager;
-    }
-
-    void Awake()
-    {
-        AssignServices();
-    }
+    [SerializeField] private VHSDisplay vhsDisplay;
+    [SerializeField] private RewindManager rewindManager;
 
     void Update()
     {
+        rewindButton.button.enabled = RewindManager.CanRewind;
         isSettingTime = timeSetHolder.activeSelf;
         // during setting time
         if (!isSettingTime) return;

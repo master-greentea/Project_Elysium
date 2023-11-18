@@ -9,7 +9,6 @@ public static class Services
     // AI
     public static EnemyAgent EnemyAgent;
     // Managers
-    public static GameManager GameManager;
     public static VHSDisplay VHSDisplay;
     // Menus
     public static PauseMenuManager PauseMenuManager;

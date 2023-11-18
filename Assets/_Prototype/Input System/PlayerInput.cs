@@ -15,10 +15,10 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public partial class @PrototypePlayerInput: IInputActionCollection2, IDisposable
+public partial class PlayerInput: IInputActionCollection2, IDisposable
 {
     public InputActionAsset asset { get; }
-    public @PrototypePlayerInput()
+    public PlayerInput()
     {
         asset = InputActionAsset.FromJson(@"{
     ""name"": ""PrototypePlayerInput"",
@@ -1007,8 +1007,8 @@ public partial class @PrototypePlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Console;
     public struct PlayerActions
     {
-        private @PrototypePlayerInput m_Wrapper;
-        public PlayerActions(@PrototypePlayerInput wrapper) { m_Wrapper = wrapper; }
+        private PlayerInput m_Wrapper;
+        public PlayerActions(PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
@@ -1111,8 +1111,8 @@ public partial class @PrototypePlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     public struct UIActions
     {
-        private @PrototypePlayerInput m_Wrapper;
-        public UIActions(@PrototypePlayerInput wrapper) { m_Wrapper = wrapper; }
+        private PlayerInput m_Wrapper;
+        public UIActions(PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Submit => m_Wrapper.m_UI_Submit;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;

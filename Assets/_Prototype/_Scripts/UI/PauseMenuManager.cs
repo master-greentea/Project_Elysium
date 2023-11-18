@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class PauseMenuManager : MonoBehaviour
 {
@@ -9,7 +10,8 @@ public class PauseMenuManager : MonoBehaviour
     [SerializeField] private VHSButton firstSelectButton;
     [SerializeField] private VHSButton endFirstSelectButton;
 
-    [SerializeField] private VHSButton[] endDisableButton;
+    [SerializeField] private VHSButton[] endDisableButtons;
+    [SerializeField] private VHSButton[] altNavButtons;
     
     private void Awake()
     {
@@ -17,10 +19,19 @@ public class PauseMenuManager : MonoBehaviour
         pauseCanvas = GetComponent<Canvas>();
     }
 
+    private void Update()
+    {
+        foreach (var b in altNavButtons)
+        {
+            b.isAltNav = !RewindManager.CanRewind;
+            Debug.Log(RewindManager.CanRewind);
+        }
+    }
+
     public void ToggleEnd()
     {
         pauseCanvas.enabled = true;
-        foreach (var button in endDisableButton)
+        foreach (var button in endDisableButtons)
         {
             button.button.enabled = false;
         }

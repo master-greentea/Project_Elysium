@@ -27,8 +27,8 @@ public class RewindManager : MonoBehaviour
     private struct CameraRewindInfo
     {
         public readonly int timeStampInSeconds;
-        public readonly camDirection loggedDirection;
-        public CameraRewindInfo(camDirection _direction)
+        public readonly CameraDirection loggedDirection;
+        public CameraRewindInfo(CameraDirection _direction)
         {
             timeStampInSeconds = Services.VHSDisplay.GetFormattedSecond(TimedGameMode.SurvivedTime);
             loggedDirection = _direction;
@@ -129,7 +129,7 @@ public class RewindManager : MonoBehaviour
         _lastSecond = Services.VHSDisplay.GetFormattedSecond(TimedGameMode.SurvivedTime);
     }
     
-    public static void LogCamera(camDirection direction)
+    public static void LogCamera(CameraDirection direction)
     {
         // do not log position if is rewinding
         if (isRewinding) return;

@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        Services.GameManager = this;
         Time.timeScale = 1;
         GameStart();
     }

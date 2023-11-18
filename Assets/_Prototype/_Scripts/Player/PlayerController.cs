@@ -4,30 +4,30 @@ using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
-public enum camDirection
+public enum CameraDirection
 { South, SouthWest, West, NorthWest, North, NorthEast, East, SouthEast, Count };
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    private CharacterController _characterController;
-
+    [Header("References")]
+    [SerializeField] private CharacterController characterController;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Transform mainCam;
     // input
-    public PrototypePlayerInput input;
+    private PlayerInput input;
 
     // direction
     private Vector3 targetDirection;
     // cam based direction
     [Header("Camera Switch")]
-    public camDirection currentCamDirection;
+    [SerializeField] private float camLerpDuration;
+    private CameraDirection currentCameraDirection;
     [HideInInspector] public bool isInvertedControls;
     private bool playerLeft; // for changing animation of running left & right
-    [SerializeField] private Transform mainCam;
-    [SerializeField] private float camLerpDuration;
     private Coroutine camSwitchRoutineInstance;
-    // new camera
-    private Vector2 currentMouseInput;
 
     // movement
     private Vector2 currentMovementInput;
@@ -36,36 +36,24 @@ public class PlayerController : MonoBehaviour
     private float moveSpeed;
     
     [Header("Movement")]
-    [Tooltip("Default walking speed")]
-    public float walkSpeed = 5f;
-    [Tooltip("Default sprinting speed")]
-    public float sprintSpeed = 8f;
-    [Space(10)]
-    [Tooltip("How fast the character accelerates")]
-    public float speedChangeRate = 10f;
-    [Tooltip("How fast the character rotates")]
+    [SerializeField] public float walkSpeed;
+    [SerializeField] private float sprintSpeed;
     [Range(0.0f, 0.5f)]
-    public float rotationSpeed = 0.1f;
-    public static float currentSpeed { get; private set; }
+    [SerializeField] private float rotationSpeed;
+    [SerializeField] private float speedChangeRate;
+
+    public static float PlayerCurrentSpeed { get; private set; }
 
     // dash
     private bool isDashing;
     private bool canDash;
     [Header("Dash")]
-    [Tooltip("How quickly can the player dash")]
-    public float dashDistance = 2f;
-    [Tooltip("How long the dash lasts")]
+    [SerializeField] private float dashDistance;
     [Range(0, .5f)]
-    public float dashDuration = .1f;
-    [Tooltip("How long before next dash")]
-    public float dashCooldown = .5f;
+    [SerializeField] private float dashDuration;
+    [SerializeField] private float dashCooldown;
     
-    // animations
-    [Header("Animation")]
-    Animator _animator;
-
     // test
-
     [Header("Test")]
     [SerializeField] private bool isLookingBack;
 
@@ -79,15 +67,9 @@ public class PlayerController : MonoBehaviour
         input.Player.Disable();
     }
 
-    void AssignComponents()
-    {
-        _animator = GetComponent<Animator>();
-        _characterController = GetComponent<CharacterController>();
-    }
-
     void SubscribeInputEvents()
     {
-        input = new PrototypePlayerInput();
+        input = new PlayerInput();
         // input events
         // walking & running
         input.Player.Move.performed += OnMovementInput;
@@ -137,8 +119,7 @@ public class PlayerController : MonoBehaviour
         Services.PlayerController = this;
         LoadControlSettings();
         SubscribeInputEvents();
-        AssignComponents();
-        currentCamDirection = camDirection.South;
+        currentCameraDirection = CameraDirection.South;
     }
     
     public void TogglePlayerInput(bool isActive)
@@ -151,23 +132,23 @@ public class PlayerController : MonoBehaviour
     void HandleAnimation()
     {
         if ((GameManager.IsGamePaused && !RewindManager.isRewinding) || GameManager.IsGameEnded) return; // do not run on pause
-        var currentState = _animator.GetCurrentAnimatorStateInfo(0).ToString();
+        var currentState = animator.GetCurrentAnimatorStateInfo(0).ToString();
         if (isMoving || RewindManager.isRewindMoving)
         {
-            AnimationChange.ChangeAnimationState(_animator, currentState, "NewRun", true,
-                RewindManager.isRewindMoving ? _characterController.velocity.x > 0 : currentMovementInput.x < 0);
-            _animator.speed = _characterController.velocity.magnitude * .2f;
+            AnimationChange.ChangeAnimationState(animator, currentState, "NewRun", true,
+                RewindManager.isRewindMoving ? characterController.velocity.x > 0 : currentMovementInput.x < 0);
+            animator.speed = characterController.velocity.magnitude * .2f;
         }
         else { 
-            AnimationChange.ChangeAnimationState(_animator, currentState, "NewIdle", false, currentMovementInput.x < 0); 
-            _animator.speed = RewindManager.isRewinding ? RewindManager.RewindSpeed : 1;
+            AnimationChange.ChangeAnimationState(animator, currentState, "NewIdle", false, currentMovementInput.x < 0); 
+            animator.speed = RewindManager.isRewinding ? RewindManager.RewindSpeed : 1;
         }
     }
 
     void Update()
     {
         HandleAnimation();
-        currentSpeed = _characterController.velocity.magnitude;
+        PlayerCurrentSpeed = characterController.velocity.magnitude;
     }
 
     void FixedUpdate()
@@ -193,7 +174,7 @@ public class PlayerController : MonoBehaviour
         if (inputMagnitude > 1f) inputMagnitude = 1f;
 
         // get current horizontal speed
-        float currentHorizontalSpeed = new Vector3(_characterController.velocity.x, 0.0f, _characterController.velocity.z).magnitude;
+        float currentHorizontalSpeed = new Vector3(characterController.velocity.x, 0.0f, characterController.velocity.z).magnitude;
         // accelerate or decelerate to target speed
         if (currentHorizontalSpeed < targetSpeed - .1f || currentHorizontalSpeed > targetSpeed + .1f)
         {
@@ -212,7 +193,7 @@ public class PlayerController : MonoBehaviour
         Vector3 move = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
         // gravity
-        var gravityVector = new Vector3(0, _characterController.isGrounded ? 0 : -1, 0);
+        var gravityVector = new Vector3(0, characterController.isGrounded ? 0 : -1, 0);
 
         // rotate player when moving
         if (isMoving)
@@ -221,8 +202,8 @@ public class PlayerController : MonoBehaviour
             Rotate(new Vector3(move.x, 0, move.z), rotationSpeed);
         }
         // move player
-        if (isDashing) _characterController.Move(transform.forward * (Time.deltaTime * (dashDistance / dashDuration)));
-        else _characterController.Move((move.normalized + gravityVector) * (Time.deltaTime * moveSpeed));
+        if (isDashing) characterController.Move(transform.forward * (Time.deltaTime * (dashDistance / dashDuration)));
+        else characterController.Move((move.normalized + gravityVector) * (Time.deltaTime * moveSpeed));
     }
     // movement rotation
     private void Rotate(Vector3 rotateTo, float rate)
@@ -259,7 +240,7 @@ public class PlayerController : MonoBehaviour
     private void OnCameraInput(string direction)
     {
         if (isLookingBack || GameManager.IsGamePaused || GameManager.IsGameEnded) return; // prevent camera change when looking back
-        var camIndex = (int)currentCamDirection;
+        var camIndex = (int)currentCameraDirection;
         switch (direction)
         {
             case "Right":
@@ -269,20 +250,20 @@ public class PlayerController : MonoBehaviour
                 camIndex += isInvertedControls ? 1 : -1;
                 break;
         }
-        if (camIndex > (int)camDirection.Count - 1) camIndex = 0;
-        if (camIndex < 0) camIndex = (int)camDirection.Count - 1;
+        if (camIndex > (int)CameraDirection.Count - 1) camIndex = 0;
+        if (camIndex < 0) camIndex = (int)CameraDirection.Count - 1;
         // log camera position
-        RewindManager.LogCamera(currentCamDirection);
-        SwitchCamera((camDirection)camIndex, camLerpDuration);
+        RewindManager.LogCamera(currentCameraDirection);
+        SwitchCamera((CameraDirection)camIndex, camLerpDuration);
     }
 
     /// <summary>
     /// Switch camera to direction
     /// </summary>
     /// <param name="direction">camDirection to switch to</param>
-    public void SwitchCamera(camDirection direction, float lerpDuration)
+    public void SwitchCamera(CameraDirection direction, float lerpDuration)
     {
-        currentCamDirection = direction;
+        currentCameraDirection = direction;
         if (camSwitchRoutineInstance != null) StopCoroutine(camSwitchRoutineInstance);
         camSwitchRoutineInstance = StartCoroutine(CameraSwitchRoutine(GetTargetAngle(), lerpDuration));
     }
@@ -306,16 +287,16 @@ public class PlayerController : MonoBehaviour
     
     float GetTargetAngle()
     {
-        float angle = currentCamDirection switch
+        float angle = currentCameraDirection switch
         {
-            camDirection.South => 0,
-            camDirection.SouthWest => 45,
-            camDirection.West => 90,
-            camDirection.NorthWest => 135,
-            camDirection.North => 180,
-            camDirection.NorthEast => -135,
-            camDirection.East => -90,
-            camDirection.SouthEast => -45,
+            CameraDirection.South => 0,
+            CameraDirection.SouthWest => 45,
+            CameraDirection.West => 90,
+            CameraDirection.NorthWest => 135,
+            CameraDirection.North => 180,
+            CameraDirection.NorthEast => -135,
+            CameraDirection.East => -90,
+            CameraDirection.SouthEast => -45,
         };
 
         angle += isLookingBack ? 180 : 0;
