@@ -17,14 +17,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Transform mainCam;
     // input
-    private PlayerInput input;
+    private PrototypePlayerInput input;
 
     // direction
     private Vector3 targetDirection;
     // cam based direction
     [Header("Camera Switch")]
+    [SerializeField] private CameraSwitcher cameraSwitcher;
     [SerializeField] private float camLerpDuration;
-    private CameraDirection currentCameraDirection;
+    [HideInInspector] public CameraDirection currentCameraDirection;
     [HideInInspector] public bool isInvertedControls;
     private bool playerLeft; // for changing animation of running left & right
     private Coroutine camSwitchRoutineInstance;
@@ -34,6 +35,7 @@ public class PlayerController : MonoBehaviour
     public static bool isMoving;
     private bool isSprinting;
     private float moveSpeed;
+    private bool lastFacing; // false = right
     
     [Header("Movement")]
     [SerializeField] public float walkSpeed;
@@ -69,7 +71,7 @@ public class PlayerController : MonoBehaviour
 
     void SubscribeInputEvents()
     {
-        input = new PlayerInput();
+        input = new PrototypePlayerInput();
         // input events
         // walking & running
         input.Player.Move.performed += OnMovementInput;
@@ -136,7 +138,7 @@ public class PlayerController : MonoBehaviour
         if (isMoving || RewindManager.isRewindMoving)
         {
             AnimationChange.ChangeAnimationState(animator, currentState, "NewRun", true,
-                RewindManager.isRewindMoving ? characterController.velocity.x > 0 : currentMovementInput.x < 0);
+                !lastFacing);
             animator.speed = characterController.velocity.magnitude * .2f;
         }
         else { 
@@ -161,7 +163,15 @@ public class PlayerController : MonoBehaviour
     private void OnMovementInput(InputAction.CallbackContext context)                                    
     {                                                                                            
         currentMovementInput = context.ReadValue<Vector2>();                                     
-        isMoving = currentMovementInput.x != 0 || currentMovementInput.y != 0;                   
+        isMoving = currentMovementInput.x != 0 || currentMovementInput.y != 0;
+        if (currentMovementInput.x < 0)
+        {
+            lastFacing = false;
+        }
+        else if (currentMovementInput.x > 0)
+        {
+            lastFacing = true;
+        }
     }
     // movement (called per frame)
     private void Move()
@@ -239,7 +249,7 @@ public class PlayerController : MonoBehaviour
     // change camera
     private void OnCameraInput(string direction)
     {
-        if (isLookingBack || GameManager.IsGamePaused || GameManager.IsGameEnded) return; // prevent camera change when looking back
+        if (isLookingBack || GameManager.IsGamePaused || GameManager.IsGameEnded || !cameraSwitcher.isDefault) return; // prevent camera change when looking back
         var camIndex = (int)currentCameraDirection;
         switch (direction)
         {
@@ -306,6 +316,7 @@ public class PlayerController : MonoBehaviour
     // look back logic
     void OnLookBack(bool isActive)
     {
+        if (!cameraSwitcher.isDefault) return;
         isLookingBack = isActive;
         if (camSwitchRoutineInstance != null) StopCoroutine(camSwitchRoutineInstance);
         mainCam.eulerAngles = new Vector3(mainCam.eulerAngles.x, GetTargetAngle(), 0);

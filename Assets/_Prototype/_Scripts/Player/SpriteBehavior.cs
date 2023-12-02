@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SpriteFacing {
+    FaceFront, FaceCam, FaceTop
+}
+
 public class SpriteBehavior : MonoBehaviour
 {
     [SerializeField] private Transform spriteTransform;
+
     [Header("Orientation")]
-    [Tooltip("Always face front")]
-    [SerializeField] private bool faceFront;
-    [Tooltip("Always face camera")]
-    [SerializeField] private bool faceCam;
+    [SerializeField] public SpriteFacing facing;
 
     private Vector3 initialRotation;
 
@@ -20,7 +22,19 @@ public class SpriteBehavior : MonoBehaviour
 
     void Update()
     {
-        if (faceCam) spriteTransform.LookAt(2 * spriteTransform.position - Camera.main.transform.position);
-        if (faceFront) spriteTransform.rotation = Quaternion.Euler(initialRotation);
+        switch (facing)
+        {
+            case SpriteFacing.FaceCam:
+                spriteTransform.LookAt(2 * spriteTransform.position - Camera.main.transform.position);
+                break;
+            case SpriteFacing.FaceFront:
+                spriteTransform.rotation = Quaternion.Euler(initialRotation);
+                break;
+            case SpriteFacing.FaceTop:
+                spriteTransform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
+                break;
+            default:
+                return;
+        }
     }
 }

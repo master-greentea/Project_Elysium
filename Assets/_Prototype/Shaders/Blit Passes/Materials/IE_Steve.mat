@@ -34,7 +34,7 @@ Material:
     - _distortion: 0.298
     - _effectWeight: 1
     - _gscale: 800
-    - _nintensity: 0.084
+    - _nintensity: 0.013
     - _scale: 0.95
     - _speed: 1.74
     - _unscaledTime: 0

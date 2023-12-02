@@ -348,8 +348,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3572670108874576240}
-  m_LocalRotation: {x: 0.1706652, y: -0, z: -0, w: 0.9853291}
-  m_LocalPosition: {x: 0.16979563, y: 4.99, z: -13.998293}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -390,7 +390,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 28
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -863,7 +863,9 @@ MonoBehaviour:
   characterController: {fileID: 7655150860452917776}
   animator: {fileID: 8130346067340669711}
   mainCam: {fileID: 0}
+  cameraSwitcher: {fileID: 0}
   camLerpDuration: 5
+  currentCameraDirection: 0
   isInvertedControls: 0
   walkSpeed: 5
   sprintSpeed: 2
@@ -960,5 +962,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteTransform: {fileID: 9057284221906284184}
-  faceFront: 0
-  faceCam: 1
+  facing: 0
