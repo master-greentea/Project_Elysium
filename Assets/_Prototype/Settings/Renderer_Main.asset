@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8478137778135594625
+--- !u!114 &-8232024800937557145
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,10 +9,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66006249c505891429f04916fff52a16, type: 3}
-  m_Name: Prefilter
+  m_Script: {fileID: 11500000, guid: 0b2ad86e4537cab47875ae3d089430df, type: 3}
+  m_Name: HyperRFCore
   m_EditorClassIdentifier: 
   m_Active: 1
+  transparencyPassSettings:
+    TextureName: _GrabPassTransparent
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 1024
+  outlinePassSettings:
+    OutlinesRenderPassEvent: 300
+    OutlinesLayerMask:
+      serializedVersion: 2
+      m_Bits: 192
+    NormalsTextureSettings:
+      colorFormat: 0
+      depthBufferBits: 8
+      backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+      filterMode: 0
+    OutlineMaterialSettings:
+      outlineScale: 1
+      crossMultiplier: 25
+      depthThreshold: 1
+      normalThreshold: 0.6
+      stepAngleThreshold: 1
+      stepAngleMultiplier: 20
+      outlineColor: {r: 1, g: 1, b: 1, a: 1}
   blitPassSettingsStack:
   - Activate: 1
     BlitRenderPassEvent: 600
@@ -80,8 +103,8 @@ MonoBehaviour:
   - {fileID: 1260217176212577286}
   - {fileID: -1483356386453860390}
   - {fileID: 6609678913115180217}
-  - {fileID: -8478137778135594625}
-  m_RendererFeatureMap: 4852a2b889ce810f061cff47d8307d11da4f1cc6390f6aebb9cc9eaff34bba5b7f8968219c9a578a
+  - {fileID: -8232024800937557145}
+  m_RendererFeatureMap: 4852a2b889ce810f061cff47d8307d11da4f1cc6390f6aebb9cc9eaff34bba5b6743e9050ff9c18d
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
