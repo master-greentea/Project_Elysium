@@ -8,7 +8,7 @@ public class Compass : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private CameraSwitcher cameraSwitcher;
     private float targetRotationZ;
-    
+    [SerializeField] private float rotationSpeed;
     
     void Update()
     {
@@ -28,6 +28,6 @@ public class Compass : MonoBehaviour
         {
             targetRotationZ = 270;
         }
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(-90, 0, targetRotationZ), 2f * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(-90, 0, targetRotationZ), rotationSpeed * Time.deltaTime);
     }
 }

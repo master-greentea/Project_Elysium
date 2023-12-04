@@ -9,7 +9,6 @@ namespace HyperToon
     public class HyperRFCore : ScriptableRendererFeature
     {
         // Common
-        
         [Header("Transparency")]
         // Transparency passes
         [SerializeField] private TransparencyPassSettings transparencyPassSettings;

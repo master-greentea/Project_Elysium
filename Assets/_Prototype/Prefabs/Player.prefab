@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7029392119858970139}
   - component: {fileID: 2344289460895806101}
   m_Layer: 10
-  m_Name: GuidanceBall
+  m_Name: GuiderBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -348,8 +348,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3572670108874576240}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 25, z: 0}
+  m_LocalRotation: {x: 0.1706652, y: -0, z: -0, w: 0.9853291}
+  m_LocalPosition: {x: 0.16658574, y: 4.99, z: -13.998293}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -390,7 +390,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 28
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -725,7 +725,7 @@ Transform:
   - {fileID: 1399312566656355613}
   - {fileID: 5013556397434381681}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &7655150860452917776
 CharacterController:
