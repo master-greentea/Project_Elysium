@@ -9,6 +9,7 @@ public class Compass : MonoBehaviour
     [SerializeField] private CameraSwitcher cameraSwitcher;
     private float targetRotationZ;
     
+    
     void Update()
     {
         targetRotationZ = playerController.currentCameraDirection switch
