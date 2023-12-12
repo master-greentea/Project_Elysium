@@ -255,9 +255,11 @@ public class PlayerController : MonoBehaviour
         {
             case "Right":
                 camIndex += isInvertedControls ? -1 : 1;
+                lastFacing = !isInvertedControls;
                 break;
             case "Left":
                 camIndex += isInvertedControls ? 1 : -1;
+                lastFacing = isInvertedControls;
                 break;
         }
         if (camIndex > (int)CameraDirection.Count - 1) camIndex = 0;
